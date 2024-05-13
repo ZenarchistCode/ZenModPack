@@ -7,4 +7,6 @@ I can't guarantee this modpack will be compatible with other mods - it works wit
 
 I actually recommend not repacking this mod if you don't need to - I will be updating this mod regularly. But if you want to you can - just keep in mind any bugfixes and improvements will not be automatically applied, so make sure to check back every few months especially if you encounter any issues/bugs with a particular mod of mine.
 
+As always - the mods in this pack are 100% free, just abide by any copyright rules from 3rd party models etc (I bought a few models off Sketchfab and other sites that require you to credit them if you repack my mod).
+
 Credits: TODO!
