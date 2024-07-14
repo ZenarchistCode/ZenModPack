@@ -1,0 +1,32 @@
+ImageSetClass {
+ Name "tirerackslots"
+ RefSize 768 256
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{C2A99EBD16939AB1}ZenModPack/data/gui/tirerack/tirerackslots.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass tirerepairkit {
+   Name "tirerepairkit"
+   Pos 0 0
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass gasoline {
+   Name "gasoline"
+   Pos 256 0
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass tireiron {
+   Name "tireiron"
+   Pos 512 0
+   Size 245 256
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

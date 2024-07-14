@@ -1,0 +1,92 @@
+ambient[]={1,1,1,1};
+diffuse[]={1,1,1,1};
+forcedDiffuse[]={0,0,0,0};
+emmisive[]={0,0,0,1};
+specular[]={0.46792164,0.46400008,0.46400008,0.995};
+specularPower=34.599998;
+PixelShaderID="Super";
+VertexShaderID="Super";
+class Stage1
+{
+	texture="ZenModPack\data\textures\sleepingbags\sleepingbag_nohq.paa";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
+class Stage2
+{
+	texture="#(argb,8,8,3)color(0.5,0.5,0.5,1,DT)";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
+class Stage3
+{
+	texture="dz\characters\data\generic_destruct_mc.paa";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={4.8541021,3.5267115,0};
+		up[]={-3.5267115,4.8541021,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
+class Stage4
+{
+	texture="#(argb,8,8,3)color(1,1,1,1,AS)";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
+class Stage5
+{
+	texture="ZenModPack\data\textures\sleepingbags\sleepingbag_smdi.paa";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
+class Stage6
+{
+	texture="#(ai,64,64,1)fresnel(1.05,0.67)";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
+class Stage7
+{
+	texture="#(argb,8,8,3)color(0,0,0,1,CO)";
+	uvSource="tex";
+	class uvTransform
+	{
+		aside[]={1,0,0};
+		up[]={0,1,0};
+		dir[]={0,0,1};
+		pos[]={0,0,0};
+	};
+};
