@@ -1,0 +1,129 @@
+ambient[]= 	{1,1,1,1};
+diffuse[]= 	{1,1,1,1};
+emmisive[]= 	{0,0,0,1};
+forceddiffuse[]= 	{0,0,0,0};
+specular[]= 	{1,1,1,1};
+specularpower=100;
+pixelshaderid=NormalDXTA;
+vertexshaderid=NormalMap;
+class TegGen0
+{
+	uvSource=None;
+};
+class TegGen1
+{
+	uvSource=Tex;
+	class uvTransform
+	{
+		aside[] =	{   1.0000,   0.0000,   0.0000};
+		up[] =	{   0.0000,   1.0000,   0.0000};
+		dir[] =	{   0.0000,   0.0000,   0.0000};
+		pos[] =	{   0.0000,   0.0000,   0.0000};
+	};
+};
+class TegGen2
+{
+	uvSource=Tex;
+	class uvTransform
+	{
+		aside[] =	{   1.0000,   0.0000,   0.0000};
+		up[] =	{   0.0000,   1.0000,   0.0000};
+		dir[] =	{   0.0000,   0.0000,   0.0000};
+		pos[] =	{   0.0000,   0.0000,   0.0000};
+	};
+};
+class TegGen3
+{
+	uvSource=Tex;
+	class uvTransform
+	{
+		aside[] =	{   1.0000,   0.0000,   0.0000};
+		up[] =	{   0.0000,   1.0000,   0.0000};
+		dir[] =	{   0.0000,   0.0000,   0.0000};
+		pos[] =	{   0.0000,   0.0000,   0.0000};
+	};
+};
+class TegGen4
+{
+	uvSource=Tex;
+	class uvTransform
+	{
+		aside[] =	{   1.0000,   0.0000,   0.0000};
+		up[] =	{   0.0000,   1.0000,   0.0000};
+		dir[] =	{   0.0000,   0.0000,   0.0000};
+		pos[] =	{   0.0000,   0.0000,   0.0000};
+	};
+};
+class TegGen5
+{
+	uvSource=Tex;
+	class uvTransform
+	{
+		aside[] =	{   1.0000,   0.0000,   0.0000};
+		up[] =	{   0.0000,   1.0000,   0.0000};
+		dir[] =	{   0.0000,   0.0000,   0.0000};
+		pos[] =	{   0.0000,   0.0000,   0.0000};
+	};
+};
+class TegGen6
+{
+	uvSource=None;
+};
+class TegGen7
+{
+	uvSource=Tex;
+	class uvTransform
+	{
+		aside[] =	{   1.0000,   0.0000,   0.0000};
+		up[] =	{   0.0000,   1.0000,   0.0000};
+		dir[] =	{   0.0000,   0.0000,   0.0000};
+		pos[] =	{   0.0000,   0.0000,   0.0000};
+	};
+};
+class stage1
+{
+	texture="#(argb,8,8,3)color(0.5,0.5,1.0,1.0,nohq)";
+	Texgen=1;
+};
+class stage2
+{
+	texture="#(argb,8,8,3)color(0.5,0.5,0.5,1,dt)";
+	Texgen=2;
+};
+class stage3
+{
+	texture="#(argb,8,8,3)color(0,0,0,0,mc)";
+	Texgen=3;
+};
+class stage4
+{
+	texture="#(argb,8,8,3)color(0,0,0,1.0,as)";
+	Texgen=4;
+};
+class stage5
+{
+	texture="#(argb,8,8,3)color(1,0,0,1.0,smdi)";
+	Texgen=5;
+};
+class stage6
+{
+	texture="#(ai,64,64,1)fresnel(1.82,0.71)";
+	Texgen=6;
+};
+class stage7
+{
+	texture="dz\data\data\env_land_co.paa";
+	Texgen=7;
+};
+class stage8
+{
+	texture="#(argb,8,8,3)color(1,1,1,1,dt)";
+	Filter=Point;
+	Texgen=0;
+};
+class stage9
+{
+	texture="#(argb,8,8,3)color(1,1,1,1,dt)";
+	Filter=Point;
+	Texgen=0;
+};

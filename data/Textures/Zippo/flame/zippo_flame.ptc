@@ -1,0 +1,70 @@
+EffectDef {
+ Emitors {
+  EmitorDef emitor1 {
+   MaxNum 20
+   BirthRate 200
+   BirthRateRND 0
+   Offset 0 0.04 0
+   LocalTransform 1
+   Material "ZenModPack/data/textures/zippo/flame/zippo_flame.emat"
+   CenterY 0
+   ScaleX 0.785
+   SizeMultiplier 0.05
+   SizeRND 0.01
+   RandomRotDir 1
+   VelAngle 0
+   RandomAngle 0
+   BillboardingType LockedAxis
+   Velocity 0
+   VelAffect 0
+   AirResistance 0
+   AnimOnce 0
+   AnimFPS 12
+   LifetimeByAnim 0
+   RandomFrame 0
+   LifeTime 3
+   LifeTimeRND 0
+   Color {
+    0 0.9051 0.7089 0.3101 0.2817 0.981 0.5443 0.5443 0.6087 1 0.8165 0.8165 1 0.6709 0.5316 0.3924
+   }
+   Alpha {
+    0 1 0.21928 0.91139 0.38752 0.6519 0.58034 0.99367 1 0.68354
+   }
+   Size {
+    0 1 0.45747 1 1 1
+   }
+   EffectTime 0.3
+   SizeMast {
+    0 0.96835 0.01985 0.99367 0.09924 0.91139 0.15123 0.98734 0.21928 0.94304 0.27694 0.98101 0.31474 0.86076 0.36578 0.93038 0.41966 0.92405 0.48393 0.87975 0.58979 0.88608 0.70321 1 0.79584 1 0.87618 0.93671 0.93951 0.87342 1 1
+   }
+  }
+  EmitorDef emitor1_cloned {
+   MaxNum 10
+   BirthRate 1
+   BirthRateRND 5
+   Offset 0 0.03 0
+   LocalTransform 1
+   Material "graphics/particles/materials/fire/fire_flame_01.emat"
+   ScaleX 0.21
+   SizeMultiplier 0.1
+   SizeRND 0.01
+   RandomRotDir 1
+   RandomAngle 0
+   BillboardingType Full
+   Velocity 0.1
+   VelocityRND 0.01
+   LifeTime 0.3
+   LifeTimeRND 0.1
+   Color {
+    0 1 1 1 1 1 1 1
+   }
+   Size {
+    0 0.3481 0.70888 0.18987 1 0
+   }
+   EffectTime 1
+   SizeMast {
+    0 0.22152 0.01985 0.99367 0.0983 0.01899 0.15123 0.98734 0.20888 0 0.27694 0.48101 0.33365 0 0.36578 0.93038 0.4121 0.10759 0.48393 0.87975 0.59074 0.46835 0.70321 1 0.79017 0.3038 0.8828 0.70886 0.94045 0.06329 1 1
+   }
+  }
+ }
+}

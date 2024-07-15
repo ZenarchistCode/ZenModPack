@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{CDD325E1A4663B09}ZenMods/ZenChess/data/gui/whiteslot.edds"
+ Author "mattjuly22"
+ ChangeDate 1749839624
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "whiteslot.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}
