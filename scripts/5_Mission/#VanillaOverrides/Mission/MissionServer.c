@@ -18,6 +18,7 @@ modded class MissionServer
 		GetZenUtilitiesConfig();
 		GetZenPlayerMessageConfig();
 		GetZenUpdateMessage();
+		GetZenPollConfig();
 		m_ModLogger = new ZenModLogger;
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.ZenDeferredInit, 30000, false);
 
@@ -157,6 +158,7 @@ modded class MissionServer
 
 		//! UTILITIES 
 		GetZenUpdateMessage().Save();
+		GetZenPollConfig().UpdateResults();
 
 		//! ZOMBIE DOORS 
 		GetZenZombieDoorManager().Destroy();

@@ -10,7 +10,7 @@ FrameWidgetClass root_frame {
  vexactsize 0
  priority 996
  {
-  PanelWidgetClass discord_gui {
+  PanelWidgetClass gui {
    inheritalpha 1
    ignorepointer 1
    position 0 0
@@ -193,7 +193,7 @@ FrameWidgetClass root_frame {
   ImageWidgetClass vignette {
    ignorepointer 1
    color 0 0 0 0.7843
-   position -0.69 -0.69
+   position 0 0
    size 1.6 0.9
    valign center_ref
    hexactpos 1

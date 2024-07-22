@@ -2,23 +2,13 @@ class ZenSleepingBag_PackedBase extends TentBase
 {
     protected bool m_WasHologrammed;
 
-    override void EEInit()
-    {
-        super.EEInit();
-    }
-
-    override void OnItemLocationChanged(EntityAI old_owner, EntityAI new_owner)
-    {
-        super.OnItemLocationChanged(old_owner, new_owner);
-    }
-
     void SetHologrammed(bool hologram)
     {
         m_WasHologrammed = hologram;
 
         if (m_WasHologrammed)
         {
-            string textureAlpha = "#(argb,8,8,3)color(0.5,0.5,0.5,0.5,ca)";
+            string textureAlpha = "#(argb,8,8,3)color(1,1,1,0.1,ca)";
             SetObjectTexture(0, textureAlpha);
         }
         else

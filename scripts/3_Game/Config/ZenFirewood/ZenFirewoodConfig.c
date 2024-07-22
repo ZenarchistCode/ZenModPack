@@ -169,10 +169,7 @@ class ZenFirewoodConfig
 	// Clean up any stuff not required anymore after spawn 
 	void CleanUp()
 	{
-		WoodTypes.Clear();
 		WoodPositions.Clear();
-
-		delete WoodTypes;
 		delete WoodPositions;
 	}
 }

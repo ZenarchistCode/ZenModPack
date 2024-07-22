@@ -25,12 +25,4 @@ class Zen_CarWorkbench extends ItemBase
 		if (newLevel == GameConstants.STATE_RUINED)
 			MiscGameplayFunctions.DropAllItemsInInventoryInBounds(this, vector.Zero);
 	}
-
-	override void SetActions()
-	{
-		super.SetActions();
-
-		AddAction(ActionTogglePlaceObject);
-		AddAction(ActionPlaceObject);
-	}
 };

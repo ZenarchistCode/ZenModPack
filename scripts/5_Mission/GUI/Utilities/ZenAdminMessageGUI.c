@@ -1,11 +1,8 @@
 class ZenAdminMessageGUI extends UIScriptedMenu
 {
 	// Title widgets
-	private MultilineTextWidget m_ReplyText;
-	private ButtonWidget m_BtnOK;
-
-	// Reply
-	static string REPLY = "";
+	private ref MultilineTextWidget m_ReplyText;
+	private ref ButtonWidget m_BtnOK;
 
 	// Init widgets
 	override Widget Init()
@@ -26,15 +23,16 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 			return NULL;
 		}
 
-		if (REPLY != "")
-		{
-			m_ReplyText.SetText(REPLY);
-		}
-
 		// Disable controls & hud
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DisableControls, 100, false);
 
 		return layoutRoot;
+	}
+
+	void SetAdminMessage(string msg)
+	{
+		m_ReplyText.SetText(msg);
+		m_ReplyText.Update();
 	}
 
 	// Diable controls & hud

@@ -4,9 +4,7 @@ modded class PluginManager
 	{
 		super.Init();
 
-		#ifdef SERVER
 		if (ZenModEnabled("ZenWeatherConfig"))
 			RegisterPlugin("PluginZenWeatherConfig", false, true);
-		#endif
 	}
 }

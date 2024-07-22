@@ -187,10 +187,7 @@ class ZenChickenCoopsConfig
 	// Clean up any stuff not required anymore after spawn 
 	void CleanUp()
 	{
-		CoopTypes.Clear();
 		CoopPositions.Clear();
-
-		delete CoopTypes;
 		delete CoopPositions;
 	}
 }

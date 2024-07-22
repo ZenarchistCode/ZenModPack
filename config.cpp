@@ -370,6 +370,75 @@ class CfgVehicles
 		};
 	};
 
+	//! GENERIC KIT BOX 
+	class ZenKitBoxBase : Inventory_Base
+	{
+		scope = 0;
+		displayName = "Zen's Kit Box";
+		descriptionShort = "Zen's Kit Box";
+		model = "ZenModPack\data\models\zenkitbox\zenkitbox.p3d";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zenkitbox\kit_blank_co.paa" };
+		weight = 10000;
+		itemSize[] = { 9,5 };
+		physLayer = "item_small";
+		itemBehaviour = 0;
+		soundImpactType = "cloth";
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 5000;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+	};
+
 	//! SLEEPING BAGS 
 	class ZenSleepingBag_PackedBase: Inventory_Base
 	{
@@ -4260,69 +4329,13 @@ class CfgVehicles
 	};
 
 	//! WORKBENCH 
-	class Zen_CarWorkbenchKit : Inventory_Base
+	class Zen_CarWorkbenchKit : ZenKitBoxBase
 	{
 		scope = 2;
 		displayName = "$STR_CfgVehicles_ZenCarWorkbenchKit0";
 		descriptionShort = "$STR_CfgVehicles_ZenCarWorkbench1";
-		model = "ZenModPack\data\models\workbench\kit\kit.p3d";
-		weight = 10000;
-		itemSize[] = { 9,5 };
-		itemBehaviour = 0;
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 250;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\workbench\kit\kit.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\workbench\kit\kit.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\workbench\kit\kit_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\workbench\kit\kit_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\workbench\kit\kit_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType = "cloth";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\workbench\workbench_kit_co.paa" };
 	};
 	class Zen_CarWorkbench : Inventory_Base
 	{

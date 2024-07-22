@@ -4,7 +4,6 @@ class ZenUpdateMessage
 	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
 	private const static string zenConfigName = "UpdateMessage.json";
 
-	// Define tabs and buttons
 	string UPDATE_VERSION = "-1";
 	string UPDATE_PREFIX = "Lastest Update: ";
 	string UPDATE_SUFFIX = " | For more information: HardcoreDayZ.com/changes";

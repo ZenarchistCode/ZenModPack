@@ -1165,7 +1165,8 @@ modded class PlayerBase
 	{
 		super.EEKilled(killer);
 
-		if (GetType().Contains("eAI"))
+		// Expansion & Syberia compatibility
+		if (GetType().Contains("eAI") || GetType().Contains("_Ghost"))
 			return;
 
 		if (!GetIdentity())
@@ -1189,9 +1190,6 @@ modded class PlayerBase
 		PlayerBase player = PlayerBase.Cast(killer);
 		if (player && player.GetIdentity())
 		{
-			if (player.GetType().Contains("_Ghost")) // Syberia compatibility
-				return;
-
 			ZenModLogger.Log("PLAYER PVP KILL: " + player.GetCachedName() + " (" + player.GetCachedID() + ") killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos=" + GetPosition() + ") (killerHealth=" + player.GetHealth().ToString() + ")", "pvp");
 			return;
 		}
@@ -1321,7 +1319,7 @@ modded class PlayerBase
 	}
 
 	// Check player message cfg
-	void CheckZenPlayerMsgConfig()
+	protected void CheckZenPlayerMsgConfig()
 	{
 		if (GetIdentity() == NULL || GetType().Contains("_Ghost"))
 			return;
@@ -1349,12 +1347,20 @@ modded class PlayerBase
 
 		if (playerMsg && playerMsg.Message != "")
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPlayerMessageReply, 5000, false, playerMsg);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPlayerMessageReply, 1000, false, playerMsg);
+			return;
+		}
+
+		// Check for Poll on login only if there was no admin message
+		if (GetZenPollConfig().PollID != -1 && !GetZenPollConfig().PlayerChoices.Contains(GetIdentity().GetId()))
+		{
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPollData, 1000, false);
+			return;
 		}
 	}
 
 	// Sends a reply to the given player cfg
-	void SendZenPlayerMessageReply(ZenPlayerMessage message)
+	protected void SendZenPlayerMessageReply(ZenPlayerMessage message)
 	{
 		if (!IsAlive() || IsUnconscious())
 			return;
@@ -1368,7 +1374,7 @@ modded class PlayerBase
 		// Cache message
 		m_CachedZenPlayerMessage = message;
 
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageReply", new Param1<string>(message.Message), true, GetIdentity());
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param1<string>(message.Message), true, GetIdentity());
 	}
 
 	// Called only when player confirms they read the admin text message (via RPC MissionBase)
@@ -1463,6 +1469,22 @@ modded class PlayerBase
 
 		m_CachedZenPlayerMessage.SpawnItems.Clear();
 		m_CachedZenPlayerMessage = NULL;
+	}
+
+	// Send poll data to player and open screen 
+	protected void SendZenPollData()
+	{
+		if (GetIdentity() != NULL)
+		{
+			array<string> options = new array<string>;
+			options.Insert(GetZenPollConfig().Option1);
+			options.Insert(GetZenPollConfig().Option2);
+			options.Insert(GetZenPollConfig().Option3);
+			options.Insert(GetZenPollConfig().Option4);
+			options.Insert(GetZenPollConfig().Option5);
+			options.Insert(GetZenPollConfig().Option6);
+			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenPollOptions", new Param4<string, string, bool, array<string>>(GetZenPollConfig().PollTitle, GetZenPollConfig().PollSubtitle, GetZenPollConfig().OnlyOneOption, options), true, GetIdentity());
+		}
 	}
 
 	//! MUSIC 

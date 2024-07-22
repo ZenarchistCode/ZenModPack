@@ -8,6 +8,7 @@ modded class MissionBase
 
 		//! UTILITIES
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingeplayerExecutionType.Server);
+		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPollChoice", this, SingeplayerExecutionType.Server);
 		#else
 		// CLIENT RECEIVE RPC
 
@@ -25,8 +26,9 @@ modded class MissionBase
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenMusicCfgClient", this, SingeplayerExecutionType.Client);
 
 		//! UTILITIES 
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageReply", this, SingeplayerExecutionType.Client);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", this, SingeplayerExecutionType.Client);
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenNotificationConfigOnClient", this, SingeplayerExecutionType.Client);
+		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenPollOptions", this, SingeplayerExecutionType.Client);
 		#endif
 
 		//! TREASURE 
@@ -59,6 +61,12 @@ modded class MissionBase
 				case ZenMenus.PLAYER_MESSAGE:
                 {
                     menu = new ZenAdminMessageGUI;
+                    break;
+                }
+
+                case ZenMenus.POLL_GUI:
+                {
+                    menu = new ZenPollGUI;
                     break;
                 }
 
@@ -193,7 +201,7 @@ modded class MissionBase
 	//! UTILITIES 
 
 	// (Server -> Client, runs on client)
-    void RPC_ReceiveZenNotificationConfigOnClient(CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target)
+    void RPC_ReceiveZenNotificationConfigOnClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
         if (type == CallType.Client && !GetGame().IsDedicatedServer())
         {
@@ -217,14 +225,14 @@ modded class MissionBase
     }
 
 	// Client -> server :: confirm that the player has clicked OK and read the admin message
-	void RPC_SendZenPlayerMessageConfirmRead(CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target)
+	void RPC_SendZenPlayerMessageConfirmRead(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
         if (type == CallType.Server && GetGame().IsDedicatedServer())
         {
             Param1<bool> data;
             if (!ctx.Read(data))
             {
-                Error("Error sending data - RPC_SendReadReportToServer");
+                Error("Error receiving data - RPC_SendReadReportToServer");
                 return;
             }
 
@@ -245,33 +253,73 @@ modded class MissionBase
             }
         }
     }
+	
+	// Client -> server :: receive poll vote
+	void RPC_SendZenPollChoice(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+    {
+        if (type == CallType.Server && GetGame().IsDedicatedServer())
+        {
+            Param1<array<bool>> data;
+            if (!ctx.Read(data))
+            {
+                Error("Error receiving data - RPC_SendZenPollChoice");
+                return;
+            }
 
-	// Server -> client :: send admin text message and dialogue
-    void RPC_SendZenPlayerMessageReply(CallType type, ref ParamsReadContext ctx, ref PlayerIdentity sender, ref Object target)
+            if (sender && data.param1)
+            {
+				GetZenPollConfig().RegisterVote(sender.GetId(), data.param1);
+
+                int highBits, lowBits;
+				GetGame().GetPlayerNetworkIDByIdentityID(sender.GetPlayerId(), lowBits, highBits);
+				PlayerBase player = PlayerBase.Cast(GetGame().GetObjectByNetworkId(lowBits, highBits));
+				if (player)
+                {
+                    player.Zen_SendMessage("[SERVER] Vote received!");
+                }
+            }
+        }
+    }
+
+	// Server -> client :: receive admin text message and dialogue
+    void RPC_ReceiveZenAdminMessage(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
         if (type == CallType.Client && GetGame().IsClient())
         {
             Param1<string> data;
             if (!ctx.Read(data))
             {
-                Error("Error sync'ing server-side data to client - RPC_SendZenPlayerMessageReply");
+                Error("Error sync'ing server-side data to client - RPC_ReceiveZenAdminMessage");
                 return;
             }
 
-            if (data.param1)
+            if (GetGame().GetUIManager() != NULL)
             {
-                ZenAdminMessageGUI.REPLY = data.param1;
-                GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(OpenZenPlayerMessageReplyDialogue, 100, false);
+                ZenAdminMessageGUI gui = ZenAdminMessageGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL));
+                if (gui)
+                    gui.SetAdminMessage(data.param1);
             }
         }
     }
 
-	// Client :: Open reply dialogue
-    void OpenZenPlayerMessageReplyDialogue()
+	// Server -> client :: receive poll data
+    void RPC_ReceiveZenPollOptions(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
-        if (ZenAdminMessageGUI.REPLY != "")
+        if (type == CallType.Client && GetGame().IsClient())
         {
-            GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL);
+            Param4<string, string, bool, array<string>> data;
+            if (!ctx.Read(data))
+            {
+                Error("Error sync'ing server-side data to client - RPC_ReceiveZenPollOptions");
+                return;
+            }
+
+            if (GetGame().GetUIManager() != NULL)
+            {
+                ZenPollGUI gui = ZenPollGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.POLL_GUI, NULL));
+                if (gui)
+                    gui.SetPollSettings(data.param1, data.param2, data.param3, data.param4);
+            }
         }
     }
 }
