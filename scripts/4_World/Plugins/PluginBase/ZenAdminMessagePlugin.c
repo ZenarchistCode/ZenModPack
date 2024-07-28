@@ -114,7 +114,10 @@ class ZenAdminMessagePlugin extends PluginBase
             MsgPlayer(player, "Current Server FPS: " + GetZenServerFPS() + " | Session Average FPS: " + GetZenAvgServerFPS() + " | " + uptime + " minutes");
             string msg = "Players: " + PlayerBase.ZENMOD_PLAYER_COUNT + " Items: " + ItemBase.ZENMOD_ITEM_COUNT;
             msg = msg + " Animals: " + AnimalBase.ZENMOD_ANIMAL_COUNT + " Zombies: " + ZombieBase.ZENMOD_ZOMBIE_COUNT;
-            msg = msg + " Drivers: " + PlayerBase.ZENMOD_DRIVER_COUNT + " eAI: " + eAIBase.ZENMOD_AI_COUNT;
+            msg = msg + " Drivers: " + PlayerBase.ZENMOD_DRIVER_COUNT;
+#ifdef EXPANSIONMODAI
+            msg = msg + " eAI: " + eAIBase.ZENMOD_AI_COUNT
+#endif
             NotificationSystem.SendNotificationToPlayerIdentityExtended(player.GetIdentity(), 15.0, "SERVER PERFORMANCE", msg, "");
             return true;
         }
