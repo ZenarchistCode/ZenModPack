@@ -124,7 +124,7 @@ class ZenPollGUI extends UIScriptedMenu
 	private void OnSubmitBtnClick()
 	{
 		// Inform server player has read the reply
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPollChoice", new Param1<ref array<bool>>(GetSelectedOptions()), true, NULL);
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPollChoice", new Param1<array<bool>>(GetSelectedOptions()), true, NULL);
 		
 		// Close window
 		Close();

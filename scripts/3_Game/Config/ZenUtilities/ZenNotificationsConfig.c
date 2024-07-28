@@ -24,7 +24,7 @@ class ZenNotificationsConfig
 			{
 				// Notification keywords
 				EnableServerNotifications = true;
-				ServerIcon = "ZenServerGUI/data/gui/icons/notify.edds";
+				ServerIcon = "ZenModPack/data/gui/Notifications/notify.edds";
 				ServerMessage = "Server Message";
 				Keywords = new array<ref ZenNotification>;
 				Keywords.Insert(new ZenNotification("[N]", "#servermessage", "#servericon", true));
@@ -34,7 +34,7 @@ class ZenNotificationsConfig
 				Keywords.Insert(new ZenNotification("Restart"));
 				Keywords.Insert(new ZenNotification("Shutdown"));
 				Keywords.Insert(new ZenNotification("Update:"));
-				Keywords.Insert(new ZenNotification("Quest:", "Quest Update:", "ZenServerGUI/data/gui/icons/quest.edds", true));
+				Keywords.Insert(new ZenNotification("Quest:", "Quest Update:", "ZenModPack/data/gui/Notifications/quest.edds", true));
 				// Save config
 				Save();
 			}

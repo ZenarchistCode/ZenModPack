@@ -86,10 +86,9 @@ class CAContinuousFillRain : CAContinuousBase
 
 	override int Interrupt(ActionData action_data)
 	{
-		if (GetGame().IsDedicatedServer())
-		{
+#ifdef SERVER
 			action_data.m_Player.GetSoftSkillsManager().AddSpecialty(UASoftSkillsWeight.PRECISE_LOW);
-		}
+#endif
 
 		return super.Interrupt(action_data);
 	}
@@ -103,8 +102,7 @@ class CAContinuousFillRain : CAContinuousBase
 	void CalcAndSetQuantity(ActionData action_data)
 	{
 		m_SpentQuantity_total += m_SpentQuantity;
-		if (GetGame().IsDedicatedServer())
-		{
+#ifdef SERVER
 			if (m_SpentUnits)
 			{
 				m_SpentUnits.param1 = m_SpentQuantity;
@@ -112,7 +110,7 @@ class CAContinuousFillRain : CAContinuousBase
 			}
 
 			Liquid.FillContainerEnviro(action_data.m_MainItem, m_liquid_type, m_SpentQuantity, false); // False = no inject agents
-		}
+#endif
 
 		m_SpentQuantity = 0;
 	}

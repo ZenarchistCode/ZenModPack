@@ -39,12 +39,14 @@ class ActionRepairWell : ActionContinuousBase
 			return false;
 
 		// Server checks
-		if (GetGame().IsDedicatedServer() && well.IsRepaired())
+#ifdef SERVER
+		if (well.IsRepaired())
 		{
 			// Send a message to the client that the well is already repaired
 			player.Zen_SendMessage(GetZenWellsConfig().MessageRepaired);
 			return false;
 		}
+#endif
 
 		return !well.IsRepaired();
 	}
@@ -64,34 +66,29 @@ class ActionRepairWell : ActionContinuousBase
 		action_data.m_MainItem.DecreaseHealth("", "", GetZenWellsConfig().DamageTool);
 	}
 
+#ifdef SERVER
 	override void OnStartAnimationLoop( ActionData action_data )
 	{
 		super.OnStartAnimationLoop( action_data );
 
-		if ( !GetGame().IsMultiplayer() || GetGame().IsDedicatedServer() )
-		{
-			Param2<bool, string> play = new Param2<bool, string>( true, "wrench_loop_SoundSet" );
-			GetGame().RPCSingleParam( action_data.m_MainItem, ERPCs.RPC_SOUND_LOCK_ATTACH, play, true );
-		}
+		Param2<bool, string> play = new Param2<bool, string>( true, "wrench_loop_SoundSet" );
+		GetGame().RPCSingleParam( action_data.m_MainItem, ERPCs.RPC_SOUND_LOCK_ATTACH, play, true );
 	}
 	
 	override void OnEnd( ActionData action_data )
 	{
-		if ( !GetGame().IsMultiplayer() || GetGame().IsDedicatedServer() )
-		{
-			Param2<bool, string> play = new Param2<bool, string>( false, "wrench_loop_SoundSet" );
-			GetGame().RPCSingleParam( action_data.m_MainItem, ERPCs.RPC_SOUND_LOCK_ATTACH, play, true );
-		}
+		super.OnEnd(action_data);
+
+		Param2<bool, string> play = new Param2<bool, string>( false, "wrench_loop_SoundSet" );
+		GetGame().RPCSingleParam( action_data.m_MainItem, ERPCs.RPC_SOUND_LOCK_ATTACH, play, true );
 	}
 	
 	override void OnEndAnimationLoop( ActionData action_data )
 	{
 		super.OnEndAnimationLoop( action_data );
 
-		if ( !GetGame().IsMultiplayer() || GetGame().IsDedicatedServer() )
-		{
-			Param2<bool, string> play = new Param2<bool, string>( false, "wrench_loop_SoundSet" );
-			GetGame().RPCSingleParam( action_data.m_MainItem, ERPCs.RPC_SOUND_LOCK_ATTACH, play, true );
-		}
+		Param2<bool, string> play = new Param2<bool, string>( false, "wrench_loop_SoundSet" );
+		GetGame().RPCSingleParam( action_data.m_MainItem, ERPCs.RPC_SOUND_LOCK_ATTACH, play, true );
 	}
-};
+#endif
+}

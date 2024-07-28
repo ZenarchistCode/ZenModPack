@@ -9,7 +9,7 @@ modded class ActionDigOutStash : ActionContinuousBase
 			if (targetEntity && Class.CastTo(stash, targetEntity))
 			{
 				array<Object> objectsAtCross = new array<Object>;
-				GetGame().GetObjectsAtPosition(stash.GetPosition(), 2, objectsAtCross, null);
+				GetGame().GetObjectsAtPosition3D(stash.GetPosition(), 2, objectsAtCross, null);
 
 				for (int i = 0; i < objectsAtCross.Count(); i++)
 				{

@@ -62,7 +62,7 @@ class ZenModLogger
 		if (!ZenModEnabled("ZenModLogger"))
 			return;
 
-		string file_path = "$profile:\\Zenarchist\\Logs\\";
+		string file_path = "$profile:\\Zenarchist\\Logs\\" + LOG_FILE;
 
 		switch (type)
 		{

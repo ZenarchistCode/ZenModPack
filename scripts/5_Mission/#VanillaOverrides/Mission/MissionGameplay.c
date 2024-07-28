@@ -102,7 +102,6 @@ modded class MissionGameplay
 		{
 			m_ZenRadioWidget.SetChannel(m_Radio.GetTunedFrequency().ToString());
 			m_ZenRadioWidget.ShowIcon();
-			return;
 		}
 
 		// Only check for radio every 1 secs

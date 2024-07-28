@@ -65,6 +65,7 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenRepairWells",			true);
 		ModEnabled.Insert("ZenCarWorkench",			true);
 		ModEnabled.Insert("ZenPimpMyRide",			true);
+		ModEnabled.Insert("ZenRaidAlarm",			true);
 		ModEnabled.Insert("ZenCatchRain",			true);
 		ModEnabled.Insert("ZenEarPlugs",			true);
 		ModEnabled.Insert("ZenCamoCamp",			true);
@@ -94,8 +95,6 @@ class ZenModPackConfig
 		ServerSideModEnabled.Insert("ZenTreasure",				true);
 		ServerSideModEnabled.Insert("ZenGraves",				true);
 		ServerSideModEnabled.Insert("ZenZippo",					true);
-
-		// 
 	}
 
 	// We only need to sync client config if a mod is disabled as they're all enabled by default
@@ -148,13 +147,43 @@ static bool ZenModEnabled(string mod)
 	bool enabled = false;
 	if (!GetZenModPackConfig().ModEnabled.Find(mod, enabled))
 	{
-		#ifdef SERVER
+#ifdef SERVER
 		if (GetZenModPackConfig().ServerSideModEnabled.Find(mod, enabled))
 			return enabled;
-		#endif
+#endif
 
 		Error("VERY BAD ERROR: ZenModEnabled(" + mod + ") - THAT MOD WASN'T FOUND! TYPO?"); // Print to Crash Logs
 	}
 
 	return enabled;
+}
+
+static bool SetZenModEnabled(string mod, bool enabled)
+{
+	int i;
+	for (i = 0; i < GetZenModPackConfig().ModEnabled.Count(); i++)
+	{
+		string clientKey = GetZenModPackConfig().ModEnabled.GetKey(i);
+		clientKey.ToLower();
+
+		if (mod == clientKey)
+		{
+			GetZenModPackConfig().ModEnabled.Set(GetZenModPackConfig().ModEnabled.GetKey(i), enabled);
+			return true;
+		}
+	}
+
+	for (i = 0; i < GetZenModPackConfig().ServerSideModEnabled.Count(); i++)
+	{
+		string serverKey = GetZenModPackConfig().ServerSideModEnabled.GetKey(i);
+		serverKey.ToLower();
+
+		if (mod == serverKey)
+		{
+			GetZenModPackConfig().ServerSideModEnabled.Set(GetZenModPackConfig().ServerSideModEnabled.GetKey(i), enabled);
+			return true;
+		}
+	}
+
+	return false;
 }

@@ -3,10 +3,16 @@ class ZenUtilitiesConfig
 	// Config location
 	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
 	private const static string zenConfigName = "ZenUtilitiesConfig.json";
-	private const static string CURRENT_VERSION = "1";
+	private const static string CURRENT_VERSION = "2";
 	string CONFIG_VERSION = "";
 
 	// Settings data
+	bool CountServerFPS = false;
+	string FpsChatCommand = "fps";
+	string ServerFPSWarningMsg = "PERFORMANCE WARNING: Server FPS is currently %1. This is low and very bad for vehicle desync. Be careful if driving!";
+	int ServerFPSWarning = 50; // Raw fps
+	int ServerActionFPSDropWarningPct = 0; // %
+	//bool ShouldLogLootCyclers;
 	bool ShouldLogPVP;
 	bool ShouldLogDeathGear;
 	bool ShouldDeleteGhostItems;
@@ -22,9 +28,10 @@ class ZenUtilitiesConfig
 		{
 			JsonFileLoader<ZenUtilitiesConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
 
-			if (CONFIG_VERSION != CURRENT_VERSION)
+			// If version mismatch, backup old version of json before replacing it
+			if (CONFIG_VERSION != CONFIG_VERSION)
 			{
-				CONFIG_VERSION = CURRENT_VERSION;
+				JsonFileLoader<ZenUtilitiesConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
 			}
 			else
 			{
@@ -36,6 +43,7 @@ class ZenUtilitiesConfig
 		CONFIG_VERSION = CURRENT_VERSION;
 
 		// Prepare default config
+		//ShouldLogLootCyclers = true;
 		ShouldLogPVP = true;
 		ShouldLogDeathGear = true;
 		ShouldLogItemCount = false;
@@ -50,7 +58,7 @@ class ZenUtilitiesConfig
 		RaidAmmo.Insert("Plastic_Explosive_Ammo");
 
 		Save();
-	};
+	}
 
 	void Save()
 	{

@@ -1,8 +1,5 @@
 modded class MissionServer
 {
-	//! CAMP SITES
-	ref ZenCampSiteManager m_CampSiteManager;
-
 	//! SHARED
 	ref ZenModLogger m_ModLogger;
 	ref map<string, int> m_ZenPlayerUIDs;
@@ -25,13 +22,6 @@ modded class MissionServer
 		//! GENERAL CONFIG
 		ZMPrint("[ZenModPack] Loading config");
 		GetZenModPackConfig();
-
-		//! CAMP SITES 
-		if (ZenModEnabled("ZenCampSites"))
-		{
-			GetZenCampSitesConfig();
-			m_CampSiteManager = new ZenCampSiteManager();
-		}
 
 		//! TREASURE
 		if (ZenModEnabled("ZenTreasure"))
@@ -75,13 +65,6 @@ modded class MissionServer
 		if (ZenModEnabled("ZenMusic"))
 			GetZenMusicConfig();
 
-		//! ZOMBIE DOORS
-		if (ZenModEnabled("ZenZombieDoors"))
-		{
-			GetZombieDoorsConfig();
-			GetZenZombieDoorManager().Init();
-		}
-
 		//! ANTI-COMBAT LOG 
 		if (ZenModEnabled("ZenAntiCombatLogout"))
 		{
@@ -112,6 +95,9 @@ modded class MissionServer
 
 		//! IMMERSIVE LOGIN 
 		m_ZenDisableFireSpawn = FileExist("$profile:\\Zenarchist\\disablespawnfire.txt");
+
+		//! DISCORD API
+		GetZenDiscordConfig();
 	}
 
 	override void OnMissionStart()
@@ -159,10 +145,33 @@ modded class MissionServer
 		//! UTILITIES 
 		GetZenUpdateMessage().Save();
 		GetZenPollConfig().UpdateResults();
-
-		//! ZOMBIE DOORS 
-		GetZenZombieDoorManager().Destroy();
+		//PrintZenPlayerDropCounts();
 	}
+
+	//! TODO: Prints any players who dropped more than X items during the session
+	/*void PrintZenPlayerDropCounts()
+	{
+		if (!GetZenUtilitiesConfig().ShouldLogLootCyclers)
+			return;
+
+		string time;
+		for (int i = 0; i < PlayerBase.ZEN_LOOT_CYCLING_COUNTER.Count(); i++)
+		{
+			int dropCount = PlayerBase.ZEN_LOOT_CYCLING_COUNTER.GetElement(i);
+			if (dropCount > 30)
+			{
+				int minsPlayed = PlayerBase.ZEN_LOOT_CYCLING_PLAYERAGE.Get(PlayerBase.ZEN_LOOT_CYCLING_COUNTER.GetKey(i)) / 60;
+				time = "time played: " + minsPlayed + " minutes";
+				int dropRate = dropCount / minsPlayed;
+				ZenModLogger.Log(PlayerBase.ZEN_LOOT_CYCLING_COUNTER.GetKey(i) + " dropped " + PlayerBase.ZEN_LOOT_CYCLING_COUNTER.GetElement(i) + " items " + time + " (" + dropRate + "/min)", "lootcycle");
+			}
+		}
+
+		PlayerBase.ZEN_LOOT_CYCLING_COUNTER.Clear();
+		PlayerBase.ZEN_LOOT_CYCLING_PLAYERAGE.Clear();
+		delete PlayerBase.ZEN_LOOT_CYCLING_COUNTER;
+		delete PlayerBase.ZEN_LOOT_CYCLING_PLAYERAGE;
+	}*/
 
 	// Perform some general debuggin'
 	private void ZenServerDebugStartup()
@@ -212,7 +221,26 @@ modded class MissionServer
 
 		//! UTILITIES 
 		if (player && identity)
+		{
 			ZenModLogger.Log("Player logged in: " + player.GetCachedName() + " (" + player.GetCachedID() + ") (pos=" + player.GetPosition() + ")", "login");
+
+			//! DISCORD WATCHLIST
+			string reason;
+			if (GetZenDiscordConfig().PlayerWatchlist.Find(identity.GetId(), reason))
+			{
+				ZenDiscordMessage playerWatchlistMsg = new ZenDiscordMessage("Watchlist");
+				playerWatchlistMsg.SetTitle(identity.GetName() + " " + GetZenDiscordConfig().JustLoggedIn + " " + GetZenDiscordConfig().ServerName);
+				playerWatchlistMsg.SetMessage(GetZenDiscordConfig().Explanation + "\n\n" + reason + "\n\n" + GetZenDiscordConfig().GetMapLinkPosition(player.GetPosition()) + "\n\n" + identity.GetId() + "\n\n[" + identity.GetPlainId() + "](http://steamcommunity.com/profiles/" + identity.GetPlainId() + ")");
+				playerWatchlistMsg.SetColor(255, 255, 0);
+
+				foreach(string s : GetZenDiscordConfig().AdminWebhooks)
+				{
+					playerWatchlistMsg.AddWebhook(s);
+				}
+
+				GetZenDiscordAPI().SendMessage(playerWatchlistMsg);
+			}
+		}
 
 		//! SHARED 
 		int playerUID;
@@ -230,7 +258,7 @@ modded class MissionServer
 
 		//! SEND GENERAL CONFIG IMMEDIATELY
 		if (GetZenModPackConfig().SYNC_REQUIRED)
-			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<ref map<string, bool>>(GetZenModPackConfig().ModEnabled), true, player.GetIdentity());
+			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<map<string, bool>>(GetZenModPackConfig().ModEnabled), true, player.GetIdentity());
 
 		if (ZenModEnabled("ZenTreasure"))
 			SendZenTreasureConfig(player, identity);
@@ -245,7 +273,9 @@ modded class MissionServer
 
 		//! UTILITIES 
 		if (player && player.GetIdentity())
+		{
 			ZenModLogger.Log("Player logged out: " + player.GetCachedName() + " (" + player.GetCachedID() + ")" + " (pos=" + player.GetPosition() + ")", "login");
+		}
 
 		//! ANTI-COMBAT LOG
 		if (ZenModEnabled("ZenAntiCombatLogout"))
@@ -579,7 +609,7 @@ modded class MissionServer
 	{
 		// Get all objects within 10cm of the vector location
 		array<Object> objectsNearTree = new array<Object>;
-		GetGame().GetObjectsAtPosition(treeConfig.Location, 0.01, objectsNearTree, null);
+		GetGame().GetObjectsAtPosition3D(treeConfig.Location, 0.01, objectsNearTree, null);
 		Object obj;
 
 		// Cut down any trees/bushes within 0.01m of location
@@ -679,7 +709,7 @@ modded class MissionServer
 
 				// Get objects within 1 meter of the config'd wood pile vector
 				array<Object> objectsNearWoodpile = new array<Object>;
-				GetGame().GetObjectsAtPosition(loc, 1, objectsNearWoodpile, null);
+				GetGame().GetObjectsAtPosition3D(loc, 1, objectsNearWoodpile, null);
 
 				// Prepare reused variables
 				string debugName = "";
@@ -734,7 +764,7 @@ modded class MissionServer
 
 		// Get all objects on the map in a 20km radius from the center of that 20km radius (enough for most maps?)
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition(Vector(10000, 0, 10000), 20000, objectsOnMap, null);
+		GetGame().GetObjectsAtPosition3D(Vector(10000, 0, 10000), 20000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach(ZenFirewoodType woodType : GetZenFirewoodConfig().WoodTypes)
@@ -826,7 +856,7 @@ modded class MissionServer
 
 				// Get objects within 1 meter of the config'd coop vector
 				array<Object> objectsNearCoop = new array<Object>;
-				GetGame().GetObjectsAtPosition(loc, 1, objectsNearCoop, null);
+				GetGame().GetObjectsAtPosition3D(loc, 1, objectsNearCoop, null);
 
 				// Prepare reused variables
 				string debugName = "";
@@ -886,7 +916,7 @@ modded class MissionServer
 
 		// Get all objects on the map in a 30km radius from the center of that 30km radius (enough for most maps?)
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition(Vector(10000, 0, 10000), 30000, objectsOnMap, null);
+		GetGame().GetObjectsAtPosition3D(Vector(10000, 0, 10000), 30000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach(ZenChickenCoopType coopType : GetZenChickenCoopsConfig().CoopTypes)
@@ -1007,7 +1037,7 @@ modded class MissionServer
 	{
 		// Delete any duplicate objects nearby cross within 1m
 		array<Object> objectsAtCross = new array<Object>;
-		GetGame().GetObjectsAtPosition(deadData.Position, GetZenGravesConfig().MinDistanceBetweenCrosses, objectsAtCross, null);
+		GetGame().GetObjectsAtPosition3D(deadData.Position, GetZenGravesConfig().MinDistanceBetweenCrosses, objectsAtCross, null);
 		ZenGraves_DeadPlayerCross cross;
 
 		int i;
@@ -1094,7 +1124,7 @@ modded class MissionServer
 
 		// Check for any duplicate objects nearby cross within 1m
 		array<Object> objectsAtCross = new array<Object>;
-		GetGame().GetObjectsAtPosition(cross.GetPosition(), 1, objectsAtCross, null);
+		GetGame().GetObjectsAtPosition3D(cross.GetPosition(), 1, objectsAtCross, null);
 
 		for (i = 0; i < objectsAtCross.Count(); i++)
 		{
@@ -1310,7 +1340,7 @@ modded class MissionServer
 			{
 				// Get objects within 0.5 meter of the config'd vector
 				array<Object> objectsNearWire = new array<Object>;
-				GetGame().GetObjectsAtPosition(loc, 0.5, objectsNearWire, null);
+				GetGame().GetObjectsAtPosition3D(loc, 0.5, objectsNearWire, null);
 
 				for (int x = 0; x < objectsNearWire.Count(); x++)
 				{
@@ -1351,7 +1381,7 @@ modded class MissionServer
 	{
 		// Get all objects on the map
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition(Vector(0, 0, 0), 50000, objectsOnMap, null);
+		GetGame().GetObjectsAtPosition3D(Vector(0, 0, 0), 50000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach (ZenStaticBarbedWireType wireType : GetZenStaticBarbedWireConfig().WireTypes)

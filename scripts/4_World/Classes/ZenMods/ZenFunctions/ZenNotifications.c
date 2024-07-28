@@ -2,10 +2,12 @@ class ZenNotifications
 {
 	static void Notify(PlayerBase player, string title, string message, string icon = "", float time = 5)
 	{
-		if (GetGame().IsDedicatedServer() && player && player.GetIdentity())
+#ifdef SERVER
+		if (player && player.GetIdentity())
 		{
 			NotificationSystem.SendNotificationToPlayerExtended(player, time, title, message, icon);
 		}
+#endif
 	}
 
 	static void NotifyLocal(string title, string message, string icon = "", float p_time = 5)

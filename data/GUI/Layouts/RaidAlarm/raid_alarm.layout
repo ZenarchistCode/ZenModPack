@@ -1,0 +1,593 @@
+FrameWidgetClass root_frame {
+ color 1 1 1 0.9412
+ position 0 0
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ priority 996
+ {
+  PanelWidgetClass gui {
+   inheritalpha 1
+   ignorepointer 1
+   position 0 0
+   size 0.45 0.45
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   priority 1
+   style blank
+   {
+    PanelWidgetClass header {
+     inheritalpha 0
+     ignorepointer 1
+     color 0.0196 0.0235 0.0196 0.9804
+     position 0 0
+     size 1 0.18
+     halign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass title_text {
+       clipchildren 0
+       ignorepointer 1
+       position 0.05 0.1
+       size 0.95 0.5
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       text "#STR_ZenGui_RaidAlarmTitle"
+       font "gui/fonts/metron-bold"
+       "exact text" 0
+       "size to text h" 0
+       "size to text v" 0
+       {
+        ButtonWidgetClass guide_button {
+         position 0.01 0
+         size 0.2 1
+         halign right_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "#STR_ZenGui_RaidAlarmGuide"
+         font "gui/fonts/metron-bold16"
+        }
+       }
+      }
+      TextWidgetClass title_sub_text {
+       clipchildren 0
+       ignorepointer 1
+       color 0.7843 0.7843 0.7843 1
+       position 0.05 0.6
+       size 0.95 0.2
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       text "#STR_ZenGui_RaidAlarmSubtitle"
+       font "gui/fonts/metron"
+       "exact text" 0
+       "size to text h" 0
+       "size to text v" 0
+      }
+     }
+    }
+    PanelWidgetClass body {
+     inheritalpha 1
+     ignorepointer 1
+     color 0 0 0 1
+     position 0 0.02
+     size 1 0.68
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      PanelWidgetClass information_panel {
+       inheritalpha 1
+       color 0.1098 0.1098 0.1098 1
+       position 0 0.02
+       size 0.96 0.9
+       halign center_ref
+       valign bottom_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style EditorPanel
+       {
+        GridSpacerWidgetClass GridSpacerWidget0 {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         Padding 10
+         Margin 10
+         Columns 1
+         {
+          PanelWidgetClass WebhookPanelWidget0 {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           {
+            MultilineTextWidgetClass WebhookMultilineTextWidget0 {
+             ignorepointer 1
+             position 0 0
+             size 0.3 1
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             text "#STR_ZenGui_DiscordWebhook 1"
+             "exact text" 1
+             "text halign" center
+             "text valign" center
+             wrap 1
+            }
+            EditBoxWidgetClass WebhookEditBoxWidget0 {
+             position 0.1 0.25
+             size 0.6 0.5
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             style DefaultBorder
+             text "test"
+             "limit visible" 0
+             "Use default text" 0
+             "exact text" 1
+            }
+            ImageWidgetClass ImageWidget0 {
+             clipchildren 1
+             inheritalpha 0
+             ignorepointer 1
+             position 0.01 0.36
+             size 25 25
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             image0 "ZenModPack/data/gui/layouts/RaidAlarm/clearicon.edds"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" stretch_w_h
+             "flip u" 0
+             {
+              ButtonWidgetClass ClearButtonWidget0 {
+               position 0 0
+               size 1 1
+               halign right_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+              }
+             }
+            }
+            ImageWidgetClass ImageWidget1 {
+             clipchildren 1
+             inheritalpha 0
+             ignorepointer 1
+             position 0.05 0.36
+             size 25 25
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             image0 "ZenModPack/data/gui/layouts/RaidAlarm/pasteicon.edds"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" stretch_w_h
+             "flip u" 0
+             {
+              ButtonWidgetClass PasteButtonWidget0 {
+               position 0 0
+               size 1 1
+               halign right_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+              }
+             }
+            }
+           }
+          }
+          PanelWidgetClass WebhookPanelWidget1 {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           {
+            MultilineTextWidgetClass WebhookMultilineTextWidget1 {
+             ignorepointer 1
+             position 0 0
+             size 0.3 1
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             text "#STR_ZenGui_DiscordWebhook 2"
+             "exact text" 1
+             "text halign" center
+             "text valign" center
+             wrap 1
+            }
+            EditBoxWidgetClass WebhookEditBoxWidget1 {
+             position 0.1 0.25
+             size 0.6 0.5
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             style DefaultBorder
+             text "test"
+             "limit visible" 0
+             "Use default text" 0
+             "exact text" 1
+            }
+            ImageWidgetClass ImageWidget2 {
+             clipchildren 1
+             inheritalpha 0
+             ignorepointer 1
+             position 0.01 0.36
+             size 25 25
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             image0 "ZenModPack/data/gui/layouts/RaidAlarm/clearicon.edds"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" stretch_w_h
+             "flip u" 0
+             {
+              ButtonWidgetClass ClearButtonWidget1 {
+               position 0 0
+               size 1 1
+               halign right_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+              }
+             }
+            }
+            ImageWidgetClass ImageWidget3 {
+             clipchildren 1
+             inheritalpha 0
+             ignorepointer 1
+             position 0.05 0.36
+             size 25 25
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             image0 "ZenModPack/data/gui/layouts/RaidAlarm/pasteicon.edds"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" stretch_w_h
+             "flip u" 0
+             {
+              ButtonWidgetClass PasteButtonWidget1 {
+               position 0 0
+               size 1 1
+               halign right_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+              }
+             }
+            }
+           }
+          }
+          PanelWidgetClass WebhookPanelWidget2 {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           {
+            MultilineTextWidgetClass WebhookMultilineTextWidget2 {
+             ignorepointer 1
+             position 0 0
+             size 0.3 1
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             text "#STR_ZenGui_DiscordWebhook 3"
+             "exact text" 1
+             "text halign" center
+             "text valign" center
+             wrap 1
+            }
+            EditBoxWidgetClass WebhookEditBoxWidget2 {
+             position 0.1 0.25
+             size 0.6 0.5
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             style DefaultBorder
+             text "test"
+             "limit visible" 0
+             "Use default text" 0
+             "exact text" 1
+            }
+            ImageWidgetClass ImageWidget4 {
+             clipchildren 1
+             inheritalpha 0
+             ignorepointer 1
+             position 0.01 0.36
+             size 25 25
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             image0 "ZenModPack/data/gui/layouts/RaidAlarm/clearicon.edds"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" stretch_w_h
+             "flip u" 0
+             {
+              ButtonWidgetClass ClearButtonWidget2 {
+               position 0 0
+               size 1 1
+               halign right_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+              }
+             }
+            }
+            ImageWidgetClass ImageWidget5 {
+             clipchildren 1
+             inheritalpha 0
+             ignorepointer 1
+             position 0.05 0.36
+             size 25 25
+             halign right_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             image0 "ZenModPack/data/gui/layouts/RaidAlarm/pasteicon.edds"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" stretch_w_h
+             "flip u" 0
+             {
+              ButtonWidgetClass PasteButtonWidget2 {
+               position 0 0
+               size 1 1
+               halign right_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass footer {
+     inheritalpha 1
+     ignorepointer 1
+     color 0 0 0 1
+     position 0 0
+     size 1 0.14
+     halign center_ref
+     valign bottom_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      WrapSpacerWidgetClass button_wrapper {
+       ignorepointer 1
+       position 0.02 0
+       size 0.2 0.45
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       Padding 20
+       Margin 0
+       content_halign center
+       content_valign bottom
+       {
+        ButtonWidgetClass ok_button {
+         inheritalpha 0
+         color 0 0.502 0.1255 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         priority 1
+         userID 1
+         style DayZDefaultButton
+         font "gui/fonts/Metron22"
+         {
+          TextWidgetClass ok_text {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#menu_ok"
+           font "gui/fonts/Metron22"
+           "exact text" 1
+           "size to text h" 1
+           "size to text v" 1
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+      WrapSpacerWidgetClass button_wrapper0 {
+       ignorepointer 1
+       position 0.25 0
+       size 0.2 0.45
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       Padding 20
+       Margin 0
+       content_halign center
+       content_valign bottom
+       {
+        ButtonWidgetClass cancel_button {
+         inheritalpha 0
+         color 0.502 0.251 0.251 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         priority 1
+         userID 1
+         style DayZDefaultButton
+         font "gui/fonts/Metron22"
+         {
+          TextWidgetClass cancel_text {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "#menu_cancel"
+           font "gui/fonts/Metron22"
+           "exact text" 1
+           "size to text h" 1
+           "size to text v" 1
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+      MultilineTextWidgetClass MultilineTextWidget0 {
+       ignorepointer 1
+       position 0.025 0.1
+       size 0.15 0.75
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "Base:"
+       "exact text" 1
+       "text valign" center
+       wrap 1
+      }
+      EditBoxWidgetClass BaseEditBoxWidget {
+       position 0.18 0.103
+       size 0.35 0.75
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style Default
+       "limit visible" 1
+       "Use default text" 0
+       "exact text" 1
+      }
+     }
+    }
+   }
+  }
+  ImageWidgetClass vignette {
+   ignorepointer 1
+   color 0 0 0 0.7843
+   position 0 0
+   size 1.6 0.9
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   fixaspect outside
+   imageTexture "{E6B3EF816E067499}gui/textures/inventory_bgvignette.edds"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
+   filter 0
+   nocache 1
+  }
+ }
+}

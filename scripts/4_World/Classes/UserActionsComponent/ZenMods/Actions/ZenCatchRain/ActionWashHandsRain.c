@@ -45,6 +45,10 @@ class ActionWashHandsRain : ActionContinuousBase
 
 	bool WashCheck(notnull PlayerBase player, bool noLookAtSky = false)
 	{
+#ifdef SERVER
+		return true;
+#endif
+
 		if (!player.HasBloodyHands())
 			return false;
 
@@ -56,9 +60,6 @@ class ActionWashHandsRain : ActionContinuousBase
 
 		if (MiscGameplayFunctions.IsUnderRoof(player))
 			return false;
-
-		if (GetGame().IsDedicatedServer())
-			return true; // can't access CameraPitch on server
 
 		if (noLookAtSky)
 			return true;

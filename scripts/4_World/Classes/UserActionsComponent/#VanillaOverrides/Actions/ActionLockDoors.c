@@ -8,6 +8,10 @@ modded class ActionLockDoors
 		if (!ZenModEnabled("ZenZombieDoors"))
 			return;
 
+		ZenZombieDoorsPlugin doorsPlugin = ZenZombieDoorsPlugin.Cast(GetPlugin(ZenZombieDoorsPlugin));
+		if (!doorsPlugin)
+			return;
+
 		// Door has been locked, store reference so zombies can hit it
 		Building building;
 		if (Class.CastTo(building, target.GetObject()))
@@ -15,7 +19,7 @@ modded class ActionLockDoors
 			int doorIndex = building.GetDoorIndex(target.GetComponentIndex());
 			if (doorIndex != -1)
 			{
-				GetZenZombieDoorManager().AddDoor(building.GetDoorSoundPos(doorIndex));
+				doorsPlugin.AddDoor(building.GetDoorSoundPos(doorIndex));
 			}
 		}
 	}

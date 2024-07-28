@@ -75,22 +75,20 @@ class ActionPourFuelOnFire : ActionContinuousBase
 	// Start pour sound
 	override void OnStartAnimationLoop(ActionData action_data)
 	{
-		if (GetGame().IsDedicatedServer())
-		{
-			Bottle_Base vessel_in_hands = Bottle_Base.Cast(action_data.m_MainItem);
-			Param1<bool> play = new Param1<bool>(true);
-			GetGame().RPCSingleParam(vessel_in_hands, SoundTypeBottle.POURING, play, true);
-		}
+#ifdef SERVER
+		Bottle_Base vessel_in_hands = Bottle_Base.Cast(action_data.m_MainItem);
+		Param1<bool> play = new Param1<bool>(true);
+		GetGame().RPCSingleParam(vessel_in_hands, SoundTypeBottle.POURING, play, true);
+#endif
 	}
 
 	// Stop pour sound
 	override void OnEndAnimationLoop(ActionData action_data)
 	{
-		if (GetGame().IsDedicatedServer())
-		{
-			Bottle_Base target_vessel = Bottle_Base.Cast(action_data.m_MainItem);
-			Param1<bool> play = new Param1<bool>(false);
-			GetGame().RPCSingleParam(target_vessel, SoundTypeBottle.POURING, play, true);
-		}
+#ifdef SERVER
+		Bottle_Base target_vessel = Bottle_Base.Cast(action_data.m_MainItem);
+		Param1<bool> play = new Param1<bool>(false);
+		GetGame().RPCSingleParam(target_vessel, SoundTypeBottle.POURING, play, true);
+#endif
 	}
-};
+}

@@ -132,7 +132,7 @@ class ZenTreasure_StashTrigger extends Trigger
 
 		// Check for existing treasure and delete
 		array<Object> objectsNearTreasure = new array<Object>;
-		GetGame().GetObjectsAtPosition(m_TreasureConfig.Position, 1, objectsNearTreasure, NULL);
+		GetGame().GetObjectsAtPosition3D(m_TreasureConfig.Position, 1, objectsNearTreasure, NULL);
 		for (i = 0; i < objectsNearTreasure.Count(); i++)
 		{
 			Object obj = objectsNearTreasure.Get(i);

@@ -1,15 +1,47 @@
 modded class ItemBase
 {
+	//! SHARED
+	static int ZENMOD_ITEM_COUNT = 0;
+	protected bool m_WasZenHologrammed;
+
+	void SetZenHologrammed(bool hologram)
+	{
+		m_WasZenHologrammed = hologram;
+
+		if (m_WasZenHologrammed)
+		{
+			string textureAlpha = "#(argb,8,8,3)color(1,1,1,0.1,ca)";
+			SetObjectTexture(0, textureAlpha);
+		}
+		else
+		{
+			string textureNoAlpha = GetHiddenSelectionsTextures().Get(0);
+			SetObjectTexture(0, textureNoAlpha);
+		}
+	}
+
+	bool IsZenHologrammed()
+	{
+		return m_WasZenHologrammed;
+	}
+
+	bool ShouldZenHologram()
+	{
+		return false;
+	}
+
 	//! LEFTOVERS
 	override bool SetQuantity(float value, bool destroy_config = true, bool destroy_forced = false, bool allow_client = false, bool clamp_to_stack_max = true)
 	{
-		if (GetGame().IsDedicatedServer() && ZenModEnabled("ZenLeftovers"))
+		#ifdef SERVER
+		if (ZenModEnabled("ZenLeftovers"))
 		{
 			LeftoverItem li = GetLeftoversConfig().GetLeftoverItem(this.GetType());
 
 			if (value <= 0.01 && li && !li.DropToGround && li.LeftoverItemType != "")
 				return super.SetQuantity(0.01, destroy_config, destroy_forced, allow_client, clamp_to_stack_max); // Prevent edible item from being deleted if config says the junk item should be replaced in the player's hands instead of dropped to the ground.
 		}
+		#endif
 
 		return super.SetQuantity(value, destroy_config, destroy_forced, allow_client, clamp_to_stack_max);
 	}
@@ -38,11 +70,13 @@ modded class ItemBase
 	}
 
 	//! ZEN UTILITIES
+#ifdef SERVER
 	override void DeferredInit()
 	{
 		super.DeferredInit();
 
-		if (ZenItemStatsLogger.ALREADY_PRINTED || !GetGame().IsDedicatedServer())
+
+		if (ZenItemStatsLogger.ALREADY_PRINTED )
 			return;
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenLogItemStuff, 1000);
@@ -58,6 +92,21 @@ modded class ItemBase
 			ZenItemStatsLogger.IncreaseItemCount(type, GetQuantity());
 		}
 	}
+
+	override void EOnInit(IEntity other, int extra)
+	{
+		super.EOnInit(other, extra);
+
+		ZENMOD_ITEM_COUNT++;
+	}
+
+	override void EEDelete(EntityAI parent)
+	{
+		super.EEDelete(parent);
+
+		ZENMOD_ITEM_COUNT--;
+	}
+#endif
 
 	//! SPLIT UI 
 	//! Vanilla
@@ -196,4 +245,53 @@ modded class ItemBase
 			}
 		}	
 	}
-};
+
+	/*
+	//! UTILITIES - Loot cycling detection?
+#ifdef SERVER
+	bool m_ZenIsVirgin = false;
+
+	override void EEOnCECreate()
+	{
+		super.EEOnCECreate();
+
+		m_ZenIsVirgin = true; // :(
+	}
+
+	override void OnItemLocationChanged(EntityAI old_owner, EntityAI new_owner)
+	{
+		super.OnItemLocationChanged(old_owner, new_owner);
+
+		if (!GetZenUtilitiesConfig().ShouldLogLootCyclers)
+			return;
+
+		// Only count items spawned this session
+		if (!m_ZenIsVirgin)
+			return;
+
+		// If new owner is not null, item was not dropped onto the ground.
+		if (new_owner != NULL)
+			return;
+
+		// If old owner is null, it wasn't dropped by a player
+		if (old_owner == NULL)
+			return;
+
+		if (IsRuined())
+			return;
+
+		PlayerBase player = PlayerBase.Cast(old_owner);
+		if (!player)
+			player = PlayerBase.Cast(old_owner.GetHierarchyRootPlayer());
+
+		if (!player)
+			return;
+
+		// If lifetime doesn't match lifetime max, this is potentially a new item???
+		ZenFunctions.DebugMessage("Lifetime=" + GetLifetime() + " Max=" + GetLifetimeMax() + " m_ZenIsVirgin=" + m_ZenIsVirgin);
+		player.IncreaseZenLootCyclingCounter();
+		m_ZenIsVirgin = false;
+	}
+#endif
+*/
+}

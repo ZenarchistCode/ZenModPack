@@ -14,7 +14,7 @@ modded class Hologram
 
     override void SetProjectionPosition(vector position)
 	{
-        //! MUSIC (TODO: Figure out why this 3d model doesn't place correctly as hologram, broken p3d LODs?)
+        //! MUSIC
 		Zen_BoomBox boombox = Zen_BoomBox.Cast(m_Parent);
 		if (boombox)
 		{
@@ -28,8 +28,29 @@ modded class Hologram
 			return;
 		}
 
+        //! KIT BOX
+        ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
+        if (zen_kit != NULL)
+        {
+            m_Projection.SetPosition(position + zen_kit.GetDeployPositionOffset());
+            return;
+        }
+
 		super.SetProjectionPosition( position );
 	}
+
+    override void SetProjectionOrientation(vector orientation)
+    {
+        //! RAID ALARM
+        ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
+        if (zen_kit != NULL)
+        {
+            m_Projection.SetOrientation(orientation + zen_kit.GetDeployOrientationOffset());
+            return;
+        }
+
+        super.SetProjectionOrientation(orientation);
+    }
 
     override string ProjectionBasedOnParent()
     {
@@ -53,11 +74,39 @@ modded class Hologram
             return newType;
         }
 
+        //! RAID ALARM
+        Zen_RaidAlarmStationKit station_kit = Zen_RaidAlarmStationKit.Cast(m_Parent);
+        if (station_kit != NULL)
+            return station_kit.GetDeployedClassname();
+
+        //! KIT BOX
+        ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
+        if (zen_kit != NULL)
+            return zen_kit.GetDeployedClassname();
+
         return super.ProjectionBasedOnParent();
     }
 
     override EntityAI PlaceEntity(EntityAI entity_for_placing)
     {
+        //! RAID ALARM
+        string itemType = entity_for_placing.GetType();
+        itemType.ToLower();
+
+        // Check if this item is on our raid config
+        foreach(string s : GetZenDiscordConfig().ItemsDeployedTriggerRaidAlert)
+        {
+            s.ToLower();
+            if (itemType == s || entity_for_placing.IsKindOf(s))
+            {
+                ZenRaidAlarmPlugin plugin = ZenRaidAlarmPlugin.Cast(GetPlugin(ZenRaidAlarmPlugin));
+                if (plugin)
+                    plugin.AlertNearestRaidStation(entity_for_placing.GetPosition());
+
+                break;
+            }
+        }
+
         //! CAMO SHELTER
         if (m_Parent.IsInherited(Zen_CamoShelterKit))
         {
@@ -92,33 +141,32 @@ modded class Hologram
         return super.PlaceEntity(entity_for_placing);
     }
 
-    //! SLEEPING BAG
 	override void RefreshVisual()
     {
         super.RefreshVisual();
 
-        if (m_Parent && m_Parent.IsInherited(ZenSleepingBag_PackedBase) && m_Player.IsPlacingLocal())
+        if (!m_Parent)
+            return;
+
+        //! SHARED
+        if (m_Parent.ShouldZenHologram() && m_Player.IsPlacingLocal())
         {
-            ZenSleepingBag_PackedBase bag = ZenSleepingBag_PackedBase.Cast(m_Parent);
-            if (bag != NULL)
-            {
-                bag.SetHologrammed(m_Projection != NULL);
-            }
+            m_Parent.SetZenHologrammed(m_Projection != NULL);
         }
     }
 
 	void ~Hologram()
     {
-        if (GetGame())
+        if (!GetGame())
+            return;
+
+        if (!m_Parent)
+            return;
+
+        //! SHARED
+        if (m_Parent.IsZenHologrammed())
         {
-            if (m_Parent && m_Parent.IsInherited(ZenSleepingBag_PackedBase))
-            {
-                ZenSleepingBag_PackedBase bag = ZenSleepingBag_PackedBase.Cast(m_Parent);
-                if (bag != NULL)
-                {
-                    bag.SetHologrammed(false);
-                }
-            }
+            m_Parent.SetZenHologrammed(false);
         }
     }
 }

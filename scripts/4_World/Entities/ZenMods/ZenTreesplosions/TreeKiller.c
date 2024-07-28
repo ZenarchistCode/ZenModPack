@@ -11,7 +11,7 @@ class TreeKiller
 
 		// Get objects at position
 		array<Object> objectsNearBomb = new array<Object>;
-		GetGame().GetObjectsAtPosition(pos, tt.Radius, objectsNearBomb, null);
+		GetGame().GetObjectsAtPosition3D(pos, tt.Radius, objectsNearBomb, null);
 
 		for (int x = 0; x < objectsNearBomb.Count(); x++)
 		{

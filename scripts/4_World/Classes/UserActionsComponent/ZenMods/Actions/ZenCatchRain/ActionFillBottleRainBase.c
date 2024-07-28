@@ -71,14 +71,15 @@ class ActionFillBottleRainBase : ActionContinuousBase
 
 	bool RainCheck(notnull PlayerBase player, bool noLookAtSky = false)
 	{
+#ifdef SERVER
+		return true;
+#endif
+
 		if (!ZenFunctions.IsRaining())
 			return false;
 
 		if (MiscGameplayFunctions.IsUnderRoof(player))
 			return false;
-
-		if (GetGame().IsDedicatedServer())
-			return true; // can't access CameraPitch on server
 
 		if (noLookAtSky)
 			return true;

@@ -6,7 +6,7 @@ class ActionOpenCanEnvCB : ActionContinuousBaseCB
 	{
 		m_ActionData.m_ActionComponent = new CAContinuousTime(TIME_TO_CRAFT);
 	}
-};
+}
 
 class ActionOpenCanEnv : ActionContinuousBase
 {
@@ -53,35 +53,28 @@ class ActionOpenCanEnv : ActionContinuousBase
 	{
 		super.OnStartAnimationLoop( action_data );
 
-		if (!GetGame().IsMultiplayer() || GetGame().IsDedicatedServer())
-		{
-			SendZenSoundPlay(action_data);
-		}
+		SendZenSoundPlay(action_data);
 	}
 	
 	override void OnEnd(ActionData action_data)
 	{
 		super.OnEnd(action_data);
 
-		if (!GetGame().IsMultiplayer() || GetGame().IsDedicatedServer())
-		{
-			SendZenSoundPlay(action_data);
-		}
+		SendZenSoundPlay(action_data);
 	}
 	
 	override void OnEndAnimationLoop(ActionData action_data)
 	{
 		super.OnEndAnimationLoop(action_data);
 
-		if (!GetGame().IsMultiplayer() || GetGame().IsDedicatedServer())
-		{
-			SendZenSoundPlay(action_data);
-		}
+		SendZenSoundPlay(action_data);
 	}
 
 	protected void SendZenSoundPlay(ActionData action_data)
 	{
+		#ifdef SERVER
 		Param1<string> soundSet = new Param1<string>("minePickAxe_SoundSet");
 		GetGame().RPCSingleParam(action_data.m_MainItem, ZenRPCs.PLAY_SOUND, soundSet, true);
+		#endif
 	}
-};
+}

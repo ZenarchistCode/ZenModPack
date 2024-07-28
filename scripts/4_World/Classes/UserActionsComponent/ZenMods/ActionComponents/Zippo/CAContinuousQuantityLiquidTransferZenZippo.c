@@ -133,8 +133,7 @@ class CAContinuousQuantityLiquidTransferZenZippo : CAContinuousBase
 		ItemBase target_item = ItemBase.Cast(action_data.m_Target.GetObject());
 		m_SpentQuantity_total += m_SpentQuantity;
 		
-		if (GetGame().IsDedicatedServer())
-		{
+#ifdef SERVER
 			if (m_SpentUnits)
 			{
 				m_SpentUnits.param1 = m_SpentQuantity;
@@ -147,7 +146,7 @@ class CAContinuousQuantityLiquidTransferZenZippo : CAContinuousBase
 				target_item.GetCompEM().AddEnergy(m_SpentQuantity * 10); //! Zippo is set to convert energy to quantity in .cpp. 10x fill rate since it's a lighter but has large quantity.
 				bottle.SetQuantity(bottle.GetQuantity() - m_SpentQuantity);
 			}
-		}
+#endif
 
 		m_SpentQuantity = 0;
 	}

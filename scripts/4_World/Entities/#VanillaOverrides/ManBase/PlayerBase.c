@@ -1,6 +1,9 @@
 modded class PlayerBase
 {
 	//! SHARED
+	static int ZENMOD_PLAYER_COUNT = 0;
+	static int ZENMOD_DRIVER_COUNT = 0;
+
 	private int m_ZenPlayerUID;
 
 	override void Init()
@@ -51,6 +54,30 @@ modded class PlayerBase
 
 		//! UTILITIES
 		ZenUtilities_OnPlayerLoaded();
+	}
+
+	override void OnConnect()
+	{
+		super.OnConnect();
+
+		ZENMOD_PLAYER_COUNT++;
+	}
+
+	override void OnDisconnect()
+	{
+		super.OnDisconnect();
+
+		ZENMOD_PLAYER_COUNT--;
+
+		//! LOOT CYCLING DETECTION
+		/*if (!GetZenUtilitiesConfig().ShouldLogLootCyclers)
+			return;
+
+		if (!ZEN_LOOT_CYCLING_PLAYERAGE)
+			ZEN_LOOT_CYCLING_PLAYERAGE = new map<string, int>;
+
+		int secondsPlayed = GetGame().GetTickTime() - m_ZenTimeStarted;
+		ZEN_LOOT_CYCLING_PLAYERAGE.Set(GetCachedID(), secondsPlayed);*/
 	}
 
 	override void SetActions(out TInputActionMap InputActionMap)
@@ -203,6 +230,57 @@ modded class PlayerBase
 		}
 
 		return NULL;
+	}
+
+	//! LOOT CYCLING DETECTION
+	/*static ref map<string, int> ZEN_LOOT_CYCLING_COUNTER;
+	static ref map<string, int> ZEN_LOOT_CYCLING_PLAYERAGE;
+
+	void IncreaseZenLootCyclingCounter()
+	{
+		if (!GetIdentity() || !GetZenUtilitiesConfig().ShouldLogLootCyclers)
+			return;
+
+		// IF NOT TRACK LOOT CYCLE STOP HERE
+
+		if (!ZEN_LOOT_CYCLING_COUNTER)
+			ZEN_LOOT_CYCLING_COUNTER = new map<string, int>;
+
+		int lootCounter;
+		if (!ZEN_LOOT_CYCLING_COUNTER.Find(GetCachedID(), lootCounter))
+			lootCounter = 0;
+
+		ZEN_LOOT_CYCLING_COUNTER.Set(GetCachedID(), lootCounter + 1);
+	}*/
+
+	static bool GetZenTerritoryPermission(notnull PlayerBase player, bool someOverride = false)
+	{
+		return GetZenTerritoryPermission(player.GetIdentity().GetId(), player.GetPosition(), someOverride);
+	}
+
+	static bool GetZenTerritoryPermission(string uid, vector pos, bool someOverride = false)
+	{
+		if (someOverride)
+			return true;
+
+		// Check Expansion
+#ifdef EXPANSIONMODBASEBUILDING
+		ExpansionTerritoryModule expansionTerritoryModule = ExpansionTerritoryModule.Cast(CF_ModuleCoreManager.Get(ExpansionTerritoryModule));
+		if (expansionTerritoryModule != NULL)
+			return expansionTerritoryModule.IsInsideOwnTerritoryOrPerimeter(pos, -1, -1, uid);
+#endif
+
+		// Check basic territories by Daemonforge
+#ifdef BASICTERRITORIES
+		TerritoryFlag tflag = GetNearestTerritoryFlag(pos);
+		if (tflag != NULL && tflag.HasRaisedFlag())
+		{
+			if (tflag.IsTerritoryMember(uid)
+				return true;
+		}
+#endif
+
+		return false;
 	}
 
 	//! CONCUSSION GRENADE 
@@ -680,11 +758,10 @@ modded class PlayerBase
 	{
 		m_ZenLoginHasFinishedClient = true;
 
-		if (GetGame().IsDedicatedServer())
-		{
+#ifdef SERVER
 			m_ZenLoginHasFinishedServer = true;
 			SetSynchDirty();
-		}
+#endif
 	}
 
 	bool ZenLoginHasFinished()
@@ -1133,17 +1210,20 @@ modded class PlayerBase
 	}
 
 	//! UTILITIES
-	ref ZenPlayerMessage m_CachedZenPlayerMessage; // Cached admin message, allows admin to spawn items on player via JSON
+	private int m_ZenTimeStarted;
+	protected ref ZenPlayerMessage m_CachedZenPlayerMessage; // Cached admin message, allows admin to spawn items on player via JSON
 
 	// Sends a text message to the client (Zen_ to prevent conflicts with other mods that might use the same method name)
 	void Zen_SendMessage(string message)
 	{
+#ifdef SERVER
 		Param1<string> m_MessageParam = new Param1<string>("");
-		if (message != "" && GetGame().IsDedicatedServer() && m_MessageParam != NULL && !IsPlayerDisconnected())
+		if (message != "" && m_MessageParam != NULL && !IsPlayerDisconnected())
 		{
 			m_MessageParam.param1 = message;
 			GetGame().RPCSingleParam(this, ERPCs.RPC_USER_ACTION_MESSAGE, m_MessageParam, true, GetIdentity());
 		}
+#endif
 	}
 
 	// Sends a text message with X miliseconds delay
@@ -1172,9 +1252,128 @@ modded class PlayerBase
 		if (!GetIdentity())
 			return;
 
-		// Log player's items on death
-		if (GetZenUtilitiesConfig().ShouldLogDeathGear)
-			LogPlayerDeathItems(this);
+		EntityAI killerAI = EntityAI.Cast(killer);
+		if (!killerAI)
+			return;
+
+		if (killerAI.GetType().Contains("eAI") || killerAI.IsZombie())
+			return;
+
+		// Check player melee kill & guns through HierarchyRootPlayer
+		PlayerBase playerKiller = PlayerBase.Cast(killerAI);
+		if (!playerKiller)
+			playerKiller = PlayerBase.Cast(killerAI.GetHierarchyRootPlayer());
+
+		if (!playerKiller)
+		{
+			// Check for grenades 
+			Grenade_Base grenade = Grenade_Base.Cast(killerAI);
+			if (grenade != NULL)
+				playerKiller = PlayerBase.Cast(grenade.Zen_GetUnpinPlayer());
+
+			// Check for traps 
+			if (!playerKiller)
+			{
+				TrapBase trap = TrapBase.Cast(killerAI);
+				if (trap != NULL)
+					playerKiller = PlayerBase.Cast(trap.Zen_GetPlayerTrapper());
+			}
+
+			// Check for vehicles
+			if (!playerKiller)
+			{
+				CarScript vehicle = CarScript.Cast(killerAI);
+				if (vehicle != NULL)
+				{
+					for (int index = 0; index < vehicle.CrewSize(); index++)
+					{
+						if (vehicle.CrewMember(index) != NULL && vehicle.GetSeatAnimationType(index) == DayZPlayerConstants.VEHICLESEAT_DRIVER)
+							playerKiller = PlayerBase.Cast(vehicle.CrewMember(index));
+					}
+				}
+			}
+
+			//! TODO: ChemGas and projectile explosions/crossbow...
+		}
+
+		if (!playerKiller || !playerKiller.GetIdentity() || playerKiller == this)
+			return;
+
+		ZenKillFeed(playerKiller, killer);
+		ZenLogger(killer);
+	}
+
+	// Override this for things like Syberia mod to add character name
+	string GetZenKillFeedName()
+	{
+		return GetCachedName();
+	}
+
+	// Send kill feed info
+	void ZenKillFeed(notnull PlayerBase playerKiller, Object object)
+	{
+		if (!GetZenDiscordConfig().EnableDiscordKillFeed || !object)
+			return;
+
+		vector myPos = GetPosition();
+		string killerText = playerKiller.GetZenKillFeedName();
+		string victimText = GetZenKillFeedName();
+		string location = GetZenDiscordConfig().GetMapLinkPosition(myPos);
+		string distance = MiscGameplayFunctions.TruncateToS(vector.Distance(myPos, playerKiller.GetPosition()));
+
+		if (GetZenDiscordConfig().DisplayPlayerSteamID)
+		{
+			killerText = "[" + playerKiller.GetZenKillFeedName() + "](http://steamcommunity.com/profiles/" + playerKiller.GetIdentity().GetPlainId() + ")";
+			victimText = "[" + GetZenKillFeedName() + "](http://steamcommunity.com/profiles/" + GetIdentity().GetPlainId() + ")";
+		}
+
+		string weaponText = "";
+		if (object.GetType() == playerKiller.GetType())
+			weaponText = GetZenDiscordConfig().Melee;
+		weaponText = object.GetDisplayName();
+
+		int victimPlayMinutes = StatGet(AnalyticsManagerServer.STAT_PLAYTIME) / 60;
+		int killerPlayerMinutes = playerKiller.StatGet(AnalyticsManagerServer.STAT_PLAYTIME) / 60;
+		string victimAge = GetZenDiscordConfig().VictimAge + ": ";
+		string killerAge = GetZenDiscordConfig().KillerAge + ": ";
+		if (victimPlayMinutes > 60)
+			victimAge = victimAge + (victimPlayMinutes / 60) + " " + GetZenDiscordConfig().Hours;
+		else
+			victimAge = victimAge + (victimPlayMinutes)+" " + GetZenDiscordConfig().Minutes;
+
+		if (killerPlayerMinutes > 60)
+			killerAge = killerAge + (killerPlayerMinutes / 60) + " " + GetZenDiscordConfig().Hours;
+		else
+			killerAge = killerAge + (killerPlayerMinutes)+" " + GetZenDiscordConfig().Minutes;
+
+		string discordMsg = killerText + " " + GetZenDiscordConfig().Killed + " ";
+		discordMsg = discordMsg + victimText + " " + GetZenDiscordConfig().With + " " + weaponText + " " + distance + "m ";
+		if (GetZenDiscordConfig().DisplayKillLocation)
+			discordMsg = discordMsg + location + " ";
+		discordMsg = discordMsg + "\n\n" + victimAge + "\n" + killerAge;
+
+		if (GetZenDiscordConfig().DisplayPlayerSteamID)
+		{
+			discordMsg = discordMsg + "\n\nVictim: " + GetCachedID();
+			discordMsg = discordMsg + "\nKiller: " + playerKiller.GetCachedID();
+		}
+
+		// Send discord webhook message
+		ZenDiscordMessage msg = new ZenDiscordMessage(GetZenDiscordConfig().KillFeed);
+		msg.SetTitle(GetZenDiscordConfig().KillFeed);
+		msg.SetMessage(discordMsg);
+		msg.SetColor(255, 255, 255);
+		msg.AddWebhooks(GetZenDiscordConfig().KillFeedWebhooks);
+		GetZenDiscordAPI().SendMessage(msg);
+	}
+
+	// Log player's items on death
+	void ZenLogger(Object killer)
+	{
+		if (!GetZenUtilitiesConfig().ShouldLogDeathGear || !killer)
+			return;
+
+		LogPlayerDeathItems(this);
 
 		// Check if log PVP is enabled
 		if (!GetZenUtilitiesConfig().ShouldLogPVP)
@@ -1307,6 +1506,9 @@ modded class PlayerBase
 
 	void ZenUtilities_OnPlayerLoaded()
 	{
+		// Save player login timestamp 
+		m_ZenTimeStarted = GetGame().GetTickTime();
+
 		// Reload admin->player msg JSON in case it has changed during session
 		GetZenPlayerMessageConfig().Load();
 
@@ -1314,8 +1516,9 @@ modded class PlayerBase
 		m_CachedZenPlayerMessage = NULL;
 
 		// Check config on delay
-		if (GetGame().IsDedicatedServer())
+#ifdef SERVER
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(CheckZenPlayerMsgConfig, 5000, false);
+#endif
 	}
 
 	// Check player message cfg
@@ -1485,6 +1688,20 @@ modded class PlayerBase
 			options.Insert(GetZenPollConfig().Option6);
 			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenPollOptions", new Param4<string, string, bool, array<string>>(GetZenPollConfig().PollTitle, GetZenPollConfig().PollSubtitle, GetZenPollConfig().OnlyOneOption, options), true, GetIdentity());
 		}
+	}
+
+	override void OnVehicleSeatDriverEnter()
+	{
+		super.OnVehicleSeatDriverEnter();
+
+		ZENMOD_DRIVER_COUNT++;
+	}
+
+	override void OnVehicleSeatDriverLeft()
+	{
+		super.OnVehicleSeatDriverLeft();
+
+		ZENMOD_DRIVER_COUNT--;
 	}
 
 	//! MUSIC 

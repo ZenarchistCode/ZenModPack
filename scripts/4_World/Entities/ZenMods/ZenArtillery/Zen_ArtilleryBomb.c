@@ -10,7 +10,7 @@ class Zen_ArtilleryBomb extends Grenade_Base
 	{
 		super.OnExplosionEffects(source, directHit, componentIndex, surface, pos, surfNormal, energyFactor, explosionFactor, isWater, ammoType);
 
-		if (GetGame().IsDedicatedServer() || !GetGame().IsClient())
+		if (GetGame().IsDedicatedServer())
 			return;
 
 		vector n = surfNormal.VectorToAngles() + "0 90 0";
@@ -67,7 +67,7 @@ class Zen_ArtilleryBomb extends Grenade_Base
 
 		// Get objects at position, check for fence/bbp/door and deal damage
 		array<Object> objectsNearBomb = new array<Object>;
-		GetGame().GetObjectsAtPosition(position, GetZenArtilleryConfig().BombDamageRadius, objectsNearBomb, null);
+		GetGame().GetObjectsAtPosition3D(position, GetZenArtilleryConfig().BombDamageRadius, objectsNearBomb, null);
 		for (int x = 0; x < objectsNearBomb.Count(); x++)
 		{
 			Object obj = objectsNearBomb[x];

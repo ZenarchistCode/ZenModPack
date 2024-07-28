@@ -34,6 +34,7 @@
 	ZenRepairWells			- Wells are broken and require repair with a wrench to use			#
 	ZenZombieDoors			- Zombies can knock open doors when aggro'd							#
 	ZenCarWorkench			- A craftable mechanic workbench for storing car parts				#
+	ZenModPack			- A raid alarm & Discord API mod									#
 	ZenPimpMyRide			- Allows players to attach chemlights underneath cars for coolness	#
 	ZenSwissKnife			- Adds a multi-tool knife (saw/screwdriver/knife/bottle opener etc) 
 	ZenVikingAxe			- An alternative hatchet with 2x HP and different design			
@@ -240,7 +241,8 @@ class CfgPatches
 			"DZ_Weapons_Supports",
 			"DZ_Weapons_Explosives",
 			"DZ_Characters",
-			"DZ_Characters_Headgear"
+			"DZ_Characters_Headgear",
+			"DZ_Radio"
 		};
 	};
 };
@@ -364,10 +366,317 @@ class CfgVehicles
 	//! SCREWDRIVER PRE-DEFINE - add workbench slot
 	class Screwdriver : Inventory_Base
 	{
-		inventorySlot[] +=
+		inventorySlot[] += { "ZenCWB_Screwdriver" };
+	}
+	//! MEGAPHONE PRE-DEFINE - add megaphone attachment for raid station
+	class Megaphone : Inventory_Base
+	{
+		inventorySlot[] += { "ZenMegaphone" };
+	}
+
+	//! RAID ALARM
+	class Zen_RaidAlarmStationKit : Inventory_Base
+	{
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenRaidAlarmStation0";
+		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmStation1";
+		model = "ZenModPack\data\models\RaidAlarm\rack_packed.p3d";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raidalarm\rack_co.paa" };
+		weight = 10000;
+		itemSize[] = { 5,5 };
+		physLayer = "item_small";
+		rotationFlags = 17;
+		itemBehaviour = 0;
+		repairableWithKits[] = { 10 };
+		repairCosts[] = { 30 };
+		class DamageSystem
 		{
-			"ZenCWB_Screwdriver"
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 5000;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
 		};
+		soundImpactType = "wood";
+	};
+	class Zen_RaidAlarmStation : Inventory_Base
+	{
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenRaidAlarmStation0";
+		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmStation1";
+		model = "ZenModPack\data\models\RaidAlarm\rack.p3d";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raidalarm\rack_co.paa" };
+		forceFarBubble = "true";
+		physLayer = "item_large";
+		weight = 10000;
+		itemSize[] = { 10,10 };
+		repairableWithKits[] = { 10 };
+		repairCosts[] = { 30 };
+		attachments[] = { "Back", "ZenMegaphone" };
+		class EnergyManager
+		{
+			hasIcon = 1;
+			autoSwitchOff = 0;
+			energyStorageMax = 604800; // 1 week of energy from full battery
+			energyUsagePerSecond = 1;
+			reduceMaxEnergyByDamageCoef = 0.01;
+			energyAtSpawn = 604800;
+			powerSocketsCount = 1;
+			compatiblePlugTypes[] = { 2 };
+			updateInterval = 15;
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 5000;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\RaidAlarm\rack_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		soundImpactType = "wood";
+	};
+	class Zen_RaidAlarmRadarKit : Inventory_Base
+	{
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenRaidAlarmRadar0";
+		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmRadar1";
+		model = "ZenModPack\data\models\zenkitbox\zenkitbox.p3d";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zenkitbox\kit_radar_co.paa" };
+		weight = 10000;
+		itemSize[] = { 9,5 };
+		physLayer = "item_small";
+		itemBehaviour = 0;
+		soundImpactType = "cloth";
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 5000;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\zenkitbox\kit_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+	};
+	class Zen_RaidAlarmRadar : Inventory_Base
+	{
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenRaidAlarmRadar0";
+		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmRadar1";
+		model = "ZenModPack\data\models\RaidDish\radar.p3d";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\radar_co.paa" };
+		weight = 10000;
+		itemSize[] = { 10,10 };
+		forceFarBubble = "true";
+		physLayer = "item_large";
+		class EnergyManager
+		{
+			hasIcon = 1;
+			energyUsagePerSecond = 0.01;
+			cordLength = 15;
+			plugType = 2;
+			updateInterval = 60;
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 5000;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\raiddish\radar.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\raiddish\radar.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\raiddish\radar_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\raiddish\radar_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\raiddish\radar_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		soundImpactType = "wood";
+	};
+
+	// Static radar dish for aesthetic purposes
+	class Zen_RaidAlarmRadar_Static : HouseNoDestruct
+	{
+		scope = 1;
+		model = "ZenModPack\data\models\RaidDish\radar.p3d";
+		hiddenSelections[] = { "texture" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\radar_co.paa" };
 	};
 
 	//! GENERIC KIT BOX 
@@ -3633,7 +3942,7 @@ class CfgVehicles
 	};
 
 	// Make punched card non-stackable as it inherits from Paper
-	class PunchedCard: Paper
+	class PunchedCard : Paper
 	{
 		canBeSplit = 0;
 		varQuantityInit = 1;
@@ -3641,7 +3950,7 @@ class CfgVehicles
 		varQuantityMax = 1;
 		varStackMax = 1;
 		varQuantityDestroyOnMin = 1;
-	}
+	};
 
 	// Define a written note (non-stackable)
 	class ZenNote : Paper
@@ -7706,6 +8015,14 @@ class CfgVehicles
 
 class CfgSlots
 {
+	//! RAID ALARM
+	class Slot_ZenMegaphone
+	{
+		name = "ZenMegaphone";
+		displayName = "$STR_CfgVehicles_Megaphone0";
+		ghostIcon = "missing";
+	}
+
 	//! SLEEPING BAGS 
 	class Slot_ZenSleepingBag
 	{
@@ -8242,6 +8559,20 @@ class CfgNonAIVehicles
 {
 	class ProxyAttachment;
 
+	//! RAID ALARM
+	class Proxyzenbaseradio_prox : ProxyAttachment
+	{
+		scope = 2;
+		inventorySlot = "Back";
+		model = "ZenModPack/data/models/RaidAlarm/proxy/zenbaseradio_prox.p3d";
+	}
+	class Proxyzenmegaphone_prox : ProxyAttachment
+	{
+		scope = 2;
+		inventorySlot = "ZenMegaphone";
+		model = "ZenModPack/data/models/RaidAlarm/proxy/zenmegaphone_prox.p3d";
+	}
+
 	//! CAMONET SHELTER
 	class Proxyalicebackpack_g : ProxyAttachment
 	{
@@ -8583,6 +8914,18 @@ class CfgAmmo
 
 class CfgSoundShaders
 {
+	//! RAID ALARM
+	class Zen_RaidAlarm_SoundShader
+	{
+		frequency = 1;
+		range = 500;
+		volume = 1;
+		samples[] =
+		{
+			{ "ZenModPack\data\sounds\raidalarm\alarm", 1 }
+		};
+	}
+
 	//! NOTIFICATION AUDIO 
 	class Zen_NotificationAudio_SoundShader_Base
 	{
@@ -9059,6 +9402,18 @@ class CfgSoundSets
 {
 	class baseVehicles_SoundSet;
 	class baseCharacter_SoundSet;
+
+	//! RAID ALARM
+	class Zen_RaidAlarm_SoundSet : baseVehicles_SoundSet
+	{
+		soundShaders[] = { "Zen_RaidAlarm_SoundShader" };
+		volumefactor = 1;
+		class Noise
+		{
+			strength = 500;
+			type = "shot";
+		}
+	}
 
 	//! NOTIFICATION 
 	// Tip: Apply a 1000hz High Pass Filter in Audacity to get radio sounding voice audio

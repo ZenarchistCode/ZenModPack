@@ -84,17 +84,16 @@ class ActionEmptySodaCan: ActionContinuousBase
 
 	protected void SendRPC(ActionData actionData, bool enable)
 	{
-		if ( !GetGame().IsMultiplayer() || GetGame().IsDedicatedServer() )
-		{
-			ActionEmptySodaCanCB comp = ActionEmptySodaCanCB.Cast(actionData.m_Callback);
-			if (comp.m_RPCStopAlreadySent)
-				return;
+#ifdef SERVER
+		ActionEmptySodaCanCB comp = ActionEmptySodaCanCB.Cast(actionData.m_Callback);
+		if (comp.m_RPCStopAlreadySent)
+			return;
 			
-			SodaCan_ColorBase target_vessel = SodaCan_ColorBase.Cast( actionData.m_MainItem );
-			Param1<bool> play = new Param1<bool>( enable );
-			GetGame().RPCSingleParam( target_vessel, SoundTypeBottle.EMPTYING, play, true );
-			if (!enable)
-				comp.m_RPCStopAlreadySent = true;
-		}
+		SodaCan_ColorBase target_vessel = SodaCan_ColorBase.Cast( actionData.m_MainItem );
+		Param1<bool> play = new Param1<bool>( enable );
+		GetGame().RPCSingleParam( target_vessel, SoundTypeBottle.EMPTYING, play, true );
+		if (!enable)
+			comp.m_RPCStopAlreadySent = true;
+#endif
 	}
-};
+}

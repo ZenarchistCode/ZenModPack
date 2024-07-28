@@ -56,18 +56,6 @@ class ActionPackZenCamoShelter : ActionContinuousBase
 			if (shelter)
 			{
 				return shelter.IsEmpty();
-				/*if (GetGame().IsDedicatedServer())
-				{
-					return shelter.IsEmpty();
-				} 
-				else
-				{
-					Zen_ImprovisedShelterInventory inventoryObj = shelter.GetInventoryObject();
-					if (inventoryObj)
-					{
-						return inventoryObj.IsEmpty() && inventoryObj.GetInventory().AttachmentCount() == 0;
-					}
-				}*/
 			}
 		}
 

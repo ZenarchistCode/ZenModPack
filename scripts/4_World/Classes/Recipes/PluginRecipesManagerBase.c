@@ -39,5 +39,8 @@ modded class PluginRecipesManagerBase
 
         //! WOLF MASK 
         RegisterRecipe(new CraftZenWolfMask);
+
+        //! RAID ALARM
+        RegisterRecipe(new Zen_CraftZenRaidAlarmStationKit);
     }
 }

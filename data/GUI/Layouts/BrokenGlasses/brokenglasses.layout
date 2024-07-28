@@ -24,7 +24,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{E94A8292F11E71C6}ZenModPack/data/Layouts/BrokenGlasses/brokenglass1.edds"
+   imageTexture "{E94A8292F11E71C6}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass1.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -46,7 +46,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{B7A2ABD14E93FFC9}ZenModPack/data/Layouts/BrokenGlasses/brokenglass2.edds"
+   imageTexture "{B7A2ABD14E93FFC9}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass2.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -69,7 +69,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{43AAEC49434E97BD}ZenModPack/data/Layouts/BrokenGlasses/brokenglass3.edds"
+   imageTexture "{43AAEC49434E97BD}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass3.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -92,7 +92,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{43AAEC49434E97BD}ZenModPack/data/Layouts/BrokenGlasses/brokenglass3.edds"
+   imageTexture "{43AAEC49434E97BD}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass3.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -116,7 +116,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{B7A2ABD14E93FFC9}ZenModPack/data/Layouts/BrokenGlasses/brokenglass2.edds"
+   imageTexture "{B7A2ABD14E93FFC9}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass2.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -139,7 +139,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{E94A8292F11E71C6}ZenModPack/data/Layouts/BrokenGlasses/brokenglass1.edds"
+   imageTexture "{E94A8292F11E71C6}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass1.edds"
    mode additive
    "src alpha" 1
    "stretch mode" stretch_w_h

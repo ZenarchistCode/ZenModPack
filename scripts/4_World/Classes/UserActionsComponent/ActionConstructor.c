@@ -74,5 +74,14 @@ modded class ActionConstructor
         actions.Insert(ActionZenSwissKnifeConvert_SmallSaw);
         actions.Insert(ActionZenSwissKnifeConvert_Lockpick);
         actions.Insert(ActionZenSwissKnifeConvert_Scissors);
-    };
-};
+
+        //! RAID ALARM
+        actions.Insert(ActionTurnOffZenRaidAlarm);
+        actions.Insert(ActionTurnOnZenRaidAlarm);
+        actions.Insert(ActionViewRaidAlarmGUI);
+        actions.Insert(ActionBuildZenRaidAlarmStation);
+        actions.Insert(ActionDismantleZenRaidAlarmStation);
+        actions.Insert(ActionDismantleZenRaidAlarmRadar);
+        actions.Insert(ActionFoldZenRaidAlarmKit);
+    }
+}

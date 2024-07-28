@@ -1,7 +1,7 @@
 // This "object" is invisible and only exists to spawn a sound effect inside player network bubble. It is instantly deleted after spawning.
 class ZenZombieDoorBangerBang extends Inventory_Base
 {
-	// Delete object immediately
+	// Delete object immediately (called on both Client & Server)
 	override void EEInit()
 	{
 		super.EEInit();
@@ -15,13 +15,12 @@ class ZenZombieDoorBangerBang extends Inventory_Base
 	{
 		super.EEDelete(parent);
 
-		if (GetGame().IsClient())
-		{
-			vector pos = GetPosition();
-			pos[0] = pos[0] + Math.RandomFloatInclusive(-0.1, 0.1);
-			pos[1] = pos[1] + Math.RandomFloatInclusive(-0.1, 0.1);
-			pos[2] = pos[2] + Math.RandomFloatInclusive(-0.1, 0.1);
-			SEffectManager.PlaySound("Zombie_Hit_Door_SoundSet", pos);
-		}
+#ifndef SERVER
+		vector pos = GetPosition();
+		pos[0] = pos[0] + Math.RandomFloatInclusive(-0.1, 0.1);
+		pos[1] = pos[1] + Math.RandomFloatInclusive(-0.1, 0.1);
+		pos[2] = pos[2] + Math.RandomFloatInclusive(-0.1, 0.1);
+		SEffectManager.PlaySound("Zombie_Hit_Door_SoundSet", pos);
+#endif
 	}
-};
+}

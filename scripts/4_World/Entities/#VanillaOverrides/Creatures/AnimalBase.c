@@ -1,5 +1,22 @@
 modded class AnimalBase
 {
+	static int ZENMOD_ANIMAL_COUNT = 0;
+
+#ifdef SERVER
+	override void EOnInit(IEntity other, int extra)
+	{
+		super.EOnInit(other, extra);
+
+		ZENMOD_ANIMAL_COUNT++;
+	}
+
+	override void EEDelete(EntityAI parent)
+	{
+		super.EEDelete(parent);
+
+		ZENMOD_ANIMAL_COUNT--;
+	}
+
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
@@ -10,4 +27,5 @@ modded class AnimalBase
 			SetHealth(0);
 		}
 	}
+#endif
 }

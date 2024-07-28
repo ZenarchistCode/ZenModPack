@@ -9,6 +9,9 @@ modded class ModItemRegisterCallbacks
 	
 		//! MUSIC 
 		pType.AddItemInHandsProfileIK("Zen_BoomBox", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/vehicles/BatteryTruck.anm");
+	
+		//! RAID ALARM
+		pType.AddItemInHandsProfileIK("Zen_RaidAlarmStationKit", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/vehicles/BatteryTruck.anm");
 	}
 
 	override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior)
@@ -56,6 +59,9 @@ modded class ModItemRegisterCallbacks
         pType.AddItemInHandsProfileIK("Zen_CamoNet_Hood", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/dirtbike_visor.anm");
         pType.AddItemInHandsProfileIK("Zen_CamoNet_Strip", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/burlap_strips.anm");
 	
+		//! RAID ALARM
+		pType.AddItemInHandsProfileIK("Zen_RaidAlarmRadarKit", "dz/anims/workspaces/player/player_main/player_main_heavy.asi",	pBehavior, "dz/anims/anm/player/ik/heavy/wooden_crate.anm");
+
 		//! LEFTOVERS
 		// Food
         pType.AddItemInHandsProfileIK("Empty_BoxCerealCrunchin", "dz/anims/workspaces/player/player_main/props/player_main_1h_food_box.asi", pBehavior, "dz/anims/anm/player/ik/gear/box_cereal.anm");

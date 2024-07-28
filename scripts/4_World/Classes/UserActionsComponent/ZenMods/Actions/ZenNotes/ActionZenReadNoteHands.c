@@ -24,8 +24,9 @@ class ActionZenReadNoteHands : ActionContinuousBase
 			return false;
 
 		// Return true on server
-		if (GetGame().IsDedicatedServer())
+		#ifdef SERVER
 			return true;
+		#endif
 
 		// If the player is currently looking at an object that is not a note, disable the read note action
 		if (target.GetObject())
