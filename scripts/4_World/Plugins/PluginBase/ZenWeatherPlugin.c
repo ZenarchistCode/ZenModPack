@@ -197,6 +197,8 @@ class ZenWeatherPlugin extends PluginBase
 
     override void OnInit()
     {
+        Print("[ZenWeatherPlugin] :: OnInit");
+
         GetZenWeatherConfig(); // Loads weather config
 
         if (!GetZenWeatherConfig().WeatherPresets || GetZenWeatherConfig().WeatherPresets.Count() == 0)

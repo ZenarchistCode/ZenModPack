@@ -1,34 +1,16 @@
 class Zen_RaidAlarmRadarKit extends ZenKitBoxBase
 {
-	protected bool m_WasHologrammed;
-
-    void SetHologrammed(bool hologram)
-    {
-        m_WasHologrammed = hologram;
-
-        if (m_WasHologrammed)
-        {
-            string textureAlpha = "#(argb,8,8,3)color(1,1,1,0.1,ca)";
-            SetObjectTexture(0, textureAlpha);
-        }
-        else
-        {
-            string textureNoAlpha = GetHiddenSelectionsTextures().Get(0);
-            SetObjectTexture(0, textureNoAlpha);
-        }
-    }
-
-	string GetDeployedClassname()
+	override string GetDeployedClassname()
 	{
 		return "Zen_RaidAlarmRadar";
 	}
 
-	vector GetDeployPositionOffset()
+	override vector GetDeployPositionOffset()
 	{
 		return "0 -0.15 0";
 	}
 
-	vector GetDeployOrientationOffset()
+	override vector GetDeployOrientationOffset()
 	{
 		return "0 0 0";
 	}

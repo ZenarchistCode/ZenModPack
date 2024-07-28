@@ -29,7 +29,7 @@ class ZenUtilitiesConfig
 			JsonFileLoader<ZenUtilitiesConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
 
 			// If version mismatch, backup old version of json before replacing it
-			if (CONFIG_VERSION != CONFIG_VERSION)
+			if (CONFIG_VERSION != CURRENT_VERSION)
 			{
 				JsonFileLoader<ZenUtilitiesConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
 			}

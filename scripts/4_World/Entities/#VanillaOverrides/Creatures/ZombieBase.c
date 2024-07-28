@@ -145,7 +145,7 @@ modded class ZombieBase
 			if (vector.Distance(GetPosition(), checkDoorPos) >= 1.8)
 				continue;
 
-			foreach (Man pb : nearbyPlayers)
+			foreach (Object pb : nearbyPlayers)
 			{
 				// If zombie is super close to player don't hit door - hit player instead
 				if (vector.Distance(GetPosition(), pb.GetPosition()) < 0.4)

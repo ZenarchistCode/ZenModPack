@@ -5,6 +5,9 @@ static int GetZenServerFPS()
 
 static int GetZenAvgServerFPS()
 {
+	if (DayZGame.m_ZenTotalServerFPS == 0 || DayZGame.m_ZenTotalServerFPSCounter == 0)
+		return 0;
+
 	return DayZGame.m_ZenTotalServerFPS / DayZGame.m_ZenTotalServerFPSCounter;
 }
 
@@ -28,15 +31,6 @@ modded class DayZGame
 		if (ZEN_MONITOR_SERVER_FPS)
 		{
 			Print("[ZenModPack::DayZGame] Monitoring server FPS.");
-		}
-	}
-
-	private void ~DayZGame()
-	{
-		if (ZEN_MONITOR_SERVER_FPS)
-		{
-			Print("[ZenModPack::DayZGame] Session's Average Server FPS: " + GetZenAvgServerFPS() + " | Runtime: " + (GetTickTime() / 60) + " minutes");
-			ZenModLogger.LogEx("[ZenModPack::DayZGame] Session's Average Server FPS: " + GetZenAvgServerFPS() + " | Runtime: " + (GetTickTime() / 60) + " minutes", "performance");
 		}
 	}
 
