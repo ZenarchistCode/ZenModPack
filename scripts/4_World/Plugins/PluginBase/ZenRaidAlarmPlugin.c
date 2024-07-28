@@ -12,14 +12,21 @@ class ZenRaidAlarmPlugin extends PluginBase
     void RegisterRaidStation(Zen_RaidAlarmStation station)
     {
         if (m_RaidStations.Find(station) == -1)
+        {
             m_RaidStations.Insert(station);
+
+            Print("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
+        }
     }
 
     void UnregisterRaidStation(Zen_RaidAlarmStation station)
     {
         int idx = m_RaidStations.Find(station);
         if (idx != -1)
+        {
+            Print("[ZenRaidAlarmPlugin] Unregistered raid station @ " + station.GetPosition());
             m_RaidStations.Remove(idx);
+        }
     }
 
     Zen_RaidAlarmStation GetNearestRaidStation(vector pos)
@@ -63,7 +70,7 @@ class ZenRaidAlarmPlugin extends PluginBase
                 PlayerBase pb = PlayerBase.Cast(man);
                 if (pb != NULL && vector.Distance(objectPos, pb.GetPosition()) <= GetZenDiscordConfig().RaidDetectionDistance)
                 {
-                    playersInvolved = playersInvolved + "[" + pb.GetIdentity().GetName() + "](http://steamcommunity.com/profiles/" + pb.GetIdentity().GetPlainId() + ")" + " (" + pb.GetIdentity().GetId() + ")";
+                    playersInvolved = playersInvolved + "[" + pb.GetIdentity().GetName() + "](http://steamcommunity.com/profiles/" + pb.GetIdentity().GetPlainId() + ")" + " (" + pb.GetIdentity().GetId() + ")\n";
                 }
             }
 

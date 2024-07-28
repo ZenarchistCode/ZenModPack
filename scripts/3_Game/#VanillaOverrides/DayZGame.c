@@ -15,6 +15,7 @@ modded class DayZGame
 {
 	//! UTILITIES - PERFORMANCE MONITORING
 	private static bool ZEN_MONITOR_SERVER_FPS = -1;
+	private static float m_ZenLastUpdateTime = 0;
 	private static float m_ZenDeltaTime = 0; // Delta time, tracks update tick time
 	private static int m_ZenFrames = 0; // Current server frames this second
 	

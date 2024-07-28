@@ -103,10 +103,13 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         if (!m_MonitoringFPS) // Don't monitor FPS til server has been up for 2 minutes minimum
             m_MonitoringFPS = GetGame().GetTickTime() > MINIMUM_SECONDS_ONLINE;
 
+        if (!m_MonitoringFPS)
+            return;
+
         int fps = GetZenServerFPS();
 
         //! CHECK FPS WARNING
-        if (fps <= GetZenUtilitiesConfig().ServerFPSWarning)
+        if (m_MonitoringFPS && fps <= GetZenUtilitiesConfig().ServerFPSWarning)
         {
             Error("[ZenModPack::DayZGame] Server FPS low: " + fps + GetPerformanceDump());
 
