@@ -185,7 +185,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
             return;
 
         float pctChange = (1 - (m_CurrentActionLowestFPS / m_CurrentActionStartFPS)) * 100;
-        if (pctChange >= GetZenUtilitiesConfig().ServerActionFPSDropWarningPct)
+        if (GetZenUtilitiesConfig().ServerActionFPSDropWarningPct > 0 && pctChange >= GetZenUtilitiesConfig().ServerActionFPSDropWarningPct)
         {
             string msg = "[ZenPerformanceMonitorPlugin] :: WARNING! ServerFPS dropped -" + pctChange + "% (low: " + m_CurrentActionLowestFPS + " / start: " + m_CurrentActionStartFPS + ") during action " + m_CurrentActionClassName;
             Error(msg);
