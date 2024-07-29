@@ -22,8 +22,8 @@ FrameWidgetClass MainFrame {
    hexactsize 1
    vexactsize 1
    priority 1
-   image0 "ZenModPack/data/layouts/notes/notebg.edds"
-   imageTexture "{7819C907890D2FF0}ZenModPack/data/layouts/notes/notebg.edds"
+   image0 "ZenModPack/data/gui/layouts/notes/notebg.edds"
+   imageTexture "{7819C907890D2FF0}ZenModPack/data/gui/layouts/notes/notebg.edds"
    mode blend
    "src alpha" 1
    "clamp mode" clamp
@@ -93,7 +93,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/papernotes"
+     font "ZenModPack/data/gui/layouts/notes/fonts/papernotes"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -114,7 +114,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/matthildur"
+     font "ZenModPack/data/gui/layouts/notes/fonts/matthildur"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -135,7 +135,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/turntablz"
+     font "ZenModPack/data/gui/layouts/notes/fonts/turntablz"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -156,7 +156,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/bringthanoize"
+     font "ZenModPack/data/gui/layouts/notes/fonts/bringthanoize"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -177,7 +177,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/jamesfajardo"
+     font "ZenModPack/data/gui/layouts/notes/fonts/jamesfajardo"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -198,7 +198,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/ladylike"
+     font "ZenModPack/data/gui/layouts/notes/fonts/ladylike"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -219,7 +219,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/multikultural"
+     font "ZenModPack/data/gui/layouts/notes/fonts/multikultural"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -240,7 +240,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/scriptina"
+     font "ZenModPack/data/gui/layouts/notes/fonts/scriptina"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -261,7 +261,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/love"
+     font "ZenModPack/data/gui/layouts/notes/fonts/love"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -282,7 +282,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/youmurderer"
+     font "ZenModPack/data/gui/layouts/notes/fonts/youmurderer"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -303,7 +303,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/andthishappened"
+     font "ZenModPack/data/gui/layouts/notes/fonts/andthishappened"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -345,7 +345,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/papernotes"
+     font "ZenModPack/data/gui/layouts/notes/fonts/papernotes"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -366,7 +366,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/matthildur"
+     font "ZenModPack/data/gui/layouts/notes/fonts/matthildur"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -387,7 +387,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/turntablz"
+     font "ZenModPack/data/gui/layouts/notes/fonts/turntablz"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -408,7 +408,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/bringthanoize"
+     font "ZenModPack/data/gui/layouts/notes/fonts/bringthanoize"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -429,7 +429,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/jamesfajardo"
+     font "ZenModPack/data/gui/layouts/notes/fonts/jamesfajardo"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -450,7 +450,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/ladylike"
+     font "ZenModPack/data/gui/layouts/notes/fonts/ladylike"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -471,7 +471,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/multikultural"
+     font "ZenModPack/data/gui/layouts/notes/fonts/multikultural"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -492,7 +492,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/scriptina"
+     font "ZenModPack/data/gui/layouts/notes/fonts/scriptina"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -513,7 +513,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/love"
+     font "ZenModPack/data/gui/layouts/notes/fonts/love"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -534,7 +534,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/youmurderer"
+     font "ZenModPack/data/gui/layouts/notes/fonts/youmurderer"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -555,7 +555,7 @@ FrameWidgetClass MainFrame {
      vexactsize 0
      style Normal
      text "28/8/2022"
-     font "ZenModPack/data/layouts/notes/fonts/andthishappened"
+     font "ZenModPack/data/gui/layouts/notes/fonts/andthishappened"
      "exact text" 0
      "size to text h" 0
      "size to text v" 0
@@ -594,7 +594,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/papernotes"
+     font "ZenModPack/data/gui/layouts/notes/fonts/papernotes"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -614,7 +614,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/matthildur"
+     font "ZenModPack/data/gui/layouts/notes/fonts/matthildur"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -634,7 +634,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/turntablz"
+     font "ZenModPack/data/gui/layouts/notes/fonts/turntablz"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -654,7 +654,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/bringthanoize"
+     font "ZenModPack/data/gui/layouts/notes/fonts/bringthanoize"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -674,7 +674,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/jamesfajardo"
+     font "ZenModPack/data/gui/layouts/notes/fonts/jamesfajardo"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -694,7 +694,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/ladylike"
+     font "ZenModPack/data/gui/layouts/notes/fonts/ladylike"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -714,7 +714,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/multikultural"
+     font "ZenModPack/data/gui/layouts/notes/fonts/multikultural"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -734,7 +734,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/scriptina"
+     font "ZenModPack/data/gui/layouts/notes/fonts/scriptina"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -754,7 +754,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/love"
+     font "ZenModPack/data/gui/layouts/notes/fonts/love"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -774,7 +774,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/youmurderer"
+     font "ZenModPack/data/gui/layouts/notes/fonts/youmurderer"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0
@@ -794,7 +794,7 @@ FrameWidgetClass MainFrame {
      hexactsize 0
      vexactsize 0
      style DayZNormal
-     font "ZenModPack/data/layouts/notes/fonts/andthishappened"
+     font "ZenModPack/data/gui/layouts/notes/fonts/andthishappened"
      "exact text" 1
      "size to text h" 0
      "size to text v" 0

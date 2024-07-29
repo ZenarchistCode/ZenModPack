@@ -389,7 +389,9 @@ class Zen_RaidAlarmStation extends ItemBase
 
 	void CheckForValidRadar()
 	{
-		if (!GetRaidAlarmRadar() && m_ZenHadValidRadar)
+		bool checkForRoof = GetZenDiscordConfig().RaidRadarDishCheckRoofTimerMinutes != -1;
+
+		if (!GetRaidAlarmRadar(checkForRoof) && m_ZenHadValidRadar)
 		{
 			InformDisconnection("", true);
 			m_ZenHadValidRadar = false;

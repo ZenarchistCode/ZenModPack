@@ -94,18 +94,25 @@ modded class ZombieBase
 
 		if (vector.Distance(GetPosition(), m_ZenZombieDoorsLastCheckPos) > ZENMOD_BUILDING_SEARCH_RADIUS)
 		{
-			GetGame().GetObjectsAtPosition3D(GetPosition(), ZENMOD_BUILDING_SEARCH_RADIUS, m_ZenZombieDoorsCache, NULL);
+			GetGame().GetObjectsAtPosition(GetPosition(), ZENMOD_BUILDING_SEARCH_RADIUS, m_ZenZombieDoorsCache, NULL);
 			m_ZenZombieDoorsLastCheckPos = GetPosition();
 		}
 
-		if (!m_ZenZombieDoorsCache || m_ZenZombieDoorsCache.Count() == 0)
+		if (m_ZenZombieDoorsCache == NULL || m_ZenZombieDoorsCache.Count() == 0)
 			return;
 
 		// Get nearby players
 		array<Object> nearbyPlayers = new array<Object>;
 		int i;
-		for (i = 0; i < m_ZenZombieDoorsCache.Count(); i++)
+		for (i = m_ZenZombieDoorsCache.Count(); i >= 0; i--)
 		{
+			// Check if cache object no longer exists
+			if (m_ZenZombieDoorsCache.Get(i) == NULL)
+			{
+				m_ZenZombieDoorsCache.Remove(i);
+				continue;
+			}
+
 			if (m_ZenZombieDoorsCache.Get(i).IsMan())
 			{
 				nearbyPlayers.Insert(m_ZenZombieDoorsCache.Get(i));
@@ -119,7 +126,7 @@ modded class ZombieBase
 		for (i = 0; i < m_ZenZombieDoorsCache.Count(); i++)
 		{
 			Building building = Building.Cast(m_ZenZombieDoorsCache.Get(i));
-			if (building && !building.GetType().Contains("Wreck") && !building.GetType().Contains("wreck"))
+			if (building != NULL && !building.GetType().Contains("Wreck") && !building.GetType().Contains("wreck"))
 			{
 				HandleBuildingDoors(building, nearbyPlayers);
 				break;

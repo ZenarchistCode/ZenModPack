@@ -41,6 +41,7 @@ class ZenKitBoxBase extends DeployableContainer_Base
 		SetIsDeploySound(true);
 		deployedItem.SetPosition(position);
 		deployedItem.SetOrientation(orientation);
+		DeleteSafe();
 	}
 
 	override bool IsBasebuildingKit()

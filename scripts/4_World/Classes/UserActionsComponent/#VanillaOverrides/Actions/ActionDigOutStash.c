@@ -47,5 +47,5 @@ modded class ActionDigOutStash : ActionContinuousBase
 		}
 
 		super.OnFinishProgressServer(action_data);
-	};
-};
+	}
+}

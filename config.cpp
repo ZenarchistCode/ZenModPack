@@ -534,7 +534,7 @@ class CfgVehicles
 		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmRadar1";
 		model = "ZenModPack\data\models\zenkitbox\zenkitbox.p3d";
 		hiddenSelections[] = { "texture" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zenkitbox\kit_radar_co.paa" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\kit_radar_co.paa" };
 		weight = 10000;
 		itemSize[] = { 9,5 };
 		physLayer = "item_small";
