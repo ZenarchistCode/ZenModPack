@@ -14,8 +14,8 @@ class ZenRaidAlarmPlugin extends PluginBase
         if (m_RaidStations.Find(station) == -1)
         {
             m_RaidStations.Insert(station);
-
             Print("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
+            ZenFunctions.DebugMessage("ZenRaidAlarmPlugin Registered");
         }
     }
 
@@ -24,8 +24,8 @@ class ZenRaidAlarmPlugin extends PluginBase
         int idx = m_RaidStations.Find(station);
         if (idx != -1)
         {
-            Print("[ZenRaidAlarmPlugin] Unregistered raid station @ " + station.GetPosition());
             m_RaidStations.Remove(idx);
+            Print("[ZenRaidAlarmPlugin] Unregistered raid station @ " + station.GetPosition());
         }
     }
 

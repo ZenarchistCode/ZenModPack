@@ -40,7 +40,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         m_DeltaTime = 0;
         m_HighestFPS = 0;
         m_LowestFPS = 99999999;
-        m_ActionLowestFPS = 99999999;
+        m_ActionLowestFPS = 0;
         m_LastDrivingWarning = 0;
         m_LastDrivingWarning = GetGame().GetTickTime();
         m_MonitoringFPS = false;
@@ -170,6 +170,9 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         m_CurrentActionStartFPS = GetZenServerFPS();
         m_CurrentActionLowestFPS = m_CurrentActionStartFPS;
         m_CurrentActionClassName = action_data.m_Action.ClassName();
+
+        if (m_ActionLowestFPS == 0)
+            m_ActionLowestFPS = m_CurrentActionLowestFPS;
     }
 
     void ActionBase_OnUpdate(ActionData action_data)

@@ -54,47 +54,61 @@ class ZenModPackConfig
 		ServerSideModEnabled = new map<string, bool>;
 
 		// Client sync mods
-		ModEnabled.Insert("ZenInventoryAnimation",	true);
-		ModEnabled.Insert("ZenAntiCombatLogout",	true);
-		ModEnabled.Insert("ZenImmersiveLogin",		true);
-		ModEnabled.Insert("ZenCraftingSounds",		true);
-		ModEnabled.Insert("ZenBrokenGlasses",		true);
-		ModEnabled.Insert("ZenCauseOfDeath",		true);
-		ModEnabled.Insert("ZenOpenCansRock",		true);
-		ModEnabled.Insert("ZenRepairPumps",			true);
-		ModEnabled.Insert("ZenRepairWells",			true);
-		ModEnabled.Insert("ZenCarWorkench",			true);
-		ModEnabled.Insert("ZenPimpMyRide",			true);
-		ModEnabled.Insert("ZenRaidAlarm",			true);
-		ModEnabled.Insert("ZenCatchRain",			true);
-		ModEnabled.Insert("ZenEarPlugs",			true);
-		ModEnabled.Insert("ZenCamoCamp",			true);
-		ModEnabled.Insert("ZenFireFuel",			true);
-		ModEnabled.Insert("ZenTimeBomb",			true);
-		ModEnabled.Insert("ZenTireRack",			true);
-		ModEnabled.Insert("ZenWolfMask",			true);
-		ModEnabled.Insert("ZenGlovebox",			true);
-		ModEnabled.Insert("ZenGhillie",				true);
-		ModEnabled.Insert("ZenAutoRun",				true);
-		ModEnabled.Insert("ZenSplitUI",				true);
-		ModEnabled.Insert("ZenNotes",				true);
-		ModEnabled.Insert("ZenChess",				true);
-		ModEnabled.Insert("ZenMusic",				true);
+		ModEnabled.Insert("ZenInventoryAnimation", true);
+		ModEnabled.Insert("ZenAntiCombatLogout", true);
+		ModEnabled.Insert("ZenImmersiveLogin", true);
+		ModEnabled.Insert("ZenCraftingSounds", true);
+		ModEnabled.Insert("ZenBrokenGlasses", true);
+		ModEnabled.Insert("ZenCauseOfDeath", true);
+		ModEnabled.Insert("ZenOpenCansRock", true);
+		ModEnabled.Insert("ZenRepairPumps", true);
+		ModEnabled.Insert("ZenRepairWells", true);
+		ModEnabled.Insert("ZenCarWorkench", true);
+		ModEnabled.Insert("ZenPimpMyRide", true);
+		ModEnabled.Insert("ZenRaidAlarm", true);
+		ModEnabled.Insert("ZenCatchRain", true);
+		ModEnabled.Insert("ZenEarPlugs", true);
+		ModEnabled.Insert("ZenCamoCamp", true);
+		ModEnabled.Insert("ZenFireFuel", true);
+		ModEnabled.Insert("ZenTimeBomb", true);
+		ModEnabled.Insert("ZenTireRack", true);
+		ModEnabled.Insert("ZenWolfMask", true);
+		ModEnabled.Insert("ZenGlovebox", true);
+		ModEnabled.Insert("ZenGhillie", true);
+		ModEnabled.Insert("ZenAutoRun", true);
+		ModEnabled.Insert("ZenSplitUI", true);
+		ModEnabled.Insert("ZenNotes", true);
+		ModEnabled.Insert("ZenChess", true);
+		ModEnabled.Insert("ZenMusic", true);
 
 		// No client sync required
-		ServerSideModEnabled.Insert("ZenPersistentTrees",		true);
-		ServerSideModEnabled.Insert("ZenStaticBarbedWire",		false); // Disabled by default as not all servers may want this
-		ServerSideModEnabled.Insert("ZenWeatherConfig",			false); // Disabled by default as not all servers may want this
-		ServerSideModEnabled.Insert("ZenTreesplosions",			true);
-		ServerSideModEnabled.Insert("ZenChickenCoops",			true);
-		ServerSideModEnabled.Insert("ZenZombieDoors",			true);
-		ServerSideModEnabled.Insert("ZenModLogger",				true);
-		ServerSideModEnabled.Insert("ZenLeftovers",				true);
-		ServerSideModEnabled.Insert("ZenCampSites",				false); // Disabled because not all playable maps are accounted for in default config
-		ServerSideModEnabled.Insert("ZenFireWood",				true);
-		ServerSideModEnabled.Insert("ZenTreasure",				true);
-		ServerSideModEnabled.Insert("ZenGraves",				true);
-		ServerSideModEnabled.Insert("ZenZippo",					true);
+		ServerSideModEnabled.Insert("ZenPersistentTrees", true);
+		ServerSideModEnabled.Insert("ZenStaticBarbedWire", false); // Disabled by default as not all servers may want this
+		ServerSideModEnabled.Insert("ZenWeatherConfig", false); // Disabled by default as not all servers may want this
+		ServerSideModEnabled.Insert("ZenTreesplosions", true);
+		ServerSideModEnabled.Insert("ZenChickenCoops", true);
+		ServerSideModEnabled.Insert("ZenZombieDoors", true);
+		ServerSideModEnabled.Insert("ZenModLogger", true);
+		ServerSideModEnabled.Insert("ZenLeftovers", true);
+		ServerSideModEnabled.Insert("ZenCampSites", false); // Disabled because not all playable maps are accounted for in default config
+		ServerSideModEnabled.Insert("ZenFireWood", true);
+		ServerSideModEnabled.Insert("ZenTreasure", true);
+		ServerSideModEnabled.Insert("ZenGraves", true);
+		ServerSideModEnabled.Insert("ZenZippo", true);
+
+		// Disable all mods for DayZEditor
+#ifdef EDITOR
+		int i;
+		for (i = 0; i < ModEnabled.Count(); i++)
+		{
+			ModEnabled.Set(ModEnabled.GetKey(i), false);
+		}
+
+		for (i = 0; i < ServerSideModEnabled.Count(); i++)
+		{
+			ServerSideModEnabled.Set(ServerSideModEnabled.GetKey(i), false);
+		}
+#endif
 	}
 
 	// We only need to sync client config if a mod is disabled as they're all enabled by default
