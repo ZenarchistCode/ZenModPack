@@ -101,9 +101,7 @@ class ZenCampSitesPlugin extends PluginBase
 
 		// Create fuel 
 		if (ZenModEnabled("ZenFireFuel"))
-		{
 			ItemBase fuel = ItemBase.Cast(campFire.GetInventory().CreateAttachment("Zen_FireFuel"));
-		}
 
 		// Create stone circle 
 		ItemBase stones = ItemBase.Cast(campFire.GetInventory().CreateAttachment("Stone"));

@@ -21,7 +21,8 @@ class ZenCauseOfDeathConfig
 	void Load()
 	{
 		if (FileExist(zenModFolder + zenConfigName))
-		{	// If config exists, load file
+		{	
+			// If config exists, load file
 			JsonFileLoader<ZenCauseOfDeathConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
 
 			if (ConfigVersion != CONFIG_VERSION)

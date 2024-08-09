@@ -41,7 +41,7 @@ class ZenDiscordConfig
 	string RaidAlarmWebhookUpdate = "Raid alarm configuration has been changed.";
 	string RaidAlarmConnectionOnline = "Connection established - monitoring for raid activity.";
 	string RaidAlarmConnectionOffline = "Connection lost - raid activity is no longer being monitored.";
-	string RaidAlarmRequiresTerritoryText = "You need to be the member of a territory to set up this raid alarm!";
+	string RaidAlarmRequiresTerritoryText = "You need to be the member of a territory to modify this raid alarm!";
 	string RaidAlarmTooClose = "This raid alarm is too close to an existing raid alarm!";
 	string RaidAlarmBatteryWarning = "Battery Charge";
 	bool BaseDamageTriggersRaidAlert = true;
@@ -59,7 +59,9 @@ class ZenDiscordConfig
 
 			if (CONFIG_VERSION != CURRENT_VERSION)
 			{
+				JsonFileLoader<ZenDiscordConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
 				CONFIG_VERSION = CURRENT_VERSION;
+				Save();
 			}
 			else
 			{

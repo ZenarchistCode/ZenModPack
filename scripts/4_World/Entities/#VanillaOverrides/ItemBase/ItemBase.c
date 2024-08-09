@@ -8,6 +8,10 @@ modded class ItemBase
 	{
 		m_WasZenHologrammed = hologram;
 
+		array<string> config_textures = GetHiddenSelectionsTextures();
+		if (!config_textures || config_textures.Count() == 0)
+			return;
+
 		if (m_WasZenHologrammed)
 		{
 			string textureAlpha = "#(argb,8,8,3)color(1,1,1,0.1,ca)";
@@ -15,7 +19,7 @@ modded class ItemBase
 		}
 		else
 		{
-			string textureNoAlpha = GetHiddenSelectionsTextures().Get(0);
+			string textureNoAlpha = config_textures.Get(0);
 			SetObjectTexture(0, textureNoAlpha);
 		}
 	}
@@ -27,7 +31,7 @@ modded class ItemBase
 
 	bool ShouldZenHologram()
 	{
-		return false;
+		return ZenModEnabled("ZenHologram");
 	}
 
 	//! LEFTOVERS

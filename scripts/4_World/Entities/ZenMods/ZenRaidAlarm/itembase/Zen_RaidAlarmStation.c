@@ -129,9 +129,7 @@ class Zen_RaidAlarmStation extends ItemBase
 	{
 		super.EEDelete(parent);
 
-#ifdef SERVER
-		UnregisterRaidStation();
-#else
+#ifndef SERVER
 		if (m_ZenSoundAlarmLoop)
 			m_ZenSoundAlarmLoop.SoundStop();
 
@@ -225,6 +223,35 @@ class Zen_RaidAlarmStation extends ItemBase
 	override bool CanPutIntoHands(EntityAI parent)
 	{
 		return false;
+	}
+
+	override void OnWorkStart()
+	{
+		super.OnWorkStart();
+
+#ifdef SERVER
+		RegisterRaidStation();
+#endif
+	}
+
+	override void OnWorkStop()
+	{
+		super.OnWorkStop();
+
+#ifdef SERVER
+		UnregisterRaidStation();
+
+		if (m_ZenRoofCheckTimer)
+			m_ZenRoofCheckTimer.Stop();
+
+		if (!m_ZenDontNotifyAboutPower)
+			InformDisconnection();
+
+		if (GetAlarmStatus() != ZEN_ALARM_STATUS_WASTRIGGERED)
+			SetAlarmStatus(ZEN_ALARM_STATUS_OFF);
+
+		m_ZenDontNotifyAboutPower = false;
+#endif
 	}
 
 	override void OnWork(float consumed_energy)
@@ -735,22 +762,6 @@ class Zen_RaidAlarmStation extends ItemBase
 		return true;
 	}
 
-	override void OnWorkStop()
-	{
-		super.OnWorkStop();
-
-		if (m_ZenRoofCheckTimer)
-			m_ZenRoofCheckTimer.Stop();
-
-		if (!m_ZenDontNotifyAboutPower)
-			InformDisconnection();
-
-		if (GetAlarmStatus() != ZEN_ALARM_STATUS_WASTRIGGERED)
-			SetAlarmStatus(ZEN_ALARM_STATUS_OFF);
-
-		m_ZenDontNotifyAboutPower = false;
-	}
-
 	void SetAlarmStatus(int status)
 	{
 		m_ZenRaidAlarmStatus = status;
@@ -804,7 +815,6 @@ class Zen_RaidAlarmStation extends ItemBase
 			if (!radio.IsLockedInSlot())
 			{
 				radio.LockToParent();
-				RegisterRaidStation();
 			}
 		}
 		else 
@@ -812,7 +822,6 @@ class Zen_RaidAlarmStation extends ItemBase
 			if (radio.IsLockedInSlot())
 			{
 				radio.UnlockFromParent();
-				UnregisterRaidStation();
 			}
 		}
 	}
@@ -842,7 +851,6 @@ class Zen_RaidAlarmStation extends ItemBase
 		if (newLevel == GameConstants.STATE_RUINED)
 		{
 			MiscGameplayFunctions.DropAllItemsInInventoryInBounds(this, vector.Zero);
-			UnregisterRaidStation();
 		}
 #endif
 	}
@@ -893,6 +901,5 @@ class Zen_RaidAlarmStation extends ItemBase
 		super.AfterStoreLoad();
 
 		SetAlarmStatus(m_ZenRaidAlarmStatus);
-		RegisterRaidStation();
 	}
 }

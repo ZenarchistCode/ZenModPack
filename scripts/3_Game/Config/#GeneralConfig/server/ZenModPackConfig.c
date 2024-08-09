@@ -67,6 +67,7 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenPimpMyRide", true);
 		ModEnabled.Insert("ZenRaidAlarm", true);
 		ModEnabled.Insert("ZenCatchRain", true);
+		ModEnabled.Insert("ZenHologram", true);
 		ModEnabled.Insert("ZenEarPlugs", true);
 		ModEnabled.Insert("ZenCamoCamp", true);
 		ModEnabled.Insert("ZenFireFuel", true);

@@ -58,6 +58,15 @@ class ActionDismantleZenRaidAlarmRadar: ActionContinuousBase
 	
 	override void OnFinishProgressServer(ActionData action_data)
 	{
+		if (GetZenDiscordConfig().RaidAlarmRequiresTerritory)
+		{
+			if (!Zen_RaidAlarmStation.GetTerritoryPermission(action_data.m_Player.GetCachedID(), action_data.m_Player.GetPosition()))
+			{
+				NotificationSystem.SendNotificationToPlayerIdentityExtended(action_data.m_Player.GetIdentity(), 15.0, GetZenDiscordConfig().RaidAlarmMessageTitle, GetZenDiscordConfig().RaidAlarmRequiresTerritoryText, "set:ccgui_enforce image:MapShieldBooster");
+				return;
+			}
+		}
+
 		MiscGameplayFunctions.DealAbsoluteDmg(action_data.m_MainItem, action_data.m_MainItem.GetMaxHealth() * 0.5);
 
 		Zen_RaidAlarmRadar radar = Zen_RaidAlarmRadar.Cast(action_data.m_Target.GetObject());

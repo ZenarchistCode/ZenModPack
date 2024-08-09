@@ -299,7 +299,7 @@ class ZenFunctions
 	}
 
 	//! Generate a random point inside a circle. minDistance = minimum distance in meters from center (again thanks ChatGPT)
-	static vector GetRandomPointInCircle(vector position, float radius, float minDistance = 0)
+	static vector GetRandomPointInCircle(vector position, float radius, float minDistance = 0, bool placeOnSurface = true)
 	{
 		// Get a random angle between 0 and 2*PI
         float angle = Math.RandomFloatInclusive(0.0, Math.PI2);
@@ -312,7 +312,9 @@ class ZenFunctions
 		vector newPos = position;
 		newPos[0] = newPos[0] + x;
 		newPos[2] = newPos[2] + z;
-		newPos[1] = GetGame().SurfaceY(newPos[0], newPos[2]);
+
+		if (placeOnSurface)
+			newPos[1] = GetGame().SurfaceY(newPos[0], newPos[2]);
 
         return newPos;
 	}
