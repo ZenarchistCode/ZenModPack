@@ -15,7 +15,6 @@ class ZenRaidAlarmPlugin extends PluginBase
         {
             m_RaidStations.Insert(station);
             Print("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
-            ZenFunctions.DebugMessage("ZenRaidAlarmPlugin Registered");
         }
     }
 
