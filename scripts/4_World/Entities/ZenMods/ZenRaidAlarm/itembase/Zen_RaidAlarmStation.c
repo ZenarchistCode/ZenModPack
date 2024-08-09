@@ -40,18 +40,18 @@ class Zen_RaidAlarmStation extends ItemBase
 		{
 			switch (m_ZenRaidAlarmStatus)
 			{
-				case ZEN_ALARM_STATUS_OFF:
-					StopAlarmClient();
-					break;
-				case ZEN_ALARM_STATUS_ARMED:
-					ArmAlarmClient();
-					break;
-				case ZEN_ALARM_STATUS_TRIGGERED:
-					TriggerAlarmClient();
-					break;
-				case ZEN_ALARM_STATUS_WASTRIGGERED:
-					StopAlarmSoundClient();
-					break;
+			case ZEN_ALARM_STATUS_OFF:
+				StopAlarmClient();
+				break;
+			case ZEN_ALARM_STATUS_ARMED:
+				ArmAlarmClient();
+				break;
+			case ZEN_ALARM_STATUS_TRIGGERED:
+				TriggerAlarmClient();
+				break;
+			case ZEN_ALARM_STATUS_WASTRIGGERED:
+				StopAlarmSoundClient();
+				break;
 			}
 
 			m_ZenRaidAlarmClientStatus = m_ZenRaidAlarmStatus;
@@ -230,6 +230,7 @@ class Zen_RaidAlarmStation extends ItemBase
 		super.OnWorkStart();
 
 #ifdef SERVER
+		UpdateBatteryEnergy();
 		RegisterRaidStation();
 #endif
 	}
@@ -239,6 +240,7 @@ class Zen_RaidAlarmStation extends ItemBase
 		super.OnWorkStop();
 
 #ifdef SERVER
+		UpdateBatteryEnergy();
 		UnregisterRaidStation();
 
 		if (m_ZenRoofCheckTimer)
@@ -270,6 +272,7 @@ class Zen_RaidAlarmStation extends ItemBase
 #endif
 
 		//! SERVER ONWORK
+
 		// If radar is required.... well, check for radar
 		if (GetZenDiscordConfig().RaidDiscordAlertRequiresRadar)
 		{
@@ -344,13 +347,6 @@ class Zen_RaidAlarmStation extends ItemBase
 	///////////////////////////////////////////////////////////////////////
 	//! SERVER-ONLY 
 	///////////////////////////////////////////////////////////////////////
-	override void EOnInit(IEntity other, int extra)
-	{
-		super.EOnInit(other, extra);
-
-#ifdef SERVER
-#endif
-	}
 
 	array<string> GetWebhooks()
 	{
@@ -394,7 +390,7 @@ class Zen_RaidAlarmStation extends ItemBase
 
 	void InitBaseName()
 	{
-		#ifdef EXPANSIONMODBASEBUILDING
+#ifdef EXPANSIONMODBASEBUILDING
 		if (m_ZenBaseName == "")
 		{
 			TerritoryFlag theFlag = GetNearestTerritoryFlag(GetPosition());
@@ -405,7 +401,7 @@ class Zen_RaidAlarmStation extends ItemBase
 			if (territory != NULL)
 				m_ZenBaseName = territory.GetTerritoryName();
 		}
-		#endif
+#endif
 	}
 
 	void OpenRaidAlarmGUI(notnull PlayerIdentity identity)
@@ -467,10 +463,17 @@ class Zen_RaidAlarmStation extends ItemBase
 
 	void UpdateBatteryEnergy()
 	{
-		if (!GetCarBattery())
-			return;
+		float energy = 0;
 
-		GetCompEM().SetEnergy0To1(GetCarBattery().GetCompEM().GetEnergy0To1());
+		CarBattery battery = GetCarBattery();
+		if (battery != NULL)
+			energy = battery.GetCompEM().GetEnergy0To1();
+
+		SetQuantity(GetQuantityMax() * energy)
+			GetCompEM().SetEnergy0To1(energy);
+
+		if (energy == 0)
+			GetCompEM().SwitchOff();
 	}
 
 	void ResetRaidAlarm()
@@ -493,7 +496,6 @@ class Zen_RaidAlarmStation extends ItemBase
 	void TurnOnAlarm(string playerName)
 	{
 		m_ManualTurnOnOff = true;
-		UpdateBatteryEnergy();
 		InformConnection(playerName);
 		GetCompEM().SwitchOn();
 		GetCompEM().InteractBranch(this);
@@ -508,7 +510,7 @@ class Zen_RaidAlarmStation extends ItemBase
 
 		// Sync alarm state and schedule reset
 		SetAlarmStatus(ZEN_ALARM_STATUS_TRIGGERED);
-		
+
 		// Alert any online players with notifications 
 		NotifyAllTerritoryMembers();
 
@@ -531,7 +533,7 @@ class Zen_RaidAlarmStation extends ItemBase
 
 	static TerritoryFlag GetNearestTerritoryFlag(vector pos)
 	{
-		#ifdef EXPANSIONMODBASEBUILDING
+#ifdef EXPANSIONMODBASEBUILDING
 		ExpansionTerritoryModule expansionTerritoryModule = ExpansionTerritoryModule.Cast(CF_ModuleCoreManager.Get(ExpansionTerritoryModule));
 		if (expansionTerritoryModule != NULL)
 		{
@@ -539,9 +541,9 @@ class Zen_RaidAlarmStation extends ItemBase
 			if (tflag != NULL)
 				return tflag;
 		}
-		#endif
+#endif
 
-		#ifdef BASICTERRITORIES
+#ifdef BASICTERRITORIES
 		array<Object> objects = new array<Object>;
 		array<CargoBase> proxyCargos = new array<CargoBase>;
 
@@ -549,7 +551,7 @@ class Zen_RaidAlarmStation extends ItemBase
 		GetGame().GetObjectsAtPosition3D(pos, theRadius, objects, proxyCargos);
 		TerritoryFlag theFlag;
 
-		for (int i = 0; i < objects.Count(); i++ )
+		for (int i = 0; i < objects.Count(); i++)
 		{
 			if (Class.CastTo(theFlag, objects.Get(i)))
 			{
@@ -559,7 +561,7 @@ class Zen_RaidAlarmStation extends ItemBase
 				}
 			}
 		}
-		#endif
+#endif
 
 		return NULL;
 	}
@@ -578,14 +580,14 @@ class Zen_RaidAlarmStation extends ItemBase
 			return;
 
 		// Check Expansion
-		#ifdef EXPANSIONMODBASEBUILDING
+#ifdef EXPANSIONMODBASEBUILDING
 		ExpansionTerritory territory = theFlag.GetTerritory();
 		if (!territory || territory.GetTerritoryMembers().Count() == 0)
 			return;
 
-		foreach (Man man1 : onlinePlayers)
+		foreach(Man man1 : onlinePlayers)
 		{
-			foreach (string uid : territory.GetTerritoryMemberIDs())
+			foreach(string uid : territory.GetTerritoryMemberIDs())
 			{
 				pb = PlayerBase.Cast(man1);
 				if (pb && pb.GetIdentity())
@@ -602,11 +604,11 @@ class Zen_RaidAlarmStation extends ItemBase
 		}
 
 		return;
-		#endif
+#endif
 
-		#ifdef BASICTERRITORIES
+#ifdef BASICTERRITORIES
 		// Check basic territories by Daemonforge
-		foreach (Man man2 : onlinePlayers)
+		foreach(Man man2 : onlinePlayers)
 		{
 			pb = PlayerBase.Cast(man2);
 			if (pb && pb.GetIdentity())
@@ -620,7 +622,7 @@ class Zen_RaidAlarmStation extends ItemBase
 				}
 			}
 		}
-		#endif
+#endif
 	}
 
 	bool HasRequiredAlarmItem(notnull PlayerBase player)
@@ -630,14 +632,14 @@ class Zen_RaidAlarmStation extends ItemBase
 
 		array<EntityAI> itemsArray = new array<EntityAI>;
 		player.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, itemsArray);
-		
+
 		ItemBase itemInHands = player.GetItemInHands();
 		if (itemInHands != NULL)
 		{
 			itemsArray.Insert(itemInHands);
 		}
-		
-		ItemBase item;		
+
+		ItemBase item;
 		for (int i = 0; i < itemsArray.Count(); i++)
 		{
 			ItemBase.CastTo(item, itemsArray.Get(i));
@@ -669,7 +671,7 @@ class Zen_RaidAlarmStation extends ItemBase
 
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -781,7 +783,7 @@ class Zen_RaidAlarmStation extends ItemBase
 				if (plugin)
 					plugin.AlertNearestRaidStation(GetPosition());
 			}
-			
+
 			return true;
 		}
 
@@ -800,7 +802,6 @@ class Zen_RaidAlarmStation extends ItemBase
 			if (radio.GetCompEM() && radio.GetCompEM().IsWorking())
 			{
 				radio.GetCompEM().SwitchOff();
-				UpdateBatteryEnergy();
 			}
 		}
 #endif
@@ -809,6 +810,8 @@ class Zen_RaidAlarmStation extends ItemBase
 	void LockBaseRadio(bool lock)
 	{
 		BaseRadio radio = GetBaseRadio();
+		if (!radio)
+			return;
 
 		if (lock)
 		{
@@ -817,7 +820,7 @@ class Zen_RaidAlarmStation extends ItemBase
 				radio.LockToParent();
 			}
 		}
-		else 
+		else
 		{
 			if (radio.IsLockedInSlot())
 			{
@@ -858,7 +861,7 @@ class Zen_RaidAlarmStation extends ItemBase
 	override void OnStoreSave(ParamsWriteContext ctx)
 	{
 		super.OnStoreSave(ctx);
-		
+
 		// Save webhook array data
 		ctx.Write(m_ZenBaseName);
 		ctx.Write(m_ZenWebhook1);
@@ -867,7 +870,7 @@ class Zen_RaidAlarmStation extends ItemBase
 		ctx.Write(m_ZenRaidAlarmStatus);
 		ctx.Write(m_ZenHadValidRadar);
 	}
-	
+
 	override bool OnStoreLoad(ParamsReadContext ctx, int version)
 	{
 		if (!super.OnStoreLoad(ctx, version))

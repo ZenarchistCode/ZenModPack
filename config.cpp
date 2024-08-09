@@ -460,14 +460,20 @@ class CfgVehicles
 		repairableWithKits[] = { 10 };
 		repairCosts[] = { 30 };
 		attachments[] = { "Back", "ZenMegaphone" };
+		quantityBar = 1;
+		varQuantityInit = 0;
+		varQuantityMin = 0;
+		varQuantityMax = 604800; // 1 week of energy from full battery
+		varQuantityDestroyOnMin = 0;
 		class EnergyManager
 		{
 			hasIcon = 1;
 			autoSwitchOff = 0;
+			convertEnergyToQuantity = 1;
 			energyStorageMax = 604800; // 1 week of energy from full battery
 			energyUsagePerSecond = 1;
 			reduceMaxEnergyByDamageCoef = 0.01;
-			energyAtSpawn = 604800;
+			energyAtSpawn = 604800; // 1 week of energy from full battery
 			powerSocketsCount = 1;
 			compatiblePlugTypes[] = { 2 };
 			updateInterval = 15;
