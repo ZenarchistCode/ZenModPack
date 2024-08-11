@@ -14,7 +14,7 @@ class ZenRaidAlarmPlugin extends PluginBase
         if (m_RaidStations.Find(station) == -1)
         {
             m_RaidStations.Insert(station);
-            Print("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
+            GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(DelayedRegisterMessage, 1000, false, station);
         }
     }
 
@@ -25,6 +25,16 @@ class ZenRaidAlarmPlugin extends PluginBase
         {
             m_RaidStations.Remove(idx);
             Print("[ZenRaidAlarmPlugin] Unregistered raid station @ " + station.GetPosition());
+        }
+    }
+
+    // CompEM Switches on before webhooks are loaded from storage .bin files which "registers" the raid alarm
+    // before we have the webhooks ready, so I delay the registration message by 1 sec to allow time to load the webhooks
+    void DelayedRegisterMessage(Zen_RaidAlarmStation station)
+    {
+        if (station != NULL)
+        {
+            Print("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
         }
     }
 
