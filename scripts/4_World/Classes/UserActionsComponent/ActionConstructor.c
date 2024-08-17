@@ -83,5 +83,8 @@ modded class ActionConstructor
         actions.Insert(ActionDismantleZenRaidAlarmStation);
         actions.Insert(ActionDismantleZenRaidAlarmRadar);
         actions.Insert(ActionFoldZenRaidAlarmKit);
+
+        //! ENGRAVE WEAPON
+        actions.Insert(ActionZenEngraveWeapon);
     }
 }

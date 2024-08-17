@@ -1,4 +1,4 @@
-//! ANTI-COMBAT LOG 
+//! ANTI-COMBAT LOG + WEAPON ENGRAVE
 
 // (Client-side) Detects when the player shoots at another player and informs the server.
 // I do this client-side because otherwise all these raycasts are likely to affect server performance.
@@ -162,4 +162,128 @@ modded class Weapon_Base
 	{
 		m_PauseCombatRPC = false;
 	}
-};
+
+	//! ENGRAVE WEAPON 
+	static const int RIFLE_ENGRAVE_RPC_RESPONSE = -34827469;
+	static const int RIFLE_ENGRAVE_RPC_REQUEST = -34827468;
+
+	protected string m_PlayerName = "";
+	protected bool m_HasReceivedName = false;
+	protected bool m_ResetReceivedName = false;
+
+	void Weapon_Base()
+	{
+		RegisterNetSyncVariableBool("m_HasReceivedName");
+		RegisterNetSyncVariableBoolSignal("m_ResetReceivedName");
+	}
+
+	override void OnVariablesSynchronized()
+	{
+		super.OnVariablesSynchronized();
+
+		if (m_ResetReceivedName)
+		{
+			RPCSingleParam(RIFLE_ENGRAVE_RPC_REQUEST, new Param1<bool>(true), true, NULL);
+		}
+	}
+
+	override void DeferredInit()
+	{
+		super.DeferredInit();
+
+		if (!m_HasReceivedName)
+		{
+			if (!ZenModEnabled("ZenEngraveWeapon"))
+				return;
+
+			// Client load - request player name
+			RPCSingleParam(RIFLE_ENGRAVE_RPC_REQUEST, new Param1<bool>(true), true, NULL);
+		}
+	}
+
+	void SetPlayerName(string name)
+	{
+		m_PlayerName = name;
+		m_HasReceivedName = false;
+		m_ResetReceivedName = true;
+		SetSynchDirty();
+	}
+
+	string GetPlayerName()
+	{
+		return m_PlayerName;
+	}
+
+	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+	{
+		super.OnRPC(sender, rpc_type, ctx);
+
+		Param1<string> params = new Param1<string>(m_PlayerName);
+
+		// Client-side receiver
+		if (rpc_type == RIFLE_ENGRAVE_RPC_RESPONSE)
+		{
+			if (!ctx.Read(params) || !params.param1)
+				return;
+
+			m_PlayerName = params.param1;
+			m_HasReceivedName = true;
+		}
+		else
+		// Server-side receiver
+		if (rpc_type == RIFLE_ENGRAVE_RPC_REQUEST)
+		{
+			if (m_PlayerName != "")
+			{
+				RPCSingleParam(RIFLE_ENGRAVE_RPC_RESPONSE, new Param1<string>(m_PlayerName), true, sender);
+			}
+		}
+	}
+
+	override bool NameOverride(out string output)
+	{
+		if (m_PlayerName != "")
+		{
+			string displayName;
+			GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
+			string playerName = m_PlayerName;
+			playerName = playerName.Substring(0, playerName.IndexOf(" "));
+			output = playerName + "'s " + displayName;
+			return true;
+		}
+
+		return false;
+	}
+
+	override bool DescriptionOverride(out string output)
+	{
+		if (m_PlayerName != "")
+		{
+			string displayName;
+			string description;
+			GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
+			GetGame().ConfigGetText("cfgWeapons " + GetType() + " descriptionShort", description);
+			output = m_PlayerName + "'s " + displayName + ". " + description;
+			return true;
+		}
+
+		return false;
+	}
+
+	override bool OnStoreLoad(ParamsReadContext ctx, int version)
+	{
+		super.OnStoreLoad(ctx, version);
+
+		if (!ctx.Read(m_PlayerName))
+			m_PlayerName = "";
+
+		return true;
+	}
+
+	override void OnStoreSave(ParamsWriteContext ctx)
+	{
+		super.OnStoreSave(ctx);
+
+		ctx.Write(m_PlayerName);
+	}
+}

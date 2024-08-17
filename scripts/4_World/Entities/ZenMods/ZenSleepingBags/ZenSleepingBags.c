@@ -60,7 +60,7 @@ class ZenSleepingBag_PackedBase extends TentBase
         AddAction(ActionTogglePlaceObject);
         AddAction(ActionDeployObject);
     }
-};
+}
 
 class ZenSleepingBag_DeployedBase extends ItemBase
 {
@@ -99,7 +99,8 @@ class ZenSleepingBag_DeployedBase extends ItemBase
     override void SetActions()
     {
         super.SetActions();
-        AddAction(ActionZenPackSleepingBag);
+
+        AddAction(ActionZenSleepOnBag);
     }
 
     override bool CanPutIntoHands(EntityAI parent)

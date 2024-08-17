@@ -158,4 +158,4 @@ class ZenGraves_DeadPlayerCross extends ItemBase
 		SetAllowDamage(false);
 		SpawnZenGravesRpcTrigger();
 	}
-};
+}

@@ -7,4 +7,4 @@ modded class ActionCraftBolts: ActionContinuousBase
 
 		return "Zen_CraftBolts";
 	}
-};
+}

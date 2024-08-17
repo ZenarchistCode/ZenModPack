@@ -93,8 +93,7 @@ modded class PlayerBase
 		//! CATCH RAIN 
 		AddAction(ActionWashHandsRain, InputActionMap);
 
-		//! SLEEPING BAGS 
-		AddAction(ActionZenSleepOnBag, InputActionMap);
+		//! SLEEPING BAGS
 		AddAction(ActionZenPackSleepingBag, InputActionMap);
 	}
 

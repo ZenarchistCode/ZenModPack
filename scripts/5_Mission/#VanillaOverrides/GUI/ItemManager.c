@@ -13,22 +13,9 @@ modded class ItemManager
 
 		if (item.IsInherited(ZenJameson))
 		{
-			InspectMenuNew.ZenWhiskyUpdateItemInfo(m_TooltipWidget, item);
-			return;
+			InspectMenuNew.ZenUpdateItemInfo(m_TooltipWidget, item);
 		}
 
-		int liquid_type = ib.GetLiquidType();
-		switch(liquid_type)
-		{
-			case LIQUID_WATER:	
-			case LIQUID_RIVERWATER:	
-			case LIQUID_VODKA:
-			case LIQUID_BEER:
-			case LIQUID_GASOLINE:
-			case LIQUID_DIESEL:
-			case LIQUID_DISINFECTANT:
-			case LIQUID_SALINE:
-				return;
-		}
+		InspectMenuNew.ZenUpdateItemInfoQuantity(m_TooltipWidget, item);
 	}
 }

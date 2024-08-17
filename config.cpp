@@ -34,7 +34,7 @@
 	ZenRepairWells			- Wells are broken and require repair with a wrench to use			#
 	ZenZombieDoors			- Zombies can knock open doors when aggro'd							#
 	ZenCarWorkench			- A craftable mechanic workbench for storing car parts				#
-	ZenModPack			- A raid alarm & Discord API mod									#
+	ZenDiscordAPI			- A raid alarm & Discord API mod									#
 	ZenPimpMyRide			- Allows players to attach chemlights underneath cars for coolness	#
 	ZenSwissKnife			- Adds a multi-tool knife (saw/screwdriver/knife/bottle opener etc) 
 	ZenVikingAxe			- An alternative hatchet with 2x HP and different design			
@@ -465,7 +465,7 @@ class CfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 604800; // 1 week of energy from full battery
 		varQuantityDestroyOnMin = 0;
-		stackedUnit = "w";
+		stackedUnit = "time";
 		class EnergyManager
 		{
 			hasIcon = 1;

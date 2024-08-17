@@ -59,6 +59,7 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenImmersiveLogin", true);
 		ModEnabled.Insert("ZenCraftingSounds", true);
 		ModEnabled.Insert("ZenBrokenGlasses", true);
+		ModEnabled.Insert("ZenEngraveWeapon", true);
 		ModEnabled.Insert("ZenCauseOfDeath", true);
 		ModEnabled.Insert("ZenOpenCansRock", true);
 		ModEnabled.Insert("ZenRepairPumps", true);

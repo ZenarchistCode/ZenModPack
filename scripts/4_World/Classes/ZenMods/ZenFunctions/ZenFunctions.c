@@ -335,4 +335,51 @@ class ZenFunctions
 		// Calculate the new position by adding the offset to the original position adjusted for angle
 		return originalPosition + offset;
 	}
+
+	//! Returns a readable time string based on the seconds
+	static string GetTimeToString(int totalSeconds, bool showHours = true, bool showMinutes = true, bool showSeconds = true)
+	{
+		int days = totalSeconds / 86400;        // 86400 seconds in a day
+		int remainingSeconds = totalSeconds - (days * 86400);
+
+		int hours = remainingSeconds / 3600;    // 3600 seconds in an hour
+		remainingSeconds = remainingSeconds - (hours * 3600);
+
+		int minutes = remainingSeconds / 60;    // 60 seconds in a minute
+		int seconds = remainingSeconds - (minutes * 60);
+
+		string formattedTime = "";
+
+		if (days > 0)
+		{
+			formattedTime += days.ToString() + " #STR_ZenGui_Days";
+		}
+
+		if (showHours && hours > 0)
+		{
+			if (formattedTime != "")
+				formattedTime += " ";
+
+			formattedTime += hours.ToString() + " #STR_ZenGui_Hours";
+		}
+
+		// Optionally include minutes and seconds
+		if (showMinutes && minutes > 0)
+		{
+			if (formattedTime != "")
+				formattedTime += " ";
+
+			formattedTime += minutes.ToString() + " #STR_ZenGui_Minutes";
+		}
+
+		if (showSeconds && seconds > 0)
+		{
+			if (formattedTime != "")
+				formattedTime += " ";
+
+			formattedTime += seconds.ToString() + " #STR_ZenGui_Seconds";
+		}
+
+		return formattedTime;
+	}
 }
