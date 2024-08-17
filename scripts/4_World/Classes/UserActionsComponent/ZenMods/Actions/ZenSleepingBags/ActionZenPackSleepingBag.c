@@ -30,20 +30,17 @@ class ActionZenPackSleepingBag : ActionContinuousBase
 
     override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
     {
-        /*Object targetObject = target.GetObject();
-        if (targetObject && targetObject.IsKindOf("ZenSleepingBag_DeployedBase"))
+        Object targetObject = target.GetObject();
+        if (targetObject && targetObject.IsInherited(ZenSleepingBag_DeployedBase))
         {
             ZenSleepingBag_DeployedBase bag;
-            Class.CastTo(bag, targetObject);
-
-            if (bag.GetNumberOfItems() == 0)
+            if (Class.CastTo(bag, targetObject))
             {
-                return true;
+                return true; //return bag.GetNumberOfItems() == 0;
             }
         }
-        return false;*/
 
-        return true;
+        return false;
     }
 
     override void OnFinishProgressServer(ActionData action_data)
