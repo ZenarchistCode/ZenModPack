@@ -173,7 +173,6 @@ modded class Weapon_Base
 
 	void Weapon_Base()
 	{
-		RegisterNetSyncVariableBool("m_HasReceivedName");
 		RegisterNetSyncVariableBoolSignal("m_ResetReceivedName");
 	}
 
@@ -191,6 +190,7 @@ modded class Weapon_Base
 	{
 		super.DeferredInit();
 
+#ifndef SERVER
 		if (!m_HasReceivedName)
 		{
 			if (!ZenModEnabled("ZenEngraveWeapon"))
@@ -199,6 +199,7 @@ modded class Weapon_Base
 			// Client load - request player name
 			RPCSingleParam(RIFLE_ENGRAVE_RPC_REQUEST, new Param1<bool>(true), true, NULL);
 		}
+#endif
 	}
 
 	void SetPlayerName(string name)
@@ -220,6 +221,16 @@ modded class Weapon_Base
 
 		Param1<string> params = new Param1<string>(m_PlayerName);
 
+#ifdef SERVER
+		// Server-side receiver
+		if (rpc_type == RIFLE_ENGRAVE_RPC_REQUEST)
+		{
+			if (m_PlayerName != "")
+			{
+				RPCSingleParam(RIFLE_ENGRAVE_RPC_RESPONSE, new Param1<string>(m_PlayerName), true, sender);
+			}
+		}
+#else
 		// Client-side receiver
 		if (rpc_type == RIFLE_ENGRAVE_RPC_RESPONSE)
 		{
@@ -229,27 +240,22 @@ modded class Weapon_Base
 			m_PlayerName = params.param1;
 			m_HasReceivedName = true;
 		}
-		else
-		// Server-side receiver
-		if (rpc_type == RIFLE_ENGRAVE_RPC_REQUEST)
-		{
-			if (m_PlayerName != "")
-			{
-				RPCSingleParam(RIFLE_ENGRAVE_RPC_RESPONSE, new Param1<string>(m_PlayerName), true, sender);
-			}
-		}
+#endif
 	}
 
 	override bool NameOverride(out string output)
 	{
-		if (m_PlayerName != "")
+		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_PlayerName != "")
 		{
-			string displayName;
-			GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
-			string playerName = m_PlayerName;
-			playerName = playerName.Substring(0, playerName.IndexOf(" "));
-			output = playerName + "'s " + displayName;
-			return true;
+			if (m_PlayerName.IndexOf(" ") > 0)
+			{
+				string displayName;
+				GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
+				string playerName = m_PlayerName;
+				playerName = playerName.Substring(0, playerName.IndexOf(" "));
+				output = playerName + "'s " + displayName;
+				return true;
+			}
 		}
 
 		return false;
@@ -257,7 +263,7 @@ modded class Weapon_Base
 
 	override bool DescriptionOverride(out string output)
 	{
-		if (m_PlayerName != "")
+		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_PlayerName != "")
 		{
 			string displayName;
 			string description;
@@ -275,7 +281,10 @@ modded class Weapon_Base
 		super.OnStoreLoad(ctx, version);
 
 		if (!ctx.Read(m_PlayerName))
+		{
 			m_PlayerName = "";
+			return false;
+		}
 
 		return true;
 	}
