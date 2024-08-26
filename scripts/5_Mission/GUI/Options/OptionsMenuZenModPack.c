@@ -62,7 +62,7 @@ class OptionsMenuZenModPack extends ScriptedWidgetEventHandler
 		{
 			GetZenModPackClientConfig().CassetteMusicSetting++;
 
-			if (GetZenModPackClientConfig().CassetteMusicSetting >= 2)
+			if (GetZenModPackClientConfig().CassetteMusicSetting > 3)
 				GetZenModPackClientConfig().CassetteMusicSetting = 1;
 
 			UpdateButtons();
