@@ -5,7 +5,6 @@ class ZenModPackConfig
 	private const static string zenConfigName = "ZenModPackConfig.json";
 
 	// Main config data
-	static bool SYNC_REQUIRED = false;
 	ref map<string, bool> ModEnabled;
 	ref map<string, bool> ServerSideModEnabled;
 
@@ -43,9 +42,6 @@ class ZenModPackConfig
 
 		// Call this after load, so that any new mods added to the config in SetDefaultValues() are added to the list and saved.
 		Save();
-
-		// Flags whether or not server needs to sync config to clients
-		SYNC_REQUIRED = RequiresSync();
 	}
 
 	void SetDefaultValues()
@@ -59,7 +55,7 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenImmersiveLogin", true);
 		ModEnabled.Insert("ZenCraftingSounds", true);
 		ModEnabled.Insert("ZenBrokenGlasses", true);
-		ModEnabled.Insert("ZenEngraveWeapon", true);
+		ModEnabled.Insert("ZenEngraveWeapon", false);
 		ModEnabled.Insert("ZenCauseOfDeath", true);
 		ModEnabled.Insert("ZenOpenCansRock", true);
 		ModEnabled.Insert("ZenRepairPumps", true);
@@ -111,20 +107,6 @@ class ZenModPackConfig
 			ServerSideModEnabled.Set(ServerSideModEnabled.GetKey(i), false);
 		}
 #endif
-	}
-
-	// We only need to sync client config if a mod is disabled as they're all enabled by default
-	bool RequiresSync()
-	{
-		for (int i = 0; i < ModEnabled.Count(); i++)
-		{
-			if (!ModEnabled.GetElement(i))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	void Save()

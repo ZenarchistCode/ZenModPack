@@ -290,8 +290,6 @@ modded class CarScript
 
 	override bool CanDisplayAttachmentSlot(string slot_name)
 	{
-		ZenFunctions.DebugMessage("slot_name=" + slot_name);
-
 		//! MUSIC
 		if (slot_name == "ZenCassette")
 			return ZenModEnabled("ZenMusic");

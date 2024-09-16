@@ -5,8 +5,8 @@
 modded class Weapon_Base
 {
 	// Used to temporarily disable gunshot RPC's to prevent spamming the server with mag dumps
-	bool m_PauseCombatRPC = false;
-	static const float RPC_DELAY_TIMER = 3000;
+	bool m_ZenPauseCombatRPC = false;
+	static const float ZRPC_DELAY_TIMER = 3000;
 
 	// Set default weapon combat log trigger distance
 	float GetAntiCombatLogWeaponDistance()
@@ -45,7 +45,7 @@ modded class Weapon_Base
 	private void DetectPlayerShot()
 	{
 		// Check if we sent a gunshot RPC in the past 3 secs, if so, stop here to avoid spamming the server
-		if (m_PauseCombatRPC)
+		if (m_ZenPauseCombatRPC)
 			return;
 
 		// If weapon is not fired by our player, stop here.
@@ -150,37 +150,42 @@ modded class Weapon_Base
 				// If we sent an RPC to the server tagging any player(s) we shot at, delay the next RPC event by 3 secs to avoid spamming the server with mag dumps
 				if (sentRPC)
 				{
-					m_PauseCombatRPC = true;
-					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ResetCombatRPC, RPC_DELAY_TIMER, false);
+					m_ZenPauseCombatRPC = true;
+					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ResetZenCombatRPC, ZRPC_DELAY_TIMER, false);
 				}
 			}
 		}
 	}
 
 	// Reset RPC timer
-	private void ResetCombatRPC()
+	private void ResetZenCombatRPC()
 	{
-		m_PauseCombatRPC = false;
+		m_ZenPauseCombatRPC = false;
 	}
 
 	//! ENGRAVE WEAPON 
 	static const int RIFLE_ENGRAVE_RPC_RESPONSE = -34827469;
 	static const int RIFLE_ENGRAVE_RPC_REQUEST = -34827468;
 
-	protected string m_PlayerName = "";
+	protected string m_ZenPlayerName = "";
 	protected bool m_HasReceivedName = false;
-	protected bool m_ResetReceivedName = false;
+	protected bool m_ZenResetReceivedName = false;
+
+	protected int m_ZenZombieKills = 0;
+	protected int m_ZenPlayerKills = 0;
 
 	void Weapon_Base()
 	{
-		RegisterNetSyncVariableBoolSignal("m_ResetReceivedName");
+		RegisterNetSyncVariableBoolSignal("m_ZenResetReceivedName");
+		RegisterNetSyncVariableInt("m_ZenZombieKills");
+		RegisterNetSyncVariableInt("m_ZenPlayerKills");
 	}
 
 	override void OnVariablesSynchronized()
 	{
 		super.OnVariablesSynchronized();
 
-		if (m_ResetReceivedName)
+		if (m_ZenResetReceivedName)
 		{
 			RPCSingleParam(RIFLE_ENGRAVE_RPC_REQUEST, new Param1<bool>(true), true, NULL);
 		}
@@ -202,32 +207,36 @@ modded class Weapon_Base
 #endif
 	}
 
-	void SetPlayerName(string name)
+	bool SetZenEngravedName(string name)
 	{
-		m_PlayerName = name;
+		if (name == "Survivor")
+			return false;
+
+		m_ZenPlayerName = name;
 		m_HasReceivedName = false;
-		m_ResetReceivedName = true;
+		m_ZenResetReceivedName = true;
 		SetSynchDirty();
+		return true;
 	}
 
-	string GetPlayerName()
+	string GetZenEngravedPlayerName()
 	{
-		return m_PlayerName;
+		return m_ZenPlayerName;
 	}
 
 	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
 	{
 		super.OnRPC(sender, rpc_type, ctx);
 
-		Param1<string> params = new Param1<string>(m_PlayerName);
+		Param1<string> params = new Param1<string>(m_ZenPlayerName);
 
 #ifdef SERVER
 		// Server-side receiver
 		if (rpc_type == RIFLE_ENGRAVE_RPC_REQUEST)
 		{
-			if (m_PlayerName != "")
+			if (m_ZenPlayerName != "")
 			{
-				RPCSingleParam(RIFLE_ENGRAVE_RPC_RESPONSE, new Param1<string>(m_PlayerName), true, sender);
+				RPCSingleParam(RIFLE_ENGRAVE_RPC_RESPONSE, new Param1<string>(m_ZenPlayerName), true, sender);
 			}
 		}
 #else
@@ -237,7 +246,7 @@ modded class Weapon_Base
 			if (!ctx.Read(params) || !params.param1)
 				return;
 
-			m_PlayerName = params.param1;
+			m_ZenPlayerName = params.param1;
 			m_HasReceivedName = true;
 		}
 #endif
@@ -245,17 +254,14 @@ modded class Weapon_Base
 
 	override bool NameOverride(out string output)
 	{
-		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_PlayerName != "")
+		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_ZenPlayerName != "")
 		{
-			if (m_PlayerName.IndexOf(" ") > 0)
-			{
-				string displayName;
-				GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
-				string playerName = m_PlayerName;
-				playerName = playerName.Substring(0, playerName.IndexOf(" "));
-				output = playerName + "'s " + displayName;
-				return true;
-			}
+			string displayName;
+			GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
+			string playerName = m_ZenPlayerName;
+			playerName = playerName.Substring(0, playerName.IndexOf(" "));
+			output = playerName + "'s " + displayName;
+			return true;
 		}
 
 		return false;
@@ -263,27 +269,54 @@ modded class Weapon_Base
 
 	override bool DescriptionOverride(out string output)
 	{
-		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_PlayerName != "")
+		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_ZenPlayerName != "")
 		{
 			string displayName;
 			string description;
 			GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
 			GetGame().ConfigGetText("cfgWeapons " + GetType() + " descriptionShort", description);
-			output = m_PlayerName + "'s " + displayName + ". " + description;
+			output = m_ZenPlayerName + "'s " + displayName + ". " + description + " | Kills: " + m_ZenZombieKills + " infected, " + m_ZenPlayerKills + " people.";
 			return true;
 		}
 
 		return false;
 	}
 
+	void IncreaseZenZombieKills()
+	{
+		m_ZenZombieKills++;
+		SetSynchDirty();
+	}
+
+	void IncreaseZenPlayerKills()
+	{
+		m_ZenPlayerKills++;
+		SetSynchDirty();
+	}
+
 	override bool OnStoreLoad(ParamsReadContext ctx, int version)
 	{
 		super.OnStoreLoad(ctx, version);
 
-		if (!ctx.Read(m_PlayerName))
+		if (ZenModEnabled("ZenEngraveWeapon"))
 		{
-			m_PlayerName = "";
-			return false;
+			if (!ctx.Read(m_ZenPlayerName))
+			{
+				m_ZenPlayerName = "";
+				return false;
+			}
+
+			if (!ctx.Read(m_ZenZombieKills))
+			{
+				m_ZenZombieKills = 0;
+				return false;
+			}
+
+			if (!ctx.Read(m_ZenPlayerKills))
+			{
+				m_ZenPlayerKills = 0;
+				return false;
+			}
 		}
 
 		return true;
@@ -293,6 +326,11 @@ modded class Weapon_Base
 	{
 		super.OnStoreSave(ctx);
 
-		ctx.Write(m_PlayerName);
+		if (ZenModEnabled("ZenEngraveWeapon"))
+		{
+			ctx.Write(m_ZenPlayerName);
+			ctx.Write(m_ZenZombieKills);
+			ctx.Write(m_ZenPlayerKills);
+		}
 	}
 }

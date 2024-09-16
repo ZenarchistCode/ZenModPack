@@ -33,6 +33,7 @@ modded class MissionBase
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", this, SingeplayerExecutionType.Client);
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenNotificationConfigOnClient", this, SingeplayerExecutionType.Client);
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenPollOptions", this, SingeplayerExecutionType.Client);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenServerDiversionConfigOnClient", this, SingeplayerExecutionType.Client);
 
         //! RAID ALARM
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenRaidAlarmServerWebhooks", this, SingeplayerExecutionType.Client);
@@ -447,6 +448,30 @@ modded class MissionBase
                 if (gui)
                     gui.SetPollSettings(data.param1, data.param2, data.param3, data.param4);
             }
+        }
+    }
+
+    //! SERVER DIVERSION
+    void RPC_ReceiveZenServerDiversionConfigOnClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+    {
+        if (type != CallType.Client || !GetGame().IsClient())
+            return;
+
+        Param3<string, int, string> data;
+        if (!ctx.Read(data))
+            return;
+
+        GetZenServerDiversionConfig().ServerIP = data.param1;
+        GetZenServerDiversionConfig().ServerPort = data.param2;
+        GetZenServerDiversionConfig().ServerPass = data.param3;
+
+        string currentServerIP;
+        int port;
+        GetGame().GetHostAddress(currentServerIP, port);
+
+        if (currentServerIP != GetZenServerDiversionConfig().ServerIP)
+        {
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(GetGame().DisconnectSessionForce);
         }
     }
 }

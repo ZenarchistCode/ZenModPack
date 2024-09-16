@@ -43,6 +43,7 @@ class ZenDiscordConfig
 	string RaidAlarmConnectionOffline = "Connection lost - raid activity is no longer being monitored.";
 	string RaidAlarmRequiresTerritoryText = "You need to be the member of a territory to modify this raid alarm!";
 	string RaidAlarmTooClose = "This raid alarm is too close to an existing raid alarm!";
+	string RaidAlarmConnectionObstruction = "The radar dish is obstructed! Check for objects blocking its view of the sky.";
 	string RaidAlarmBatteryWarning = "Battery Charge";
 	bool BaseDamageTriggersRaidAlert = true;
 	bool BaseDismantleTriggersRaidAlert = true;
@@ -65,6 +66,8 @@ class ZenDiscordConfig
 			}
 			else
 			{
+				Save();
+
 				// Convert all arrays to lower case 
 				string entry;
 				int i;

@@ -382,4 +382,99 @@ class ZenFunctions
 
 		return formattedTime;
 	}
+
+	//! Check for roof above given position (no entity required)
+	static bool IsUnderRoof(vector from, float height = GameConstants.ROOF_CHECK_RAYCAST_DIST, int geometry = ObjIntersectView)
+	{
+		vector to = from;
+		to[1] = to[1] + height;
+
+		vector contact_pos;
+		vector contact_dir;
+
+		int contact_component;
+		bool boo = DayZPhysics.RaycastRV(from, to, contact_pos, contact_dir, contact_component, NULL, NULL, NULL, false, false, geometry, 0.25);
+
+		return boo;
+	}
+
+	//! Return a list of objects the player is aiming at within X meters distance
+	static array<Object> GetObjectsRayCastCamera(float distance = UAMaxDistances.BASEBUILDING, PlayerBase ourPlayer = NULL)
+	{
+		array<Object> aimedObjects = new array<Object>;
+
+		if (!ourPlayer)
+			ourPlayer = PlayerBase.Cast(GetGame().GetPlayer());
+
+		if (!ourPlayer)
+			return aimedObjects;
+
+		int hitComponentIndex;
+		vector playerPos = ourPlayer.GetPosition();
+		vector headingDirection = MiscGameplayFunctions.GetHeadingVector(ourPlayer);
+
+		vector m_RayStart = GetGame().GetCurrentCameraPosition();
+		vector m_RayEnd = m_RayStart + GetGame().GetCurrentCameraDirection() * distance;
+
+		RaycastRVParams rayInput = new RaycastRVParams(m_RayStart, m_RayEnd, ourPlayer);
+		rayInput.flags = CollisionFlags.ALLOBJECTS;
+		array<ref RaycastRVResult> results = new array<ref RaycastRVResult>;
+		RaycastRVResult res;
+
+		if (DayZPhysics.RaycastRVProxy(rayInput, results))
+		{
+			for (int i = 0; i < results.Count(); i++)
+			{
+				if (results.Get(i).obj == ourPlayer)
+					continue;
+
+				aimedObjects.Insert(results.Get(i).obj);
+			}
+		}
+
+		return aimedObjects;
+	}
+
+	//! Return a list of objects the player is standing on
+	static array<Object> GetObjectsRayCastBeneath(float distance = 2.0, PlayerBase ourPlayer = NULL)
+	{
+		array<Object> aimedObjects = new array<Object>;
+
+		if (!ourPlayer)
+			ourPlayer = PlayerBase.Cast(GetGame().GetPlayer());
+
+		if (!ourPlayer)
+			return aimedObjects;
+
+		int hitComponentIndex;
+		vector playerPos = ourPlayer.GetPosition();
+		vector headingDirection = MiscGameplayFunctions.GetHeadingVector(ourPlayer);
+
+		vector distanceVector = ourPlayer.GetPosition();
+		distanceVector[1] = distanceVector[1] - distance;
+
+		vector m_RayStart = ourPlayer.GetPosition();
+		vector m_RayEnd = m_RayStart + (ourPlayer.GetPosition() - distanceVector);
+
+		RaycastRVParams rayInput = new RaycastRVParams(m_RayStart, m_RayEnd, ourPlayer);
+		rayInput.flags = CollisionFlags.ALLOBJECTS;
+		array<ref RaycastRVResult> results = new array<ref RaycastRVResult>;
+		RaycastRVResult res;
+
+		if (DayZPhysics.RaycastRVProxy(rayInput, results))
+		{
+			for (int i = 0; i < results.Count(); i++)
+			{
+				if (results.Get(i).obj == ourPlayer)
+				{
+					ZenFunctions.DebugMessage("ITS US!");
+					continue;
+				}
+
+				aimedObjects.Insert(results.Get(i).obj);
+			}
+		}
+
+		return aimedObjects;
+	}
 }

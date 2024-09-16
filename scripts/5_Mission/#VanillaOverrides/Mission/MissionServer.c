@@ -16,6 +16,7 @@ modded class MissionServer
 		GetZenPlayerMessageConfig();
 		GetZenUpdateMessage();
 		GetZenPollConfig();
+		GetZenServerDiversionConfig();
 		m_ModLogger = new ZenModLogger;
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.ZenDeferredInit, 30000, false);
 
@@ -240,6 +241,12 @@ modded class MissionServer
 
 				GetZenDiscordAPI().SendMessage(playerWatchlistMsg);
 			}
+
+			//! SERVER DIVERSION
+			if (GetZenServerDiversionConfig().ServerIP != "")
+			{
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenServerDiversionMessage, 6969, false, player);
+			}
 		}
 
 		//! SHARED 
@@ -257,8 +264,7 @@ modded class MissionServer
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendNotificationConfig, 500 + Math.RandomInt(0, 500), false, player);
 
 		//! SEND GENERAL CONFIG IMMEDIATELY
-		if (GetZenModPackConfig().SYNC_REQUIRED)
-			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<map<string, bool>>(GetZenModPackConfig().ModEnabled), true, player.GetIdentity());
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<map<string, bool>>(GetZenModPackConfig().ModEnabled), true, player.GetIdentity());
 
 		if (ZenModEnabled("ZenTreasure"))
 			SendZenTreasureConfig(player, identity);
@@ -522,26 +528,7 @@ modded class MissionServer
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StartFire, 100, false, fire);
 
 		// Orient player towards fire 
-		// Calculate direction vector from object to target
-		vector startPos = player.GetPosition();
-		vector targetPos = fire.GetPosition();
-		vector direction = targetPos - startPos;
-
-		// Calculate yaw angle in radians. Note that in Enfusion's coordinate system,
-		// Z is typically the forward axis and X is the side axis.
-		float yawRadians = Math.Atan2(direction[0], direction[2]); // [0] is X, [2] is Z
-
-		// Convert radians to degrees
-		float yawDegrees = yawRadians * (180 / Math.PI);
-
-		// Adjust the angle to be between 0 and 360 degrees if necessary
-		if (yawDegrees < 0)
-			yawDegrees += 360;
-
-		// Set object orientation's yaw angle
-		vector objectOri = player.GetOrientation();
-		objectOri[0] = yawDegrees;
-		player.SetOrientation(objectOri);
+		ZenFunctions.OrientObjectToPosition(player, fire.GetPosition());
 	}
 
 	// Ignite the fire
@@ -1450,6 +1437,25 @@ modded class MissionServer
 		{
 			ZenModLogger.Log("Deleted " + obj.GetType() + " @ 0 0 0", "000ghosts");
 		}
+	}
+
+	void SendZenServerDiversionMessage(PlayerBase player)
+	{
+		if (!player || !player.GetIdentity() || player.IsPlayerDisconnected())
+			return;
+
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param1<string>(GetZenServerDiversionConfig().RedirectMessage), true, player.GetIdentity());
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenServerDiversionConfig, 10000, false, player);
+	}
+
+	void SendZenServerDiversionConfig(PlayerBase player)
+	{
+		if (!player || !player.GetIdentity() || player.IsPlayerDisconnected())
+			return;
+
+		// Send client config
+		Param3<string, int, string> data = new Param3<string, int, string>(GetZenServerDiversionConfig().ServerIP, GetZenServerDiversionConfig().ServerPort, GetZenServerDiversionConfig().ServerPass);
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenServerDiversionConfigOnClient", data, true, player.GetIdentity());
 	}
 
 	// Send notification config to client

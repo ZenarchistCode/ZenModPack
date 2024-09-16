@@ -62,6 +62,9 @@ modded class ModItemRegisterCallbacks
 		//! RAID ALARM
 		pType.AddItemInHandsProfileIK("Zen_RaidAlarmRadarKit", "dz/anims/workspaces/player/player_main/player_main_heavy.asi",	pBehavior, "dz/anims/anm/player/ik/heavy/wooden_crate.anm");
 
+		//! FLINT 
+		pType.AddItemInHandsProfileIK("ZenFlint", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/WoodenStick.anm");
+
 		//! LEFTOVERS
 		// Food
         pType.AddItemInHandsProfileIK("Empty_BoxCerealCrunchin", "dz/anims/workspaces/player/player_main/props/player_main_1h_food_box.asi", pBehavior, "dz/anims/anm/player/ik/gear/box_cereal.anm");

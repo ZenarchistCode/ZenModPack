@@ -122,6 +122,15 @@ class ZenAdminMessagePlugin extends PluginBase
             return true;
         }
 
+        // Safespot (teleports admin to testing bunker on Livonia - replace with your own safespot coords if you have one)
+        if (command == "safespot")
+        {
+            // Rewrite command to teleport to safespot
+            MsgPlayer(player, "Teleporting to safespot");
+            player.SetPosition("580.643005 592.011536 1153.810913");
+            return true;
+        }
+
         // Tele
         if (command == "tele")
         {

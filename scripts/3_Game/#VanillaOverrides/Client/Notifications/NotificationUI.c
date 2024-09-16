@@ -1,8 +1,7 @@
 modded class NotificationUI
 {
-	private ref EffectSound m_Sound;
-
-	static ref map<string, string> ZEN_NOTIFICATION_SOUNDSETS;
+	protected static ref EffectSound m_StaticLoop;
+	protected static ref map<string, string> ZEN_NOTIFICATION_SOUNDSETS;
 
 	// Pre-load any notification soundsets
 	void NotificationUI()
@@ -10,9 +9,14 @@ modded class NotificationUI
 		LoadZenNotificationSoundsets();
 	}
 
-	// There are 6000+ soundsets to cycle through, so we should pre-load the few that we need
-	void LoadZenNotificationSoundsets()
+	// There are 6000+ soundsets to cycle through, so we should 
+	// pre-load the few that we need on game startup to save 
+	// cycling though all of them each time a notification plays
+	static void LoadZenNotificationSoundsets()
 	{
+		if (ZEN_NOTIFICATION_SOUNDSETS != NULL)
+			return;
+
 		ZEN_NOTIFICATION_SOUNDSETS = new map<string, string>;
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgSoundSets"); i++)
 		{
@@ -76,7 +80,11 @@ modded class NotificationUI
 				{
 					// Play voice effect
 					EffectSound voiceEffect = SEffectManager.PlaySoundOnObject(soundset_name, GetGame().GetPlayer(), 0, 0.15, false);
-					if (voiceEffect && voiceEffect.Zen_GetAbstractWave())
+					
+					// Check if we should play static effect for radio messages etc
+					int playStatic = GetGame().ConfigGetInt("CfgSoundSets " + soundset_name + " playStatic");
+					
+					if (playStatic == 1 && voiceEffect && voiceEffect.Zen_GetAbstractWave())
 					{
 						//voiceEffect.SetSoundWaveKind(WaveKind.WAVESPEECH); // TODO: Find out how to auto-apply a "radio" tinny high-pass filter sound 
 	
@@ -84,11 +92,10 @@ modded class NotificationUI
 						int voiceAudioDuration = voiceEffect.Zen_GetAbstractWave().GetLength() + 2;
 
 						// Play static loop
-						EffectSound m_StaticLoop;
-						GetGame().GetPlayer().PlaySoundSetLoop(m_StaticLoop, "Zen_MissionRadioStatic_SoundSet", 0, 0);
+						GetGame().GetPlayer().PlaySoundSetLoop(m_StaticLoop, "personalradio_staticnoise_SoundSet", 0, 0);
 
 						// Schedule end of static loop
-						GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StopSoundLoop, voiceAudioDuration * 1000, false, m_StaticLoop);
+						GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StopStaticSoundLoop, voiceAudioDuration * 1000, false);
 						return true;
 					}
 				}
@@ -98,11 +105,11 @@ modded class NotificationUI
 		return false;
 	}
 
-	static void StopSoundLoop(EffectSound loopEffect)
+	static void StopStaticSoundLoop()
 	{
-		if (loopEffect)
+		if (m_StaticLoop)
 		{
-			loopEffect.Stop();
+			m_StaticLoop.Stop();
 		}
 	}
 };

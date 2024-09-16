@@ -1258,6 +1258,18 @@ modded class PlayerBase
 		if (killerAI.GetType().Contains("eAI") || killerAI.IsZombie())
 			return;
 
+		if (ZenModEnabled("ZenEngraveWeapon"))
+		{
+			if (killer)
+			{
+				Weapon_Base gun = Weapon_Base.Cast(killer);
+				if (gun && gun.GetZenEngravedPlayerName() != "")
+				{
+					gun.IncreaseZenPlayerKills();
+				}
+			}
+		}
+
 		// Check player melee kill & guns through HierarchyRootPlayer
 		PlayerBase playerKiller = PlayerBase.Cast(killerAI);
 		if (!playerKiller)

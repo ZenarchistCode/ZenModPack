@@ -146,9 +146,15 @@ class ZenModLogger
 		if (logFile != 0)
 		{
 			if (includeDate)
+			{
 				FPrintln(logFile, ZMGetDate() + " | " + txt);
-			else 
+				ZMPrint(ZMGetDate() + " | " + txt);
+			} 
+			else
+			{
 				FPrintln(logFile, txt);
+				ZMPrint(txt);
+			}
 
 			CloseFile(logFile);
 		}

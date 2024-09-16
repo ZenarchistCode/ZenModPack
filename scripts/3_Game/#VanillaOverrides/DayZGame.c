@@ -23,18 +23,23 @@ modded class DayZGame
 	static int m_ZenTotalServerFPSCounter = 0;
 	static int m_ZenTotalServerFPS = 0;
 
-#ifdef SERVER 
 	// Prepare required variables
 	void DayZGame()
 	{
+#ifdef SERVER
+		// Server performance monitor jazz
 		ZEN_MONITOR_SERVER_FPS = GetZenUtilitiesConfig().CountServerFPS;
 
 		if (ZEN_MONITOR_SERVER_FPS)
 		{
 			Print("[ZenModPack::DayZGame] Monitoring server FPS.");
 		}
+#else
+		// Client-side only jazz
+#endif
 	}
 
+#ifdef SERVER 
 	// Calculate server FPS
     override void OnUpdate(bool doSim, float timeslice) 
 	{
@@ -79,4 +84,12 @@ modded class DayZGame
 		}
 	}
 #endif
+
+	//! SERVER DIVERSION
+	void ZenServerRedirect(UIScriptedMenu menu)
+	{
+		SetConnecting(true);
+		DeleteTitleScreen();
+		GetGame().Connect(menu, GetZenServerDiversionConfig().ServerIP, GetZenServerDiversionConfig().ServerPort, GetZenServerDiversionConfig().ServerPass);
+	}
 }

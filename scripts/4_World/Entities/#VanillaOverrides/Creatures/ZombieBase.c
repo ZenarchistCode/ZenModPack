@@ -27,6 +27,23 @@ modded class ZombieBase
 		ZENMOD_ZOMBIE_COUNT--;
 	}
 
+	override void EEKilled(Object killer)
+	{
+		super.EEKilled(killer);
+
+		if (ZenModEnabled("ZenEngraveWeapon"))
+		{
+			if (killer)
+			{
+				Weapon_Base gun = Weapon_Base.Cast(killer);
+				if (gun && gun.GetZenEngravedPlayerName() != "")
+				{
+					gun.IncreaseZenZombieKills();
+				}
+			}
+		}		
+	}
+
 	override bool ModCommandHandlerInside(float pDt, int pCurrentCommandID, bool pCurrentCommandFinished)
 	{
 		//! ZOMBIE DOORS

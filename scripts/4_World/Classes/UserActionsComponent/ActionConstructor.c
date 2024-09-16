@@ -86,5 +86,12 @@ modded class ActionConstructor
 
         //! ENGRAVE WEAPON
         actions.Insert(ActionZenEngraveWeapon);
+
+        //! ICE SHEETS
+        actions.Insert(ActionZenDigIceFishingHole);
+        actions.Insert(ActionZenFishingIceHole);
+
+        //! FLINT 
+        actions.Insert(ActionPrepareZenFlint);
     }
 }
