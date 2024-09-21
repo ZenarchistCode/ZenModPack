@@ -27,6 +27,9 @@ modded class DayZGame
 	void DayZGame()
 	{
 #ifdef SERVER
+		// Ice planes
+		ZenIcePlanesDefault.CheckDefaultCFile();
+
 		// Server performance monitor jazz
 		ZEN_MONITOR_SERVER_FPS = GetZenUtilitiesConfig().CountServerFPS;
 

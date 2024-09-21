@@ -466,10 +466,7 @@ class ZenFunctions
 			for (int i = 0; i < results.Count(); i++)
 			{
 				if (results.Get(i).obj == ourPlayer)
-				{
-					ZenFunctions.DebugMessage("ITS US!");
 					continue;
-				}
 
 				aimedObjects.Insert(results.Get(i).obj);
 			}

@@ -374,6 +374,94 @@ class CfgVehicles
 		inventorySlot[] += { "ZenMegaphone" };
 	}
 
+	//! FLINT
+	class ZenFlint : Inventory_Base
+	{
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenFlint0";
+		descriptionShort = "$STR_CfgVehicles_ZenFlint1";
+		model = "\ZenModPack\data\models\FlintAndSteel\flint.p3d";
+		animClass="Knife";
+		rotationFlags=34;
+		stackedUnit="percentage";
+		weight=200;
+		itemSize[]={1,2};
+		quantityBar=1;
+		varQuantityInit=100;
+		varQuantityMin=0;
+		varQuantityMax=100;
+		absorbency=0;
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 300;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\flintandsteel\flint.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\flintandsteel\flint.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\flintandsteel\flint_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\flintandsteel\flint_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\flintandsteel\flint_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		class AnimEvents
+		{
+			class SoundWeapon
+			{
+				class pickup
+				{
+					soundSet = "sewingkit_pickup_SoundSet";
+					id = 797;
+				};
+				class drop
+				{
+					soundset = "sewingkit_drop_SoundSet";
+					id = 898;
+				};
+			};
+		};
+	};
+
 	//! RAID ALARM
 	class Zen_RaidAlarmStationKit : Inventory_Base
 	{
@@ -7726,11 +7814,129 @@ class CfgVehicles
 	};
 
 	//! Ice plane (useful for winter/snow maps to block certain lakes etc)
-	class Land_IceSheet : HouseNoDestruct
+	class Land_ZenIceSheet : HouseNoDestruct
 	{
 		scope=1;
 		model="\ZenModPack\data\models\iceplane\ice_plane_simple.p3d";
 		forceFarBubble = "true";
+	}
+	class Land_ZenIceSheet_4x4 : HouseNoDestruct
+	{
+		scope = 1;
+		model = "\ZenModPack\data\models\iceplane\ice_plane_4x4.p3d";
+		forceFarBubble = "true";
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 99999;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+	}
+	class Land_ZenIceSheet_4x4_Hole : HouseNoDestruct
+	{
+		scope = 1;
+		model = "\ZenModPack\data\models\iceplane\ice_plane_4x4_hole.p3d";
+		forceFarBubble = "true";
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 99999;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
 	}
 
 	//! Tree houses
@@ -9309,6 +9515,16 @@ class CfgSoundShaders
 		};
 		volume=0.17782794;
 	};
+	// Craft bolt / sharpen stick
+	class Zen_FlintStrike_loop_Soundshader : baseCharacter_SoundShader
+	{
+		samples[] =
+		{
+			{ "ZenModPack\data\sounds\Flint\flint1", 1 },
+			{ "ZenModPack\data\sounds\Flint\flint2", 1 }
+		};
+		volume = 0.5;
+	};
 	// Pain male
 	class Zen_PainMale_loop_Soundshader: baseCharacter_SoundShader
 	{
@@ -9423,15 +9639,19 @@ class CfgSoundSets
 	}
 
 	//! NOTIFICATION 
-	// Tip: Apply a 1000hz High Pass Filter in Audacity to get radio sounding voice audio
+	// Tip: Apply a 1000hz High Pass Filter in Audacity to get radio-sounding tinny voice audio
 	class Zen_BaseMissionRadio_SoundSet
 	{
 		spatial=0;
 		doppler=0;
 		loop=0;
 		range=50;
-		volume=2.0; // Due to high-pass filter audio file volume drops quite a bit.
+		volume=0.1;
+		playStatic=1; // Plays a static sound in the background of the audio
 	};
+
+	//! Radio static
+	class Zen_MissionRadioStatic_SoundSet { soundShaders[] = { "Zen_MissionRadioStatic_SoundShader" }; volumeFactor = 0.15; };
 
 	//! UTILITIES
 	class Zen_NotifySoundset { soundShaders[] = { "Zen_NotifySoundset" }; volumeFactor = 0.15; };
@@ -9492,6 +9712,10 @@ class CfgSoundSets
 	class Zen_CraftBolts_loop_SoundSet: baseCharacter_SoundSet
 	{
 		soundShaders[]= { "Zen_CraftBolts_loop_Soundshader" };
+	};
+	class Zen_FlintStrike_loop_SoundSet : baseCharacter_SoundSet
+	{
+		soundShaders[] = { "Zen_FlintStrike_loop_Soundshader" };
 	};
 	class Zen_SprayPaint_loop_SoundSet: baseCharacter_SoundSet
 	{
@@ -9632,6 +9856,11 @@ class CfgSoundTables
 			{
 				category="Zen_CraftBolts";
 				soundSets[]= { "Zen_CraftBolts_loop_SoundSet" };
+			};
+			class Zen_FlintStrike_loop
+			{
+				category = "Zen_FlintStrike";
+				soundSets[] = { "Zen_FlintStrike_loop_SoundSet" };
 			};
 			class Zen_SprayPaint_loop
 			{

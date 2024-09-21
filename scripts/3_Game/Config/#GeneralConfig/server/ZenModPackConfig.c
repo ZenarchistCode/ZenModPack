@@ -90,6 +90,7 @@ class ZenModPackConfig
 		ServerSideModEnabled.Insert("ZenLeftovers", true);
 		ServerSideModEnabled.Insert("ZenCampSites", false); // Disabled because not all playable maps are accounted for in default config
 		ServerSideModEnabled.Insert("ZenFireWood", true);
+		ServerSideModEnabled.Insert("ZenIceLakes", false);
 		ServerSideModEnabled.Insert("ZenTreasure", true);
 		ServerSideModEnabled.Insert("ZenGraves", true);
 		ServerSideModEnabled.Insert("ZenZippo", true);
