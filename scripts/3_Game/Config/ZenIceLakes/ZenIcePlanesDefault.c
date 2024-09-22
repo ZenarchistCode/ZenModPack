@@ -43,7 +43,6 @@ class ZenIcePlanesDefault
 				// If line count is greater than 3, then we have already populated this default config or the server owner has made their own
 				if (lineCount > 3)
 				{
-					Error("LINE COUNT: " + lineCount);
 					return;
 				}
 			}
