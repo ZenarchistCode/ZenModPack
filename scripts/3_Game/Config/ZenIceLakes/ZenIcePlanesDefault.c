@@ -15,20 +15,29 @@ class ZenIcePlanesDefault
 	{
 		string file_path = zenModFolder + zenConfigName;
 
+		if (!FileExist(zenModFolder))
+		{
+			Print("[ZenIceLakes] Config folder doesn't exist - creating it.");
+			MakeDirectory(zenModFolder);
+		}
+
 		if (!FileExist(file_path) || worldName != "")
 		{
+			Print("[ZenIceLakes] " + file_path + " doesn't exist or worldName is blank, checking for existing file...");
+
 			// If file exists and world name is not blank, check that we are working with a blank cfg file before overwriting
 			if (FileExist(file_path) && worldName != "")
 			{
 				FileHandle file_handle = OpenFile(file_path, FileMode.READ);
 				string line_content = "";
-				int lineCount;
+				int lineCount = 0;
 
 				while (FGets(file_handle, line_content) >= 0)
 				{
 					lineCount++;
 				}
 
+				Print("[ZenIceLakes] " + file_path + " exists - line count: " + lineCount);
 				CloseFile(file_handle);
 
 				// If line count is greater than 3, then we have already populated this default config or the server owner has made their own
@@ -44,6 +53,8 @@ class ZenIcePlanesDefault
 			{
 				if (worldName == "ENOCH")
 				{
+					Print("[ZenIceLakes] " + file_path + " - writing default Livonia config.");
+
 					FPrintln(cFile, "// LIVONIA ICE LAKES");
 					FPrintln(cFile, "static void ZenIceLakes_Spawn()");
 					FPrintln(cFile, "{");
@@ -324,6 +335,8 @@ class ZenIcePlanesDefault
 					FPrintln(cFile, "    Error(\"[ZenIceLakes] " + errorMsg + "\");");
 				FPrintln(cFile, "}");
 				CloseFile(cFile);
+
+				Print("[ZenIceLakes] " + file_path + " - map " + worldName + " is not supported with default config! Server admin must make their own.");
 			}
 		}
 	}
