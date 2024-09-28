@@ -34,28 +34,22 @@ class ZenFlint extends ItemBase
 			return false;
 	}
 
-	override void OnIgnitedTarget(EntityAI ignited_item)
+	override void OnIgnitedTarget(EntityAI target_item)
 	{
-		if (GetGame().IsDedicatedServer())
-		{
-			if (!HasValidZenIgniterItem())
-				return;
+		if (!HasValidZenIgniterItem() || !GetGame().IsDedicatedServer())
+			return;
 
-			AddQuantity(Math.RandomFloatInclusive(0.5, 1) * -1);
-			m_ZenIgniterItem.AddHealth(-5);
-		}
+		AddQuantity(Math.RandomFloatInclusive(0.5, 1) * -1);
+		m_ZenIgniterItem.AddHealth(-5);
 	}
 
 	override void OnIgnitedTargetFailed(EntityAI target_item)
 	{
-		if (GetGame().IsDedicatedServer())
-		{
-			if (!HasValidZenIgniterItem())
-				return;
+		if (!HasValidZenIgniterItem() || !GetGame().IsDedicatedServer())
+			return;
 
-			AddQuantity(Math.RandomFloatInclusive(0.5, 1) * -1);
-			m_ZenIgniterItem.AddHealth(-5);
-		}
+		AddQuantity(Math.RandomFloatInclusive(0.5, 1) * -1);
+		m_ZenIgniterItem.AddHealth(-5);
 	}
 
 	override void SetActions()

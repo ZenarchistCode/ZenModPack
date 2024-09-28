@@ -93,5 +93,8 @@ modded class ActionConstructor
 
         //! FLINT 
         actions.Insert(ActionPrepareZenFlint);
+
+        //! SHOVE RESTRAINED PLAYER 
+        actions.Insert(ActionZenShovePlayer);
     }
 }

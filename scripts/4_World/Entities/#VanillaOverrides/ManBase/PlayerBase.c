@@ -95,6 +95,9 @@ modded class PlayerBase
 
 		//! SLEEPING BAGS
 		AddAction(ActionZenPackSleepingBag, InputActionMap);
+
+		//! SHOVE PLAYER 
+		AddAction(ActionZenShovePlayer, InputActionMap);
 	}
 
 	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
@@ -1756,5 +1759,19 @@ modded class PlayerBase
 		}
 
 		return super.HandleRemoteItemManipulation(userDataType, ctx);
+	}
+
+	//! SHOVE 
+	void Zen_StunFromAngle(vector stunPos)
+	{
+		if (!stunPos || IsUnconscious() || !IsAlive())
+			return;
+
+		vector playerAttackerDirection = vector.Direction(GetPosition(), stunPos);
+		vector playerDirection = GetDirection();
+		float hitDirection = Math.DiffAngle(playerAttackerDirection.VectorToAngles()[0], playerDirection.VectorToAngles()[0]);
+
+		string hitComponent = GetHitComponentForAI();
+		DayZPlayerSyncJunctures.SendDamageHitEx(this, 0, hitDirection, true, null, DT_CLOSE_COMBAT, this, hitComponent, "MeleeZombie", playerDirection);
 	}
 }

@@ -62,29 +62,33 @@
 
 	[GENERAL MODDING INFO]
 	Repair Kit Types
-	1: Weapon Cleaning Kit
-	2: Sewing Kit
-	3: Leather Sewing Kit
-	4: Whetstone
-	5: Duct Tape
-	6: Tire Repair Kit
-	7: Electronic Repair Kit
-	8: Epoxy Putty
+	    1: Weapon Cleaning Kit
+	    2: Sewing Kit
+	    3: Leather Sewing Kit
+	    4: Whetstone
+	    5: Duct Tape
+	    6: Tire Repair Kit
+	    7: Electronic Repair Kit
+	    8: Epoxy Putty
 
 	Rotation Flags
-	ROTATE_Front		=	1
-	ROTATE_Top			=	2 
-	ROTATE_Left			=	4 
-	ROTATE_Right		=	8 
-	ROTATE_LeftRight	=	12 
-	ROTATE_Back			=	16
-	ROTATE_FrontBack	=	17 
-	ROTATE_Bottom		=	32 
-	ROTATE_BottomTop	=	34 
-	ROTATE_All			=	63 
-	ROTATE_Ignore		=	64
+	    ROTATE_Front		=	1
+	    ROTATE_Top			=	2 
+	    ROTATE_Left			=	4 
+	    ROTATE_Right		=	8 
+	    ROTATE_LeftRight	=	12 
+	    ROTATE_Back			=	16
+	    ROTATE_FrontBack	=	17 
+	    ROTATE_Bottom		=	32 
+	    ROTATE_BottomTop	=	34 
+	    ROTATE_All			=	63 
+	    ROTATE_Ignore		=	64
 
-	CFGVehicles Types with scope=2 as of 3/7/24:
+	No idea why this var is named this, but if it's not set to 1, then items inside this inventory fall on the ground 
+	when you login with it nested in cargo. Not clear if it affects anything else:
+	    allowOwnedCargoManipulation = 1; 
+
+	CfgVehicles Types with scope=2 as of 23/9/24 (scope=2 means you can manipulate in-game as an item, scope=1 is static object):
 		ZenSleepingBag_PackedBase
 		ZenSleepingBagBlack_Packed
 		ZenSleepingBagBlue_Packed
@@ -221,6 +225,11 @@
 		Used_Morphine
 		Used_Epinephrine
 		Used_AntiChemInjector
+		ZenFlint
+		Zen_RaidAlarmStationKit
+		Zen_RaidAlarmStation
+		Zen_RaidAlarmRadarKit
+		Zen_RaidAlarmRadar
 */
 
 class CfgPatches
@@ -2661,6 +2670,7 @@ class CfgVehicles
 		itemSize[] = { 2,3 };
 		itemsCargoSize[] = { 10,5 };
 		fragility = 0.0099999998;
+		allowOwnedCargoManipulation = 1; // No idea what this does, but if it's not set to 1, then items inside this inventory fall on the ground when you login with it nested in cargo
 		class DamageSystem
 		{
 			class GlobalHealth
@@ -7945,6 +7955,59 @@ class CfgVehicles
 		scope=1;
 		model="\ZenModPack\data\models\Treehouse\treehouse_ladder.p3d";
 		forceFarBubble = "true";
+		/*class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 99999;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\treehouse\treehouse.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\treehouse\treehouse.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\treehouse\treehouse.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\treehouse\treehouse.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\treehouse\treehouse.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};*/
 	};
 	class Land_ZenTreeHouse_Bare: HouseNoDestruct
 	{
@@ -9515,7 +9578,7 @@ class CfgSoundShaders
 		};
 		volume=0.17782794;
 	};
-	// Craft bolt / sharpen stick
+	// Flint strike sounds
 	class Zen_FlintStrike_loop_Soundshader : baseCharacter_SoundShader
 	{
 		samples[] =
