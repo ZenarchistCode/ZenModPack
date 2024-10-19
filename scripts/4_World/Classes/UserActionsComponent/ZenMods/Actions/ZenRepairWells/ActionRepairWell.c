@@ -32,6 +32,11 @@ class ActionRepairWell : ActionContinuousBase
 		return "#repair";
 	}
 
+	override bool IsLockTargetOnUse()
+	{
+		return false;
+	}
+
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
 		Well well = Well.Cast(target.GetObject());

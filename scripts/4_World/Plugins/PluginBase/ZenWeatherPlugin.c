@@ -11,44 +11,56 @@ class ZenWeatherPlugin extends PluginBase
     protected bool m_InitialChange = true;
     protected int m_InstanceID = -1;
 
+    protected int m_WeatherType;
+
     protected ref ZenWeatherPreset m_CurrentWeather;
 
     protected void Start()
     {
-        WeatherDebug("PresetWeather: Started");
+        WeatherDebug("Started");
         m_Started = true;
         UpdateWeather();
     }
 
     protected void Stop()
     {
-        WeatherDebug("PresetWeather: Stopped");
+        WeatherDebug("Stopped");
         m_Started = false;
     }
 
     protected void SetRain(Weather weather, float forecast, float time, float minDuration)
     {
-        WeatherDebug("PresetWeather: Rain forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
+        WeatherDebug("Rain forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
         GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(weather.GetRain(), "Set", time * 0.9 * 1000, false, new Param3<float, float, float>(forecast, (minDuration - time) * 0.4, minDuration - time));
+    }
+
+    protected void SetSnowfall(Weather weather, float forecast, float time, float minDuration)
+    {
+        WeatherDebug("Snow forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
+        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(weather.GetSnowfall(), "Set", time * 0.9 * 1000, false, new Param3<float, float, float>(forecast, (minDuration - time) * 0.4, minDuration - time));
     }
 
     protected void SetOvercast(Weather weather, float forecast, float time, float minDuration)
     {
-        WeatherDebug("PresetWeather: Overcast forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
+        WeatherDebug("Overcast forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
         weather.GetOvercast().Set(forecast, time, minDuration);
+
+
+        GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLaterByName(weather.GetOvercast(), "Set", 1, false, new Param3<float, float, float>(forecast, (minDuration - time) * 0.4, minDuration - time));
     }
 
     protected void SetFog(Weather weather, float forecast, float time, float minDuration)
     {
-        WeatherDebug("PresetWeather: Fog forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
+        WeatherDebug("Fog forecast:" + forecast + " timeToChange:" + time + " duration:" + minDuration);
         weather.GetFog().Set(forecast, time, minDuration);
     }
 
-    protected void SetWind(Weather weather, float wind)
+    protected void SetWind(Weather weather, float wind, float time = 60)
     {
-        WeatherDebug("PresetWeather: Wind:" + wind);
-        weather.SetWindFunctionParams(0.1, 1.0, 20.0);
-        weather.SetWindMaximumSpeed(10 + 30 * wind);
+        WeatherDebug("Wind:" + wind);
+        weather.SetWindFunctionParams(0.0, 1.0, 20.0 * wind);
+        weather.SetWindMaximumSpeed(20 * wind);
+        weather.GetWindMagnitude().SetForecastChangeLimits(0, 20 * wind);
     }
 
     protected float ApplyPreset(Weather weather, ZenWeatherPreset preset, bool initialChange)
@@ -62,8 +74,11 @@ class ZenWeatherPlugin extends PluginBase
         weather.GetRain().SetLimits(0.0, 1.0);
         weather.GetRain().SetForecastChangeLimits(0.0, 1.0);
         weather.GetRain().SetForecastTimeLimits(0.0, 99999.0);
+        weather.GetSnowfall().SetLimits(0.0, 1.0);
+        weather.GetSnowfall().SetForecastChangeLimits(0.0, 1.0);
+        weather.GetSnowfall().SetForecastTimeLimits(0.0, 99999.0);
 
-        WeatherDebug("PresetWeather: Apply:" + preset.name);
+        WeatherDebug("Apply:" + preset.name);
 
         float duration = Math.RandomFloatInclusive(preset.duration_minutes_min, preset.duration_minutes_max) * 60;
 
@@ -81,7 +96,9 @@ class ZenWeatherPlugin extends PluginBase
         float overcast = Math.Clamp(Math.RandomFloatInclusive(preset.overcast_min, preset.overcast_max), 0, 1);
         float fog = Math.Clamp(Math.RandomFloatInclusive(preset.fog_min, preset.fog_max), 0, 1);
         float rain = Math.Clamp(Math.RandomFloatInclusive(preset.rain_min, preset.rain_max), 0, 1);
+        float snow = Math.Clamp(Math.RandomFloatInclusive(preset.snow_min, preset.snow_max), 0, 1);
         float wind = Math.Clamp(Math.RandomFloatInclusive( preset.wind_min, preset.wind_max), 0, 1);
+        
         SetOvercast(weather, overcast, speedOfChange, duration);
         if (rain > 0.0)
         {
@@ -99,7 +116,24 @@ class ZenWeatherPlugin extends PluginBase
             }
         }
 
+        if (snow > 0.0)
+        {
+            weather.SetSnowfallThresholds(overcast * 0.8, Math.Min(overcast * 1.2, 1.0), speedOfChange * 0.15);
+        }
+        else
+        {
+            if (overcast > weather.GetSnowfall().GetActual())
+            {
+                weather.SetSnowfallThresholds(1.0, 1.0, speedOfChange * 0.15);
+            }
+            else
+            {
+                weather.SetSnowfallThresholds(0.0, 0.0, speedOfChange * 0.15);
+            }
+        }
+
         SetRain(weather, rain, speedOfChange, duration);
+        SetSnowfall(weather, snow, speedOfChange, duration);
         SetFog(weather, fog, speedOfChange, duration);
         SetWind(weather, wind);
 
@@ -113,6 +147,12 @@ class ZenWeatherPlugin extends PluginBase
         }
 
         m_CurrentWeather = preset;
+        
+        m_WeatherType = WorldDataWeatherConstants.CLEAR_WEATHER;
+        if ((rain >= 0.75 || snow >= 0.75) && overcast > 0.8)
+                m_WeatherType = WorldDataWeatherConstants.BAD_WEATHER;
+        else if ((rain >= 0.5 || snow >= 0.5) && overcast > 0.5)
+            m_WeatherType = WorldDataWeatherConstants.CLOUDY_WEATHER;
 
         return duration;
     }
@@ -129,7 +169,7 @@ class ZenWeatherPlugin extends PluginBase
         if (!weather) 
             return;
 
-        WeatherDebug("PresetWeather: Update");
+        WeatherDebug("Update");
 
         m_PresetWeatherTime = 0.0;
         m_InstanceID = GetGame().ServerConfigGetInt("instanceId");
@@ -147,7 +187,7 @@ class ZenWeatherPlugin extends PluginBase
                     ZenWeatherPreset preset = new ZenWeatherPreset();
                     if (serializer.Read(preset))
                     {
-                        WeatherDebug("PresetWeather: Load persistent weather");
+                        WeatherDebug("Load persistent weather");
                         m_NextChangeTime = ApplyPreset(weather, preset, m_InitialChange);
                         m_InitialChange = false;
                         serializer.Close();
@@ -189,10 +229,10 @@ class ZenWeatherPlugin extends PluginBase
     {
         if (GetZenWeatherConfig().DebugOn)
         {
-            ZenFunctions.DebugMessage("[PresetWeather] " + s);
+            ZenFunctions.DebugMessage("[ZenWeatherPlugin] " + s);
         }
 
-        ZMPrint("[PresetWeather] " + s);
+        ZMPrint("[ZenWeatherPlugin] " + s);
     }
 
     override void OnInit()
@@ -203,7 +243,7 @@ class ZenWeatherPlugin extends PluginBase
 
         if (!GetZenWeatherConfig().WeatherPresets || GetZenWeatherConfig().WeatherPresets.Count() == 0)
         {
-            Error("PresetWeather: Broken Config!");
+            Error("ZenWeatherPlugin: Broken Config!");
             return;
         }
 

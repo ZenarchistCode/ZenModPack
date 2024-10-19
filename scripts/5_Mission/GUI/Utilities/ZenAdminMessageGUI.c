@@ -38,8 +38,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 	// Diable controls & hud
 	void DisableControls()
 	{
-		GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_ALL);
-		GetGame().GetMission().GetHud().Show(false);
+		ZenFunctions.SetPlayerControl(false, true);
 	}
 
 	// Handles clicks on button widgets
@@ -72,13 +71,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 			if (replyMenu)
 			{
 				uiManager.HideScriptedMenu(replyMenu);
-
-				Mission mission = GetGame().GetMission();
-				if (mission)
-				{
-					mission.PlayerControlEnable(true);
-					mission.GetHud().Show(true);
-				}
+				ZenFunctions.SetPlayerControl(true, true);
 			}
 		}
 

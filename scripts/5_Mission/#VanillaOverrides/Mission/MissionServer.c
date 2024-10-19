@@ -283,7 +283,7 @@ modded class MissionServer
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendNotificationConfig, 500 + Math.RandomInt(0, 500), false, player);
 
 		//! SEND GENERAL CONFIG IMMEDIATELY
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<map<string, bool>>(GetZenModPackConfig().ModEnabled), true, player.GetIdentity());
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<map<string, bool>>(GetZenModPackConfig().ModEnabled), true, identity);
 
 		if (ZenModEnabled("ZenTreasure"))
 			SendZenTreasureConfig(player, identity);

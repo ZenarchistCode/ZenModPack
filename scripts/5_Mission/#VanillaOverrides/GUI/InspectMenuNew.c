@@ -1,5 +1,14 @@
 modded class InspectMenuNew extends UIScriptedMenu
 {
+	// I made my alcohol items inherit from Vodka to make it much easier to be compatible with any alcohol mods out there
+	// but the whisky items just change the name from VODKA to WHISKY visually (liquid type is still vodka)
+	override void SetItem(EntityAI item)
+	{
+		super.SetItem(item);
+
+		InspectMenuNew.ZenUpdateItemInfo(layoutRoot, item);
+	}
+
 	//! Unfortunately because these are static functions that can't call super() this complicated workaround is the only way to not break future vanilla changes
 	static void ZenUpdateItemInfo(Widget root_widget, EntityAI item)
 	{
@@ -8,9 +17,15 @@ modded class InspectMenuNew extends UIScriptedMenu
 
 		UpdateItemInfo(root_widget, item);
 
-		//! JAMESON
-		if (item.IsInherited(ZenJameson))
-			WidgetTrySetText(root_widget, "ItemLiquidTypeWidget", "WHISKY", Colors.COLOR_LIQUID);
+		string zenLiquid = "CfgVehicles " + item.GetType() + " zenLiquidName";
+		if (GetGame().ConfigIsExisting(zenLiquid))
+		{
+			string zenLiquidText = "";
+			GetGame().ConfigGetText(zenLiquid, zenLiquidText);
+
+			if (zenLiquidText != "")
+				WidgetTrySetText(root_widget, "ItemLiquidTypeWidget", zenLiquidText, Colors.COLOR_LIQUID);
+		}
 	}
 
 	static void ZenUpdateItemInfoQuantity(Widget root_widget, EntityAI item)

@@ -1,1 +1,1 @@
-class ZenJameson extends Vodka {};
+class ZenJameson extends Bottle_Base {};

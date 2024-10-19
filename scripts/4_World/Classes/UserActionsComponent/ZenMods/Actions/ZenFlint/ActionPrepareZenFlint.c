@@ -92,7 +92,7 @@ class ActionPrepareZenFlint : ActionContinuousBase
 		if (!flint)
 			return;
 
-		flint.SetZenIgniterItem(action_data.m_Target.GetObject(), action_data.m_Player);
+		flint.SetZenIgniterItem(ItemBase.Cast(action_data.m_Target.GetObject()), action_data.m_Player);
 	}
 
 	override string GetSoundCategory(ActionData action_data)

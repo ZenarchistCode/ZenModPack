@@ -6,6 +6,9 @@ class ActionZenDigIceFishingHoleCB : ActionContinuousBaseCB
 		if (m_ActionData.m_MainItem.Type() == Iceaxe)
 			time = time / 2;
 
+		if (m_ActionData.m_MainItem.Type() == Zen_IceaxeDebug)
+			time = 1;
+
 		m_ActionData.m_ActionComponent = new CAContinuousTime(time);
 	}
 };
@@ -54,13 +57,23 @@ class ActionZenDigIceFishingHole : ActionContinuousBase
 			return;
 
 		// Replace with hole
-		Object newIce = GetGame().CreateObjectEx(targetObject.GetType() + "_Hole", targetObject.GetPosition(), ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS);
+		Inventory_Base newIce = Inventory_Base.Cast(GetGame().CreateObjectEx(targetObject.GetType() + "_Hole", targetObject.GetPosition(), ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
+		if (!newIce)
+			return;
+		
 		newIce.SetOrientation(targetObject.GetOrientation());
-		newIce.SetOrientation(newIce.GetOrientation());
+		newIce.SetOrientation(newIce.GetOrientation() + "180 0 0"); // No idea why, but the object is 180 degrees off despite being idential p3d...
 		newIce.SetScale(targetObject.GetScale());
-		newIce.SetPosition(targetObject.GetPosition() - "0 0.001 0"); // Not sure why... objects are identical .p3d's except hole but don't align properly
+		newIce.SetPosition(targetObject.GetPosition() - "0 0.0001 0"); // Not sure why... objects are identical .p3d's except hole but don't align properly
 		newIce.Update();
 		newIce.SetAffectPathgraph(true, false);
+
+		float lifetimeMax = newIce.GetLifetimeMax();
+		if (lifetimeMax == 0)
+			lifetimeMax = 1440;
+
+		newIce.SetLifetime(lifetimeMax);
+
 		GetGame().ObjectDelete(targetObject);
 
 		if (newIce.CanAffectPathgraph())
@@ -68,10 +81,18 @@ class ActionZenDigIceFishingHole : ActionContinuousBase
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, newIce);
 		}
 
+		DamageItem(action_data.m_Player, action_data.m_MainItem);
+	}
+
+	void DamageItem(PlayerBase player, ItemBase mainItem)
+	{
+		if (!mainItem || mainItem.Type() == Zen_IceaxeDebug)
+			return;
+
 		float dmg = -0.4; // 40% for pickaxe/any other item
-		if (action_data.m_MainItem.Type() == Iceaxe)
+		if (mainItem.Type() == Iceaxe)
 			dmg = -0.1; // 10% for iceaxe
 
-		action_data.m_MainItem.AddHealth(action_data.m_MainItem.GetMaxHealth("","") * dmg);
+		mainItem.AddHealth(mainItem.GetMaxHealth("", "") * dmg);
 	}
 }

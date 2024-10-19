@@ -1,7 +1,7 @@
 class ZenWeatherConfig
 {
 	// Static constant config version (is NOT saved to json)
-	static const string CONFIG_VERSION = "1";
+	static const string CONFIG_VERSION = "2";
 
 	// Config location
 	private const static string zenModFolder = "$profile:\\Zenarchist\\";
@@ -9,6 +9,9 @@ class ZenWeatherConfig
     // My custom winter weather define, if you alternate between summer/winter just add a #define WINTER to your modpack to use this
     #ifdef WINTER
     private const static string zenConfigName = "ZenWeatherConfig_Winter.json";
+    #else
+    #ifdef SPRING
+    private const static string zenConfigName = "ZenWeatherConfig_Spring.json";
     #else
     private const static string zenConfigName = "ZenWeatherConfig.json";
     #endif
@@ -50,7 +53,7 @@ class ZenWeatherConfig
         WeatherPresets = new array<ref ZenWeatherPreset>;
         ZenWeatherPreset preset = new ZenWeatherPreset();
 
-		#ifdef WINTER 
+		#ifdef WINTER
         // WINTER
         // Blizzard
         preset.name = "Blizzard";
@@ -65,8 +68,10 @@ class ZenWeatherConfig
         preset.fog_max = 1.0;
         preset.wind_min = 0.7;
         preset.wind_max = 1.0;
-        preset.rain_min = 0.9;
-        preset.rain_max = 1.0;
+        preset.rain_min = 0.0;
+        preset.rain_max = 0.0;
+        preset.snow_min = 0.9;
+        preset.snow_max = 1.0;
         preset.storm = true;
         preset.thunder_timeout = 10.0;
         WeatherPresets.Insert(preset);
@@ -87,6 +92,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.1;
         preset.rain_min = 0;
         preset.rain_max = 0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -105,8 +112,10 @@ class ZenWeatherConfig
         preset.fog_max = 0.2;
         preset.wind_min = 0;
         preset.wind_max = 0.01;
-        preset.rain_min = 0.2;
-        preset.rain_max = 0.3;
+        preset.rain_min = 0;
+        preset.rain_max = 0;
+        preset.snow_min = 0.2;
+        preset.snow_max = 0.3;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -127,6 +136,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.05;
         preset.rain_min = 0.0;
         preset.rain_max = 0.0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -145,8 +156,10 @@ class ZenWeatherConfig
         preset.fog_max = 0.2;
         preset.wind_min = 0;
         preset.wind_max = 0.05;
-        preset.rain_min = 0.2;
-        preset.rain_max = 0.5;
+        preset.rain_min = 0.0;
+        preset.rain_max = 0.0;
+        preset.snow_min = 0.2;
+        preset.snow_max = 0.5;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -165,17 +178,20 @@ class ZenWeatherConfig
         preset.fog_max = 0.2;
         preset.wind_min = 0;
         preset.wind_max = 0.01;
-        preset.rain_min = 0.2;
-        preset.rain_max = 0.5;
+        preset.rain_min = 0;
+        preset.rain_max = 0;
+        preset.snow_min = 0.2;
+        preset.snow_max = 1.5;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
-
         #else 
-        // SUMMER
-        // Hurricane
-        preset.name = "Hurricane";
-        preset.chance = 20;
+        #ifdef SPRING
+        // EARLY/LATE WINTER
+        
+        // Blizzard
+        preset.name = "Blizzard";
+        preset.chance = 100;
         preset.transition_minutes_min = 10;
         preset.transition_minutes_max = 20;
         preset.duration_minutes_min = 10;
@@ -184,10 +200,12 @@ class ZenWeatherConfig
         preset.overcast_max = 1.0;
         preset.fog_min = 0.9;
         preset.fog_max = 1.0;
-        preset.wind_min = 0.7;
+        preset.wind_min = 0.9;
         preset.wind_max = 1.0;
-        preset.rain_min = 0.9;
-        preset.rain_max = 1.0;
+        preset.rain_min = 0.0;
+        preset.rain_max = 0.0;
+        preset.snow_min = 0.9;
+        preset.snow_max = 1.0;
         preset.storm = true;
         preset.thunder_timeout = 10.0;
         WeatherPresets.Insert(preset);
@@ -208,6 +226,96 @@ class ZenWeatherConfig
         preset.wind_max = 0.1;
         preset.rain_min = 0;
         preset.rain_max = 0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
+        preset.storm = false;
+        preset.thunder_timeout = 0;
+        WeatherPresets.Insert(preset);
+
+        // Light Snow, Light Overcast
+        preset = new ZenWeatherPreset();
+        preset.name = "Light Snow, Light Overcast";
+        preset.chance = 100;
+        preset.transition_minutes_min = 15;
+        preset.transition_minutes_max = 30;
+        preset.duration_minutes_min = 10;
+        preset.duration_minutes_max = 30;
+        preset.overcast_min = 0.5;
+        preset.overcast_max = 0.8;
+        preset.fog_min = 0.1;
+        preset.fog_max = 0.2;
+        preset.wind_min = 0;
+        preset.wind_max = 0.01;
+        preset.rain_min = 0;
+        preset.rain_max = 0;
+        preset.snow_min = 0.2;
+        preset.snow_max = 0.3;
+        preset.storm = false;
+        preset.thunder_timeout = 0;
+        WeatherPresets.Insert(preset);
+
+        // Overcast with Slight Wind
+        preset = new ZenWeatherPreset();
+        preset.name = "Overcast with Slight Wind";
+        preset.chance = 100;
+        preset.transition_minutes_min = 15;
+        preset.transition_minutes_max = 30;
+        preset.duration_minutes_min = 10;
+        preset.duration_minutes_max = 30;
+        preset.overcast_min = 0.4;
+        preset.overcast_max = 0.8;
+        preset.fog_min = 0.0;
+        preset.fog_max = 0.1;
+        preset.wind_min = 0;
+        preset.wind_max = 0.05;
+        preset.rain_min = 0.0;
+        preset.rain_max = 0.0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
+        preset.storm = false;
+        preset.thunder_timeout = 0;
+        WeatherPresets.Insert(preset);
+
+        // Snow with Slight Wind
+        preset = new ZenWeatherPreset();
+        preset.name = "Snow with Slight Wind";
+        preset.chance = 100;
+        preset.transition_minutes_min = 15;
+        preset.transition_minutes_max = 30;
+        preset.duration_minutes_min = 10;
+        preset.duration_minutes_max = 30;
+        preset.overcast_min = 0.6;
+        preset.overcast_max = 0.9;
+        preset.fog_min = 0.1;
+        preset.fog_max = 0.2;
+        preset.wind_min = 0;
+        preset.wind_max = 0.05;
+        preset.rain_min = 0.0;
+        preset.rain_max = 0.0;
+        preset.snow_min = 0.2;
+        preset.snow_max = 0.5;
+        preset.storm = false;
+        preset.thunder_timeout = 0;
+        WeatherPresets.Insert(preset);
+
+        // Snow with No Wind
+        preset = new ZenWeatherPreset();
+        preset.name = "Snow with No Wind";
+        preset.chance = 100;
+        preset.transition_minutes_min = 15;
+        preset.transition_minutes_max = 30;
+        preset.duration_minutes_min = 10;
+        preset.duration_minutes_max = 30;
+        preset.overcast_min = 0.6;
+        preset.overcast_max = 0.9;
+        preset.fog_min = 0.1;
+        preset.fog_max = 0.2;
+        preset.wind_min = 0;
+        preset.wind_max = 0.01;
+        preset.rain_min = 0;
+        preset.rain_max = 0;
+        preset.snow_min = 0.2;
+        preset.snow_max = 1.5;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -228,6 +336,74 @@ class ZenWeatherConfig
         preset.wind_max = 0.1;
         preset.rain_min = 0.2;
         preset.rain_max = 0.3;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
+        preset.storm = false;
+        preset.thunder_timeout = 0;
+        WeatherPresets.Insert(preset);
+        #else
+        // SUMMER
+        // Hurricane
+        preset.name = "Hurricane";
+        preset.chance = 20;
+        preset.transition_minutes_min = 10;
+        preset.transition_minutes_max = 20;
+        preset.duration_minutes_min = 10;
+        preset.duration_minutes_max = 30;
+        preset.overcast_min = 0.8;
+        preset.overcast_max = 1.0;
+        preset.fog_min = 0.9;
+        preset.fog_max = 1.0;
+        preset.wind_min = 0.7;
+        preset.wind_max = 1.0;
+        preset.rain_min = 0.9;
+        preset.rain_max = 1.0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
+        preset.storm = true;
+        preset.thunder_timeout = 10.0;
+        WeatherPresets.Insert(preset);
+
+        // Clear Skies
+        preset = new ZenWeatherPreset();
+        preset.name = "Clear Skies";
+        preset.chance = 200;
+        preset.transition_minutes_min = 15;
+        preset.transition_minutes_max = 30;
+        preset.duration_minutes_min = 30;
+        preset.duration_minutes_max = 90;
+        preset.overcast_min = 0.0;
+        preset.overcast_max = 0.3;
+        preset.fog_min = 0;
+        preset.fog_max = 0;
+        preset.wind_min = 0;
+        preset.wind_max = 0.1;
+        preset.rain_min = 0;
+        preset.rain_max = 0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
+        preset.storm = false;
+        preset.thunder_timeout = 0;
+        WeatherPresets.Insert(preset);
+
+        // Light Rain, Light Overcast
+        preset = new ZenWeatherPreset();
+        preset.name = "Light Rain, Light Overcast";
+        preset.chance = 100;
+        preset.transition_minutes_min = 15;
+        preset.transition_minutes_max = 30;
+        preset.duration_minutes_min = 10;
+        preset.duration_minutes_max = 30;
+        preset.overcast_min = 0.5;
+        preset.overcast_max = 0.8;
+        preset.fog_min = 0.1;
+        preset.fog_max = 0.2;
+        preset.wind_min = 0;
+        preset.wind_max = 0.1;
+        preset.rain_min = 0.2;
+        preset.rain_max = 0.3;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -248,6 +424,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.3;
         preset.rain_min = 0.0;
         preset.rain_max = 0.0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -268,6 +446,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.3;
         preset.rain_min = 0.2;
         preset.rain_max = 0.5;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -288,6 +468,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.1;
         preset.rain_min = 0.2;
         preset.rain_max = 0.5;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -308,6 +490,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.3;
         preset.rain_min = 0;
         preset.rain_max = 0.1;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
@@ -328,6 +512,8 @@ class ZenWeatherConfig
         preset.wind_max = 0.9;
         preset.rain_min = 0.1;
         preset.rain_max = 1.0;
+        preset.snow_min = 0;
+        preset.snow_max = 0;
         preset.storm = true;
         preset.thunder_timeout = 10;
         WeatherPresets.Insert(preset);
@@ -375,6 +561,9 @@ class ZenWeatherPreset
 
     float rain_min;
     float rain_max;
+
+    float snow_min;
+    float snow_max
     
     bool storm;
     float thunder_timeout;

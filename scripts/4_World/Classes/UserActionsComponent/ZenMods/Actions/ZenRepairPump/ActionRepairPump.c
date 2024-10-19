@@ -32,6 +32,11 @@ class ActionRepairPump : ActionContinuousBase
 		return "#repair";
 	}
 
+	override bool IsLockTargetOnUse()
+	{
+		return false;
+	}
+
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
 		if (!ZenModEnabled("ZenRepairPumps"))

@@ -474,4 +474,43 @@ class ZenFunctions
 
 		return aimedObjects;
 	}
+
+	//! Enable/disable player controls - WARNING: This function does not check if controls should be enabled given what the player is doing at the time when it's called, so use carefully and thoughtfully
+	//! TODO: it also uses deprecated code, but the devs haven't made it very clear what the new best practice is for disabling controls in the vanilla scripts
+	static void SetPlayerControl(bool isEnabled = true, bool hideHud = false)
+	{
+		if (!GetGame().IsClient())
+			return;
+
+		if (isEnabled)
+		{
+			if (GetGame().GetMission().IsControlDisabled())
+			{
+				GetGame().GetMission().PlayerControlEnable(true);
+
+				if (hideHud)
+					GetGame().GetMission().GetHud().Show(true);
+			}
+		}
+		else
+		{
+			if (!GetGame().GetMission().IsControlDisabled())
+			{
+				GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_ALL);
+
+				if (hideHud)
+					GetGame().GetMission().GetHud().Show(false);
+			}
+		}
+	}
+
+	static void EnablePlayerControl()
+	{
+		SetPlayerControl(true, false);
+	}
+
+	static void DisablePlayerControl()
+	{
+		SetPlayerControl(false, false);
+	}
 }

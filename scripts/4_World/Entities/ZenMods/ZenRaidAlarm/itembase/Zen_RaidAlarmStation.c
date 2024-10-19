@@ -411,17 +411,6 @@ class Zen_RaidAlarmStation extends ItemBase
 		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenRaidAlarmServerWebhooks", new Param3<array<string>, Zen_RaidAlarmStation, string>(GetWebhooks(), this, GetBaseName()), true, identity);
 	}
 
-	void CheckForValidRadar()
-	{
-		bool checkForRoof = GetZenDiscordConfig().RaidRadarDishCheckRoofTimerMinutes != -1;
-
-		if (!GetRaidAlarmRadar(checkForRoof) && m_ZenHadValidRadar)
-		{
-			InformDisconnection("", true);
-			m_ZenHadValidRadar = false;
-		}
-	}
-
 	void CheckForRoof()
 	{
 		GetRaidAlarmRadar(true);

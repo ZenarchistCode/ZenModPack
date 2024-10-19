@@ -11,11 +11,7 @@ modded class ItemManager
 		if (!ib)
 			return;
 
-		if (item.IsInherited(ZenJameson))
-		{
-			InspectMenuNew.ZenUpdateItemInfo(m_TooltipWidget, item);
-		}
-
+		InspectMenuNew.ZenUpdateItemInfo(m_TooltipWidget, item);
 		InspectMenuNew.ZenUpdateItemInfoQuantity(m_TooltipWidget, item);
 	}
 }

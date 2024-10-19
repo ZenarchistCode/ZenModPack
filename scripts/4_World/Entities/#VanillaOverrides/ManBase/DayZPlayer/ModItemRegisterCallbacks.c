@@ -18,6 +18,10 @@ modded class ModItemRegisterCallbacks
 	{
 		super.RegisterOneHanded(pType, pBehavior);
 
+		//! FLASK
+		pType.AddItemInHandsProfileIK("ZenFlask", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+		pType.AddItemInHandsProfileIK("Empty_ZenFlask", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
+
 		//! SLEEPING BAGS
 		pType.AddItemInHandsProfileIK("ZenSleepingBagPackedBase", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/BatteryCar.anm");
 

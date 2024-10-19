@@ -70,32 +70,18 @@ class ZenRaidAlarmGUI extends UIScriptedMenu
 			Close();
 	}
 
-	void SetControls(bool on)
-	{
-		if (!on)
-		{
-			GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_ALL);
-			GetGame().GetMission().GetHud().Show(false);
-		}
-		else 
-		{
-			GetGame().GetMission().PlayerControlEnable(true);
-			GetGame().GetMission().GetHud().Show(true);
-		}
-	}
-
 	override void OnShow()
 	{
 		super.OnShow();
 
-		SetControls(false);
+		ZenFunctions.SetPlayerControl(false, true);
 	}
 
 	override void OnHide()
 	{
 		super.OnHide();
 
-		SetControls(true);
+		ZenFunctions.SetPlayerControl(false, true);
 	}
 
 	override bool OnChange(Widget w, int x, int y, bool finished)

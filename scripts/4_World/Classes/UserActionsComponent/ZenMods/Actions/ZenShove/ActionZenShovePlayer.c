@@ -51,4 +51,4 @@ class ActionZenShovePlayer : ActionInteractBase
 		// Apply stun hit (no health damage)
 		targetPlayer.Zen_StunFromAngle(action_data.m_Player.GetPosition());
 	}
-};
+}

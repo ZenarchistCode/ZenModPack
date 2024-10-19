@@ -71,6 +71,7 @@ class ZenRaidAlarmPlugin extends PluginBase
         if (GetZenDiscordConfig().TriggerAdminRaidAlert)
         {
             // Collect player IDs involved in raid (victims included)
+            int playersInvolvedCount = 0;
             string playersInvolved = "";
             array<Man> onlinePlayers = new array<Man>;
 		    GetGame().GetPlayers(onlinePlayers);
@@ -80,6 +81,7 @@ class ZenRaidAlarmPlugin extends PluginBase
                 if (pb != NULL && vector.Distance(objectPos, pb.GetPosition()) <= GetZenDiscordConfig().RaidDetectionDistance)
                 {
                     playersInvolved = playersInvolved + "[" + pb.GetIdentity().GetName() + "](http://steamcommunity.com/profiles/" + pb.GetIdentity().GetPlainId() + ")" + " (" + pb.GetIdentity().GetId() + ")\n";
+                    playersInvolvedCount++;
                 }
             }
 
@@ -92,7 +94,7 @@ class ZenRaidAlarmPlugin extends PluginBase
             // Craft alert 
             ZenDiscordMessage msg = new ZenDiscordMessage(GetZenDiscordConfig().RaidAlarmMessageTitle, true);
 		    msg.SetTitle(GetZenDiscordConfig().RaidAlarmMessageTitle);
-		    msg.SetMessage("A raid is occuring:\n\n" + mapLink + "\n\nPlayers Involved:\n" + playersInvolved);
+		    msg.SetMessage("A raid is occuring:\n\n" + mapLink + "\n\n" + playersInvolvedCount + " Players Involved : \n" + playersInvolved);
 		    msg.SetColor(255, 0, 0);
 		    msg.AddWebhooks(GetZenDiscordConfig().AdminWebhooks);
 		    GetZenDiscordAPI().SendMessage(msg);

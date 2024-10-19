@@ -1,3 +1,5 @@
+class Zen_IceaxeDebug extends Iceaxe {};
+
 class Land_ZenIceSheet extends BuildingSuper
 {
 	void Land_ZenIceSheet()
@@ -24,14 +26,61 @@ class Land_ZenIceSheet_4x4 extends BuildingSuper
 	}
 }
 
-class Land_ZenIceSheet_4x4_Hole extends BuildingSuper
+class Land_ZenIceSheet_4x4_Hole extends ItemBase
 {
 	void Land_ZenIceSheet_4x4_Hole()
 	{
 		SetAllowDamage(false);
+		SetTakeable(false);
 	}
 
-	override bool IsBuilding()
+	override void DeferredInit()
+	{
+		super.DeferredInit();
+		//SetScale(GetScale() * 1.02); //! TODO: Temporary fix for P3D model problem. Blender texture is fucko'd due to hole in middle?
+
+		if (GetGame().IsClient())
+			return;
+
+		// Delete any ice sheets that exist over this hole (allows for persistence on these objects)
+		// when the server restarts it spawns in the ice sheets, once this object spawns in it deletes any sheet ontop of it.
+		array<Object> objectsAtPosition = new array<Object>;
+		GetGame().GetObjectsAtPosition3D(GetPosition(), 0.1, objectsAtPosition, null);
+		Object obj;
+
+		for (int o = 0; o < objectsAtPosition.Count(); o++)
+		{
+			obj = objectsAtPosition.Get(o);
+
+			if (!obj)
+				continue;
+
+			if (obj.GetType().Contains("Land_ZenIceSheet") && obj != this)
+				GetGame().ObjectDelete(obj);
+		}
+	}
+
+	override bool DisableVicinityIcon()
+	{
+		return true;
+	}
+
+	override int GetHideIconMask()
+	{
+		return EInventoryIconVisibility.HIDE_VICINITY;
+	}
+
+	override bool CanPutInCargo(EntityAI parent)
+	{
+		return false;
+	}
+
+	override bool CanRemoveFromCargo(EntityAI parent)
+	{
+		return false;
+	}
+
+	override bool CanPutIntoHands(EntityAI parent)
 	{
 		return false;
 	}

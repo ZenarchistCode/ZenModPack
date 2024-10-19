@@ -120,6 +120,8 @@
 		ZenRune_Water
 		ZenJameson
 		Empty_ZenJameson
+		ZenFlask
+		Empty_ZenFlask
 		EyeMask_ZenRabbit_Black
 		EyeMask_ZenRabbit_Blue
 		EyeMask_ZenRabbit_Pink
@@ -2076,6 +2078,260 @@ class CfgVehicles
 		};
 	};
 
+	//! FLASK 
+	class ZenFlask : Bottle_Base
+	{
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenFlask0";
+		descriptionShort = "$STR_CfgVehicles_ZenFlask1";
+		zenLiquidName = "#STR_ZenGui_LiquidWhisky";
+		model = "zenmodpack\data\models\flask\zenflask.p3d";
+		// Syberia 
+		medPainkillerLevel = 3;
+		medPainkillerTimeSec = 1;
+		medAntidepresantLevel = 1;
+		medAntidepresantTimer = 1;
+		overdosedIncrement = 0.05;
+		// Vanilla
+		weight = 300;
+		itemSize[] = { 2,2 };
+		destroyOnEmpty = 0;
+		varQuantityDestroyOnMin = 0;
+		varLiquidTypeInit = 2048;
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
+		varQuantityInit = 300;
+		varQuantityMin = 0;
+		varQuantityMax = 300;
+		varTemperatureMax = 1;
+		repairableWithKits[] = { 10 };
+		repairCosts[] = { 25 };
+		hiddenSelections[] = { "flask" };
+		hiddenSelectionsTextures[] =
+		{
+			"zenmodpack\data\textures\flask\zenflask_co.paa"
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 500;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		soundImpactType = "metal";
+		class AnimEvents
+		{
+			class SoundWeapon
+			{
+				class GlassBottle_in_B
+				{
+					soundSet = "GlassBottle_in_B_SoundSet";
+					id = 202;
+				};
+				class GlassBottle_in_C
+				{
+					soundSet = "GlassBottle_in_C_SoundSet";
+					id = 203;
+				};
+				class WaterBottle_in_C1
+				{
+					soundSet = "WaterBottle_in_C1_SoundSet";
+					id = 204;
+				};
+				class GlassBottle_out_A
+				{
+					soundSet = "GlassBottle_out_A_SoundSet";
+					id = 205;
+				};
+				class GlassBottle_out_B
+				{
+					soundSet = "GlassBottle_out_B_SoundSet";
+					id = 206;
+				};
+				class WellPond_loop
+				{
+					soundSet = "WellPond_loop_SoundSet";
+					id = 209;
+				};
+				class WellBottle_loop
+				{
+					soundSet = "WellBottle_loop_SoundSet";
+					id = 210;
+				};
+			};
+		};
+	};
+	class Empty_ZenFlask : Bottle_Base
+	{
+		scope = 2;
+		displayName = "Flask";
+		descriptionShort = "A stainless steel hip flask. Might have some booze left in it, but if not then it would make a decent container for boiling water to purify it.";
+		model = "zenmodpack\data\models\flask\zenflask.p3d";
+		weight = 300;
+		itemSize[] = { 2,2 };
+		destroyOnEmpty = 0;
+		varQuantityDestroyOnMin = 0;
+		varLiquidTypeInit = 512;
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
+		varQuantityInit = 300;
+		varQuantityMin = 0;
+		varQuantityMax = 300;
+		varTemperatureMax = 200;
+		repairableWithKits[] = { 10 };
+		repairCosts[] = { 25 };
+		inventorySlot[] +=
+		{
+			"DirectCookingA",
+			"DirectCookingB",
+			"DirectCookingC"
+		};
+		hiddenSelections[] = { "flask" };
+		hiddenSelectionsTextures[] =
+		{
+			"zenmodpack\data\textures\flask\zenflask_co.paa"
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 500;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"zenmodpack\data\textures\flask\zenflask_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		soundImpactType = "metal";
+		class AnimEvents
+		{
+			class SoundWeapon
+			{
+				class GlassBottle_in_B
+				{
+					soundSet = "GlassBottle_in_B_SoundSet";
+					id = 202;
+				};
+				class GlassBottle_in_C
+				{
+					soundSet = "GlassBottle_in_C_SoundSet";
+					id = 203;
+				};
+				class WaterBottle_in_C1
+				{
+					soundSet = "WaterBottle_in_C1_SoundSet";
+					id = 204;
+				};
+				class GlassBottle_out_A
+				{
+					soundSet = "GlassBottle_out_A_SoundSet";
+					id = 205;
+				};
+				class GlassBottle_out_B
+				{
+					soundSet = "GlassBottle_out_B_SoundSet";
+					id = 206;
+				};
+				class WellPond_loop
+				{
+					soundSet = "WellPond_loop_SoundSet";
+					id = 209;
+				};
+				class WellBottle_loop
+				{
+					soundSet = "WellBottle_loop_SoundSet";
+					id = 210;
+				};
+			};
+		};
+	};
+
 	//! JAMESON 
 	// Whisky 
 	class ZenJameson: Bottle_Base
@@ -2083,13 +2339,14 @@ class CfgVehicles
 		scope=2;
 		displayName="$STR_CfgVehicles_ZenWhisky0";
 		descriptionShort="$STR_CfgVehicles_ZenWhisky1";
+		zenLiquidName = "#STR_ZenGui_LiquidWhisky";
 		model="ZenModPack\data\models\jameson\jameson.p3d";
 		weight=450;
-		itemSize[]={1,3};
+		itemSize[]={2,3};
 		destroyOnEmpty=0;
 		varQuantityDestroyOnMin=0;
 		varLiquidTypeInit=2048;
-		liquidContainerType="1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		liquidContainerType="1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varQuantityInit=750;
 		varQuantityMin=0;
 		varQuantityMax=750;
@@ -2213,7 +2470,7 @@ class CfgVehicles
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varQuantityInit = 750;
 		varQuantityMin = 0;
 		varQuantityMax = 750;
@@ -5997,7 +6254,7 @@ class CfgVehicles
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varTemperatureMax=200;
 		inventorySlot[] =
 		{
@@ -6531,7 +6788,7 @@ class CfgVehicles
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varQuantityInit = 0;
 		varQuantityMin = 0;
 		varQuantityMax = 250;
@@ -6649,7 +6906,7 @@ class CfgVehicles
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varQuantityInit = 0;
 		varQuantityMin = 0;
 		varQuantityMax = 250;
@@ -7020,7 +7277,7 @@ class CfgVehicles
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) -32768";
+		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varQuantityInit = 0;
 		varQuantityMin = 0;
 		varQuantityMax = 100;
@@ -7889,9 +8146,9 @@ class CfgVehicles
 			};
 		};
 	}
-	class Land_ZenIceSheet_4x4_Hole : HouseNoDestruct
+	class Land_ZenIceSheet_4x4_Hole : Inventory_Base
 	{
-		scope = 1;
+		scope = 2;
 		model = "\ZenModPack\data\models\iceplane\ice_plane_4x4_hole.p3d";
 		forceFarBubble = "true";
 		class DamageSystem
@@ -7948,6 +8205,107 @@ class CfgVehicles
 			};
 		};
 	}
+	class Zen_IceaxeDebug : Inventory_Base
+	{
+		scope = 2;
+		debug_ItemCategory = 2;
+		displayName = "DEBUG ITEM";
+		descriptionShort = "DEBUG ITEM";
+		model = "\dz\gear\tools\Ice_Axe.p3d";
+		rotationFlags = 17;
+		repairableWithKits[] = { 4 };
+		repairCosts[] = { 20 };
+		suicideAnim = "woodaxe";
+		weight = 425;
+		itemSize[] = { 2,5 };
+		hiddenSelections[] =
+		{
+			"camo"
+		};
+		hiddenSelectionsTextures[] =
+		{
+			"dz\weapons\melee\blade\data\Pickaxe_co.paa"
+		};
+		build_action_type = 4;
+		dismantle_action_type = 14;
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 250;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"DZ\gear\tools\data\IceAxe.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"DZ\gear\tools\data\IceAxe.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"DZ\gear\tools\data\IceAxe_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"DZ\gear\tools\data\IceAxe_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"DZ\gear\tools\data\IceAxe_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		class MeleeModes
+		{
+			class Default
+			{
+				ammo = "MeleeSickle";
+				range = 1.4;
+			};
+			class Heavy
+			{
+				ammo = "MeleeSickle_Heavy";
+				range = 1.4;
+			};
+			class Sprint
+			{
+				ammo = "MeleeSickle_Heavy";
+				range = 3.3;
+			};
+		};
+		class Horticulture
+		{
+			ToolAnim = "defaultSingle";
+			DiggingTimeToComplete = 6;
+		};
+		soundImpactType = "metal";
+	};
 
 	//! Tree houses
 	class Land_ZenTreeHouse_Ladder: HouseNoDestruct
