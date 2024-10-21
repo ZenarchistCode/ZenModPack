@@ -17,6 +17,11 @@ class ActionZenReadNoteHands : ActionContinuousBase
 		m_ConditionTarget = new CCTNone;
 	}
 
+	override bool IsLockTargetOnUse()
+	{
+		return false;
+	}
+
 	// Action condition
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{

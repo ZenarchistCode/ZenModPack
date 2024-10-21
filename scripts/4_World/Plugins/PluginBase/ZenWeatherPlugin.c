@@ -225,16 +225,6 @@ class ZenWeatherPlugin extends PluginBase
         return GetZenWeatherConfig().WeatherPresets[0];
     }
 
-    static void WeatherDebug(string s)
-    {
-        if (GetZenWeatherConfig().DebugOn)
-        {
-            ZenFunctions.DebugMessage("[ZenWeatherPlugin] " + s);
-        }
-
-        ZMPrint("[ZenWeatherPlugin] " + s);
-    }
-
     override void OnInit()
     {
         Print("[ZenWeatherPlugin] :: OnInit");
@@ -279,5 +269,15 @@ class ZenWeatherPlugin extends PluginBase
         {
             UpdateWeather();
         }
+    }
+
+    static void WeatherDebug(string s)
+    {
+        if (GetZenWeatherConfig().DebugOn)
+        {
+            ZenFunctions.DebugMessage("[ZenWeatherPlugin] " + s);
+        }
+
+        ZMPrint("[ZenWeatherPlugin] " + s);
     }
 }

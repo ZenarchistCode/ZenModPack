@@ -37,8 +37,8 @@ modded class PluginRecipesManagerBase
 		RegisterRecipe(new Zen_CraftKing);
 		RegisterRecipe(new Zen_CraftQueen);
 
-        //! WOLF MASK 
-        RegisterRecipe(new CraftZenWolfMask);
+        //! WOLF MASK (removed for 1.26 headdress)
+        //RegisterRecipe(new CraftZenWolfMask);
 
         //! RAID ALARM
         RegisterRecipe(new Zen_CraftZenRaidAlarmStationKit);

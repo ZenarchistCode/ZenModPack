@@ -33,6 +33,7 @@ class ZenGraves_RpcTrigger extends Trigger
 		if (!player || !player.GetIdentity())
 			return;
 
+		Param1<bool> params = new Param1<bool>(true);
 		m_Cross.RPCSingleParam(ZenRPCs.RECEIVE_GRAVE_RPC, m_rpcData, true, player.GetIdentity());
 	};
 };

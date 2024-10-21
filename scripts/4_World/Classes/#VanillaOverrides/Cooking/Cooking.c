@@ -1,3 +1,5 @@
+/*
+Removed after 1.26 update - !TODO no longer necessary? If confirmed, delete this file later.
 modded class Cooking
 {
 	//! LEFTOVERS
@@ -36,3 +38,4 @@ modded class Cooking
 		return false;
 	}
 }
+*/

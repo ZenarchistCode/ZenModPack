@@ -2102,7 +2102,7 @@ class CfgVehicles
 		varQuantityInit = 300;
 		varQuantityMin = 0;
 		varQuantityMax = 300;
-		varTemperatureMax = 1;
+		varTemperatureMax = 10;
 		repairableWithKits[] = { 10 };
 		repairCosts[] = { 25 };
 		hiddenSelections[] = { "flask" };
@@ -6256,12 +6256,6 @@ class CfgVehicles
 		varLiquidTypeInit = 512;
 		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
 		varTemperatureMax=200;
-		inventorySlot[] =
-		{
-			"DirectCookingA",
-			"DirectCookingB",
-			"DirectCookingC"
-		};
 		class DamageSystem
 		{
 			class GlobalHealth
@@ -6322,8 +6316,7 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Pipsi0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_pipsi_empty_co.paa" };
-		varTemperatureMax=200;
-		varWetInit = 0;
+		varWetInit = 0; // namalsk compatibility
 		varWetMax = 3;
 	};
 	class Empty_SodaCan_Cola : Empty_SodaCan_ColorBase
@@ -6331,7 +6324,6 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Cola0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_cola_empty_co.paa" };
-		varTemperatureMax=200;
 		varWetInit = 0;
 		varWetMax = 3;
 	};
@@ -6340,7 +6332,6 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Spite0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_spite_empty_co.paa" };
-		varTemperatureMax=200;
 		varWetInit = 0;
 		varWetMax = 3;
 	};
@@ -6349,7 +6340,6 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Kvass0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_rasputin_kvass_empty_co.paa" };
-		varTemperatureMax=200;
 		varWetInit = 0;
 		varWetMax = 3;
 	};
@@ -6358,7 +6348,6 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Fronta0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_fanda_empty_co.paa" };
-		varTemperatureMax=200;
 		varWetInit = 0;
 		varWetMax = 3;
 	};
