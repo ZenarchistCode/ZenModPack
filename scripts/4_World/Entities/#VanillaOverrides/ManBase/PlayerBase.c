@@ -1460,7 +1460,7 @@ modded class PlayerBase
 					identity = player.GetCachedName() + " (" + player.GetCachedID() + ")";
 				}
 
-				ZenModLogger.Log("PLAYER PVP KILL: " + identity + " killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos=" + GetPosition() + ") (killerHealth=" + killer.GetHealth().ToString() + ")", "pvp");
+				ZenModLogger.Log("PLAYER PVP KILL: " + identity + " killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos=" + GetPosition() + ") (killerHealth=" + player.GetHealth().ToString() + ")", "pvp");
 				return;
 			}
 			else

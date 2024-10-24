@@ -42,7 +42,7 @@ class ActionZenSleepOnBag : ActionInteractBase
 
     override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
     {
-        if (!target || !target.GetObject() || !target.GetObject().IsKindOf("ZenSleepingBag_DeployedBase"))
+        if (player.GetItemInHands() || !target || !target.GetObject() || !target.GetObject().IsKindOf("ZenSleepingBag_DeployedBase"))
             return false;
 
         float distance = vector.Distance(target.GetObject().GetPosition(), player.GetPosition());

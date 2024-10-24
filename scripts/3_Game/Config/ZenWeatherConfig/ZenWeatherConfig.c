@@ -7,14 +7,7 @@ class ZenWeatherConfig
 	private const static string zenModFolder = "$profile:\\Zenarchist\\";
 
     // My custom winter weather define, if you alternate between summer/winter just add a #define WINTER to your modpack to use this
-    #ifdef WINTER
-    private const static string zenConfigName = "ZenWeatherConfig_Winter.json";
-    #else
-    #ifdef SPRING
-    private const static string zenConfigName = "ZenWeatherConfig_Spring.json";
-    #else
-    private const static string zenConfigName = "ZenWeatherConfig.json";
-    #endif
+    private static string zenConfigName = "ZenWeatherConfig.json";
 
 	// Main config data
 	string ConfigVersion = "";
@@ -22,6 +15,16 @@ class ZenWeatherConfig
 	// Config settings
 	bool DebugOn = false;
 	ref array<ref ZenWeatherPreset> WeatherPresets;
+
+    void ZenWeatherConfig()
+    {
+#ifdef WINTER // Custom weather #defines I use on my server for alternating weather
+        zenConfigName = "ZenWeatherConfig_Winter.json";
+#endif
+#ifdef SPRING
+        zenConfigName = "ZenWeatherConfig_Spring.json";
+#endif
+    }
 
 	// Load server config file or create default file if config doesn't exsit
 	void Load()
@@ -185,7 +188,7 @@ class ZenWeatherConfig
         preset.storm = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
-        #else 
+        #else
         #ifdef SPRING
         // EARLY/LATE WINTER
         
@@ -517,6 +520,7 @@ class ZenWeatherConfig
         preset.storm = true;
         preset.thunder_timeout = 10;
         WeatherPresets.Insert(preset);
+        #endif
         #endif
 
 		// Save config

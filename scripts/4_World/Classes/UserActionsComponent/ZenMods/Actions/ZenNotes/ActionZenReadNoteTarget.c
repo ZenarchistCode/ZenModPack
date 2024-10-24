@@ -38,7 +38,6 @@ class ActionZenReadNoteTarget : ActionInteractBase
 
 		if (note)
 		{
-			ZenFunctions.DebugMessage("SEND NOTE - " + ZenRPCs.RECEIVE_WRITTEN_NOTE);
 			auto data = new Param1<ref ZenNoteData>(note.GetNoteData());
 			note.RPCSingleParam(ZenRPCs.RECEIVE_WRITTEN_NOTE, data, true, action_data.m_Player.GetIdentity());
 		}
