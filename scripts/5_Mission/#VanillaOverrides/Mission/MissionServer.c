@@ -113,6 +113,10 @@ modded class MissionServer
 		if (ZenModEnabled("ZenStaticBarbedWire"))
 			ZenStaticBarbedWireInit();
 
+		//! CUSTOM DYNAMIC CONTAMINATED ZONE LOOT
+		if (ZenModEnabled("ZenDynamicZoneLoot"))
+			GetZenContaminatedZoneLootConfig();
+
 		//! IMMERSIVE LOGIN 
 		m_ZenDisableFireSpawn = FileExist("$profile:\\Zenarchist\\disablespawnfire.txt");
 

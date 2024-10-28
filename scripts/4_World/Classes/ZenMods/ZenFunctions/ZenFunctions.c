@@ -95,11 +95,6 @@ class ZenFunctions
 						}
 					}
 				}
-				else 
-				{
-					ZenFunctions.DebugMessage("ITS NULL!");
-				}
-				
 			} else
 			{
 				newItemBase.SetQuantity(oldItemBase.GetQuantity(), true, true);
@@ -164,6 +159,34 @@ class ZenFunctions
 
 		newItem.SetSynchDirty();
 		return true;
+	}
+
+	//! Set the given item's quantity regardless of its type (itembase, weapon, ammo, magazine etc)
+	static bool SetQuantity(notnull ItemBase item, float quantity)
+	{
+		if (item.IsMagazine())
+		{
+			Magazine magNew = Magazine.Cast(item);
+
+			if (magNew == NULL)
+				return false;
+
+			magNew.ServerSetAmmoCount((int)Math.Round(quantity));
+			return true;
+		}
+
+		if (item.IsAmmoPile())
+		{
+			Ammunition_Base ammoNew = Ammunition_Base.Cast(item);
+
+			if (ammoNew == NULL)
+				return false;
+
+			ammoNew.ServerSetAmmoCount((int)Math.Round(quantity));
+			return true;
+		}
+
+		return item.SetQuantity(quantity, true, true);
 	}
 
 	//! Debug message - sends a server-side player message to all online players

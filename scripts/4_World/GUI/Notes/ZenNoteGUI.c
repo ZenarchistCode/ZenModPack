@@ -17,8 +17,12 @@ class ZenNoteGUI extends UIScriptedMenu
 	ButtonWidget m_ExitBtn;
 	ButtonWidget m_SelectFontBtn;
 
+	// Damage layer image widget
+	ImageWidget m_DamageLayer;
+
 	// Pen & paper variables
 	ItemBase m_Paper;
+	bool m_ReadOnly;
 	int m_PenColour;
 	static string DATE_TEXT = "";
 	static bool CAN_CHANGE_FONTS = false;
@@ -104,6 +108,7 @@ class ZenNoteGUI extends UIScriptedMenu
 		// Load required widgets
 		m_ExitBtn		= ButtonWidget.Cast(layoutRoot.FindAnyWidget("CloseBtn"));
 		m_SelectFontBtn = ButtonWidget.Cast(layoutRoot.FindAnyWidget("FontBtn"));
+		m_DamageLayer	= ImageWidget.Cast(layoutRoot.FindAnyWidget("DamageLayer"));
 		
 		// Set select style language
 		ButtonWidget fontBtn = ButtonWidget.Cast(layoutRoot.FindAnyWidget("FontBtn"));
@@ -135,6 +140,18 @@ class ZenNoteGUI extends UIScriptedMenu
 	void SetPaper(ItemBase item)
 	{
 		m_Paper = item;
+
+		int dmgState = m_Paper.GetHealthLevel("");
+
+		if (dmgState != GameConstants.STATE_PRISTINE)
+			m_DamageLayer.Show(true);
+
+		if (dmgState == GameConstants.STATE_WORN)
+			m_DamageLayer.SetAlpha(0.3);
+		else if (dmgState == GameConstants.STATE_DAMAGED)
+			m_DamageLayer.SetAlpha(0.6);
+		else if (dmgState <= GameConstants.STATE_BADLY_DAMAGED)
+			m_DamageLayer.SetAlpha(0.9);
 	}
 
 	// READ-ONLY NOTE DATA SENT - we're reading a note that's already written and saved.
@@ -236,6 +253,8 @@ class ZenNoteGUI extends UIScriptedMenu
 	// Set read only
 	void SetReadOnly(bool readOnly)
 	{
+		m_ReadOnly = readOnly;
+
 		if (readOnly)
 		{
 			// Hide all edit boxes
@@ -368,7 +387,7 @@ class ZenNoteGUI extends UIScriptedMenu
 		}
 
 		// Send written note data to server to save + sync to other clients
-		if (m_Paper)
+		if (m_Paper && !m_ReadOnly)
 		{
 			ZenNoteData note_data = new ZenNoteData;
 			note_data.m_FontIndex = m_FontIndex;
@@ -382,6 +401,10 @@ class ZenNoteGUI extends UIScriptedMenu
 			{
 				m_Paper.RPCSingleParam(ZenRPCs.SEND_WRITTEN_NOTE, params, true, NULL);
 			}
+
+			// Save last used font client-side
+			GetZenNotesClientConfig().LastUsedFontStyle = m_FontIndex;
+			GetZenNotesClientConfig().Save();
 		}
 
 		UIManager uiManager = GetGame().GetUIManager();
@@ -407,10 +430,6 @@ class ZenNoteGUI extends UIScriptedMenu
 				}
 			}
 		}
-
-		// Save last used font client-side
-		GetZenNotesClientConfig().LastUsedFontStyle = m_FontIndex;
-		GetZenNotesClientConfig().Save();
 
 		return true;
 	}

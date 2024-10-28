@@ -875,8 +875,8 @@ class CfgVehicles
 		absorbency=0;
 		rotationFlags=16;
 		itemSize[]={4,2};
-		repairableWithKits[]={5,2};
-		repairCosts[]={30,25};
+		repairableWithKits[] = { 5,2 };
+		repairCosts[] = { 30,25 };
 		reversed=0;
 		itemBehaviour=2;
 		class DamageSystem

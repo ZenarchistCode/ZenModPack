@@ -114,6 +114,7 @@ modded class Paper
 
                         // Copy note data to the written note object
                         noteGround.SetNoteData(noteData);
+                        MiscGameplayFunctions.TransferItemProperties(this, noteGround);
 
                         // If player is holding the paper stack, replace it in their hands with a note and put paper back in inventory
                         if (player.GetItemInHands() == this && noteGround)
@@ -241,7 +242,11 @@ class ReplacePaperWithNoteLambda extends ReplaceItemWithNewLambdaBase
         super.CopyOldPropertiesToNew(old_item, new_item);
 
         ZenNote note = ZenNote.Cast(new_item);
+        if (!note)
+            return;
+
         note.SetNoteData(m_NoteData);
+        MiscGameplayFunctions.TransferItemProperties(old_item, note);
 
         if (!note.GetParent()) // If not in player's hands, copy paper location & orientation to new object
         {

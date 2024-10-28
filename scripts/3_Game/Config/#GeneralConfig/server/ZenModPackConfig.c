@@ -82,6 +82,7 @@ class ZenModPackConfig
 		// No client sync required
 		ServerSideModEnabled.Insert("ZenPersistentTrees", true);
 		ServerSideModEnabled.Insert("ZenStaticBarbedWire", false); // Disabled by default as not all servers may want this
+		ServerSideModEnabled.Insert("ZenDynamicZoneLoot", true);
 		ServerSideModEnabled.Insert("ZenWeatherConfig", false); // Disabled by default as not all servers may want this
 		ServerSideModEnabled.Insert("ZenTreesplosions", true);
 		ServerSideModEnabled.Insert("ZenChickenCoops", true);

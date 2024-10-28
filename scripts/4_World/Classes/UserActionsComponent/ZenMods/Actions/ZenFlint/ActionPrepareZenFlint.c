@@ -4,7 +4,7 @@ class ActionPrepareZenFlintCB : ActionContinuousBaseCB
 	{
 		m_ActionData.m_ActionComponent = new CAContinuousTime(1);
 	}
-};
+}
 
 // This action sets the tool which the player wants to use to light fires with the Flint
 class ActionPrepareZenFlint : ActionContinuousBase
@@ -29,7 +29,6 @@ class ActionPrepareZenFlint : ActionContinuousBase
 		"Mosin_Bayonet",
 		"SKS_Bayonet",
 		"Crowbar",
-		"PipeWrench",
 		"Wrench",
 		"Lugwrench",
 		"CanOpener",

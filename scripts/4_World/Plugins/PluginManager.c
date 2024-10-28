@@ -22,6 +22,12 @@ modded class PluginManager
 		if (ZenModEnabled("ZenZombieDoors"))
 			RegisterPlugin("ZenZombieDoorsPlugin", false, true);
 
+		if (ZenModEnabled("ZenDynamicZoneLoot"))
+		{
+			if (GetZenContaminatedZoneLootConfig().ItemLifetime < 0)
+				RegisterPlugin("ZenContaminatedItemsPlugin", false, true);
+		}
+
 		RegisterPlugin("ZenAdminMessagePlugin", false, true);
 #endif
 	}

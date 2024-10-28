@@ -1,0 +1,1 @@
+Check the Wiki guide for details & instructions: https://github.com/ZenarchistCode/ZenModPack/wiki

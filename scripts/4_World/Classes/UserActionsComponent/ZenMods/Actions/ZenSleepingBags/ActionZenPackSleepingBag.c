@@ -2,7 +2,7 @@ class ActionZenPackSleepingBagCB : ActionContinuousBaseCB
 {
     override void CreateActionComponent()
     {
-        m_ActionData.m_ActionComponent = new CAContinuousTime(3);
+        m_ActionData.m_ActionComponent = new CAContinuousTime(5);
     }
 }
 
@@ -20,7 +20,7 @@ class ActionZenPackSleepingBag : ActionContinuousBase
     override void CreateConditionComponents()
     {
         m_ConditionTarget = new CCTCursor(UAMaxDistances.DEFAULT);
-        m_ConditionItem = new CCINone;
+        m_ConditionItem = new CCINotPresent;
     }
 
     override string GetText()

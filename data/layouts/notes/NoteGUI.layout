@@ -562,6 +562,7 @@ FrameWidgetClass MainFrame {
      "text halign" center
     }
     MultilineTextWidgetClass NoteReadText0 {
+     visible 1
      disabled 1
      inheritalpha 0
      color 0 0 0 1
@@ -721,7 +722,7 @@ FrameWidgetClass MainFrame {
      wrap 1
     }
     MultilineTextWidgetClass NoteReadText8 {
-     visible 0
+     visible 1
      disabled 1
      inheritalpha 0
      color 0 0 0 1
@@ -799,6 +800,22 @@ FrameWidgetClass MainFrame {
      "size to text h" 0
      "size to text v" 0
      wrap 1
+    }
+    ImageWidgetClass DamageLayer {
+     visible 0
+     inheritalpha 0
+     ignorepointer 1
+     position 0.00033 -0.00626
+     size 0.9967 0.9626
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     image0 "DZ\characters\data\generic_worn_mc.paa"
+     mode blend
+     "src alpha" 1
     }
    }
   }

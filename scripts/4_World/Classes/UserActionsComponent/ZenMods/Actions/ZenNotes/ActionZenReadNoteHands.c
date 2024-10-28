@@ -50,6 +50,7 @@ class ActionZenReadNoteHands : ActionContinuousBase
 		{
 			auto data = new Param1<ref ZenNoteData>(note.GetNoteData());
 			note.RPCSingleParam(ZenRPCs.RECEIVE_WRITTEN_NOTE, data, true, action_data.m_Player.GetIdentity());
+			note.IncreaseLifetime();
 		}
 	}
 

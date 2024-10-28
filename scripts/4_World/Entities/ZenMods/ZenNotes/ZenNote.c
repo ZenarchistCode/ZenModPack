@@ -74,6 +74,7 @@ class ZenNote extends Paper
 
 			if (gui)
 			{
+				gui.SetPaper(this);
 				gui.SetNoteData(m_ZenNoteData);
 				gui.SetReadOnly(true);
 			}

@@ -43,6 +43,11 @@ class ZenSleepingBag_PackedBase extends TentBase
         GetGame().ObjectDelete(this);
     }
 
+    override bool CanBeRepairedByCrafting()
+    {
+        return true;
+    }
+
     override bool IsDeployable()
     {
         return true;

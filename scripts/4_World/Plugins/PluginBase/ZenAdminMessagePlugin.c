@@ -198,15 +198,20 @@ class ZenAdminMessagePlugin extends PluginBase
         if (command == "reload")
         {
             bool reload = false;
-            if (params.Get(0) == "zendiscordapi")
+
+            if (params.Get(0) == "discord")
             {
                 GetZenDiscordConfig().Load();
                 reload = true;
             }
-            else
-            if (params.Get(0) == "zenutilities")
+            else if (params.Get(0) == "utilities")
             {
                 GetZenUtilitiesConfig().Load();
+                reload = true;
+            }
+            else if (params.Get(0) == "weather")
+            {
+                GetZenWeatherConfig().Load();
                 reload = true;
             }
 
@@ -217,7 +222,42 @@ class ZenAdminMessagePlugin extends PluginBase
             }
             else
             {
-                MsgPlayer(player, "Couldn't find " + params.Get(0) + " config");
+                MsgPlayer(player, "Couldn't find " + params.Get(0) + " config - valid options: discord, utilities, weather");
+            }
+
+            return true;
+        }
+
+        // Force weather config change 
+        if (command == "weather")
+        {
+            string presetName = text;
+            presetName.Replace(command + " ", "");
+
+            ZenWeatherPlugin weather = ZenWeatherPlugin.Cast(GetPlugin(ZenWeatherPlugin));
+            if (!weather)
+            {
+                MsgPlayer(player, "ZenWeatherConfig is disabled in the ZenModPackConfig json file.");
+                return true;
+            }
+
+            if (params.Count() == 0 || params.Get(0) == "")
+            {
+                weather.UpdateWeather();
+                MsgPlayer(player, "Forcing weather to " + weather.GetCurrentWeatherPreset().name);
+            }
+            else
+            {
+                float duration = weather.ApplyPreset(NULL, true, presetName);
+                if (duration == -1)
+                {
+                    MsgPlayer(player, presetName + " weather config preset name does not exist.");
+                }
+                else
+                {
+                    MsgPlayer(player, "Forcing weather to " + presetName + " preset - duration=" + duration + " secs");
+                }
+                   
             }
 
             return true;

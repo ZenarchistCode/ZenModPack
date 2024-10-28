@@ -6,7 +6,7 @@ modded class ActionLightItemOnFire
 		if (super.SetupAction(player, target, item, action_data, extra_data))
 		{
 			if (item && item.Type() == ZenFlint)
-				m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_CRAFTING;
+				m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_DEPLOY_2HD;
 
 			return true;
 		}
