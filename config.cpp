@@ -139,7 +139,6 @@
 		Zen_MusicNoise
 		ZenRandomAmmoBox
 		ZenTreasure_UndergroundStash
-		ZenTreasure_UndergroundStashWinter
 		ZenTreasure_WoodenCrate
 		ZenTreasure_SeaChest
 		ZenTreasure_DebugShovel
@@ -3502,11 +3501,9 @@ class CfgVehicles
 	};
 
 	class ZenTreasure_UndergroundStash			: UndergroundStash {};
-	class ZenTreasure_UndergroundStashWinter	: ZenTreasure_UndergroundStash 
-	{
-		// For WinterChernarus V2 compatibility - ignore if you don't use WinterChernarusV2
-		model="WinterStash\Snow_dirtpile\Snow_dirtpile.p3d";
-	};
+
+	// For legacy purposes when WinterChernarusV2 had a different stash type. No longer used.
+	class ZenTreasure_UndergroundStashWinter	: ZenTreasure_UndergroundStash {};
 
 	class ZenTreasure_WoodenCrate : WoodenCrate
 	{

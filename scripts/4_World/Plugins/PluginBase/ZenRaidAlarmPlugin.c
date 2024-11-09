@@ -5,6 +5,7 @@ class ZenRaidAlarmPlugin extends PluginBase
 
     override void OnInit()
     {
+        ZMPrint("[ZenRaidAlarmPlugin] :: OnInit");
         m_RaidStations = new array<Zen_RaidAlarmStation>;
         m_RaidTriggers = new map<string, int>;
     }
@@ -24,7 +25,7 @@ class ZenRaidAlarmPlugin extends PluginBase
         if (idx != -1)
         {
             m_RaidStations.Remove(idx);
-            Print("[ZenRaidAlarmPlugin] Unregistered raid station @ " + station.GetPosition());
+            ZMPrint("[ZenRaidAlarmPlugin] Unregistered raid station @ " + station.GetPosition());
         }
     }
 
@@ -34,7 +35,7 @@ class ZenRaidAlarmPlugin extends PluginBase
     {
         if (station != NULL)
         {
-            Print("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
+            ZMPrint("[ZenRaidAlarmPlugin] Registered raid station @ " + station.GetPosition() + " - Has Valid Webhook: " + station.HasValidWebhook());
         }
     }
 

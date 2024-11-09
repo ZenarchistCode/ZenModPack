@@ -14,6 +14,8 @@ class ZenWeatherConfig
 
 	// Config settings
 	bool DebugOn = false;
+    float OvercastMinimumRainThreshold = 0.5;
+    float OvercastMinimumSnowThreshold = 0.5;
 	ref array<ref ZenWeatherPreset> WeatherPresets;
 
     void ZenWeatherConfig()
@@ -45,6 +47,7 @@ class ZenWeatherConfig
 			else
 			{
 				// Config exists and version matches, stop here.
+                Save();
 				return;
 			}
 		}
@@ -76,7 +79,7 @@ class ZenWeatherConfig
         preset.snow_max = 1.0;
         preset.fog_min = 0.9;
         preset.fog_max = 1.0;
-        preset.storm = true;
+        preset.thunder_oc_threshold = 0.9;
         preset.thunder_timeout = 10.0;
         WeatherPresets.Insert(preset);
 
@@ -99,7 +102,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0;
         preset.fog_max = 0;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -122,7 +125,7 @@ class ZenWeatherConfig
         preset.snow_max = 0.3;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -145,7 +148,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.0;
         preset.fog_max = 0.1;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -168,7 +171,7 @@ class ZenWeatherConfig
         preset.snow_max = 0.5;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -191,7 +194,7 @@ class ZenWeatherConfig
         preset.snow_max = 1.5;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
         #else
@@ -216,7 +219,7 @@ class ZenWeatherConfig
         preset.snow_max = 1.0;
         preset.fog_min = 0.9;
         preset.fog_max = 1.0;
-        preset.storm = true;
+        preset.thunder_oc_threshold = 0.9;
         preset.thunder_timeout = 10.0;
         WeatherPresets.Insert(preset);
 
@@ -239,7 +242,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0;
         preset.fog_max = 0;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -262,7 +265,7 @@ class ZenWeatherConfig
         preset.snow_max = 0.3;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -285,7 +288,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.0;
         preset.fog_max = 0.1;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -308,7 +311,7 @@ class ZenWeatherConfig
         preset.snow_max = 0.5;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -331,7 +334,7 @@ class ZenWeatherConfig
         preset.snow_max = 1.5;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -354,7 +357,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
         #else
@@ -377,7 +380,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.9;
         preset.fog_max = 1.0;
-        preset.storm = true;
+        preset.thunder_oc_threshold = 0.9;
         preset.thunder_timeout = 10.0;
         WeatherPresets.Insert(preset);
 
@@ -400,7 +403,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0;
         preset.fog_max = 0;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -423,7 +426,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -446,7 +449,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.0;
         preset.fog_max = 0.1;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -469,7 +472,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -492,7 +495,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.1;
         preset.fog_max = 0.2;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -515,7 +518,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.0;
         preset.fog_max = 0.0;
-        preset.storm = false;
+        preset.thunder_oc_threshold = false;
         preset.thunder_timeout = 0;
         WeatherPresets.Insert(preset);
 
@@ -538,7 +541,7 @@ class ZenWeatherConfig
         preset.snow_max = 0;
         preset.fog_min = 0.0;
         preset.fog_max = 0.1;
-        preset.storm = true;
+        preset.thunder_oc_threshold = 0.9;
         preset.thunder_timeout = 10;
         WeatherPresets.Insert(preset);
         #endif
@@ -592,8 +595,23 @@ class ZenWeatherPreset
     float fog_min;
     float fog_max;
     
-    bool storm;
+    float thunder_oc_threshold;
     float thunder_timeout;
+
+    [NonSerialized()]
+    float overcast_target;
+
+    [NonSerialized()]
+    float wind_target;
+
+    [NonSerialized()]
+    float rain_target;
+
+    [NonSerialized()]
+    float snow_target;
+
+    [NonSerialized()]
+    float fog_target;
 }
 
 ref ZenWeatherConfig m_ZenWeatherConfig;

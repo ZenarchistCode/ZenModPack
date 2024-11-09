@@ -7,7 +7,7 @@ class ZenContaminatedItemsPlugin extends PluginBase
 
 	override void OnInit()
 	{
-		Print("[ZenContaminatedItemsPlugin] :: OnInit");
+		ZMPrint("[ZenContaminatedItemsPlugin] :: OnInit");
 
 		m_ZenSpawnedItems = new map<string, ref map<string, ItemBase>>;
 	}

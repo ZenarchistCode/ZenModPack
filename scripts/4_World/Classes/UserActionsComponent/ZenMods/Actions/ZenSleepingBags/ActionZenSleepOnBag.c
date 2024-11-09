@@ -15,12 +15,12 @@ class ActionZenSleepOnBagCB : ActionInteractBaseCB
         }
         #endif
 
-        if (m_ActionData.m_Target && m_ActionData.m_Target.GetObject())
-        {
+        //if (m_ActionData.m_Target && m_ActionData.m_Target.GetObject())
+        //{
             // Set player orientation to match bag - don't teleport their position to center of bag as it can be exploited for raids etc.
-            vector sleepOrientation = m_ActionData.m_Target.GetObject().GetOrientation() + "-90 0 0";
-            m_ActionData.m_Player.SetOrientation(sleepOrientation);
-        }
+            //vector sleepOrientation = m_ActionData.m_Target.GetObject().GetOrientation() + "-90 0 0";
+            //m_ActionData.m_Player.SetOrientation(sleepOrientation);
+        //}
 
         super.InitActionComponent();
     }
@@ -42,7 +42,7 @@ class ActionZenSleepOnBag : ActionInteractBase
 
     override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
     {
-        if (player.GetItemInHands() || !target || !target.GetObject() || !target.GetObject().IsKindOf("ZenSleepingBag_DeployedBase"))
+        if (player.GetItemInHands() || !target || !target.GetObject() || (!target.GetObject().IsInherited(ZenSleepingBag_DeployedBase) && !target.GetObject().IsInherited(ZenSleepingBagStatic_Base)))
             return false;
 
         float distance = vector.Distance(target.GetObject().GetPosition(), player.GetPosition());

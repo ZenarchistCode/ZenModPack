@@ -141,7 +141,7 @@ class ZenTreasure_StashTrigger extends Trigger
 		}
 
 		// Spawn container
-		EntityAI container = EntityAI.Cast(GetGame().CreateObject(treasureConfig.ContainerType, m_TreasureConfig.Position - "0 25 0", ECE_PLACE_ON_SURFACE));
+		EntityAI container = EntityAI.Cast(GetGame().CreateObject(treasureConfig.ContainerType, m_TreasureConfig.Position, ECE_PLACE_ON_SURFACE));
 		if (!container)
 		{
 			Error("[ZenTreasure] Failed to spawn treasure loot container - " + treasureConfig.ContainerType + " @ " + m_TreasureConfig.Position);
@@ -204,18 +204,8 @@ class ZenTreasure_StashTrigger extends Trigger
 		}
 
 		// Spawn stash
-		UndergroundStash stash;
-		float heightOffset = 0;
-		
-		if (ZenTreasure_PhotoBase.IsWinterPhoto())
-		{
-			stash = UndergroundStash.Cast(GetGame().CreateObject("ZenTreasure_UndergroundStashWinter", m_TreasureConfig.Position, ECE_PLACE_ON_SURFACE));
-			heightOffset = 0.17;
-		} else 
-		{
-			stash = UndergroundStash.Cast(GetGame().CreateObject("ZenTreasure_UndergroundStash", m_TreasureConfig.Position, ECE_PLACE_ON_SURFACE));
-			heightOffset = 0.24;
-		}
+		float heightOffset = 0.24;
+		UndergroundStash stash = UndergroundStash.Cast(GetGame().CreateObject("ZenTreasure_UndergroundStash", m_TreasureConfig.Position, ECE_PLACE_ON_SURFACE));
 
 		if (!stash)
 		{

@@ -50,6 +50,8 @@ class ZenBrokenGlassesWidget extends Managed
 		if (!ZenModEnabled("ZenBrokenGlasses"))
 			return;
 
+		m_layout.Show(true);
+
 		if (dmg < GameConstants.STATE_DAMAGED)
 		{
 			HideFX();
@@ -74,6 +76,8 @@ class ZenBrokenGlassesWidget extends Managed
 	{
 		if (!ZenModEnabled("ZenBrokenGlasses"))
 			return;
+
+		m_layout.Show(true);
 
 		if (dmg < GameConstants.STATE_DAMAGED)
 		{

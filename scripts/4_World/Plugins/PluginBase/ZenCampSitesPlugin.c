@@ -5,7 +5,7 @@ class ZenCampSitesPlugin extends PluginBase
 
 	override void OnInit()
 	{
-		Print("[ZenCampSitesPlugin] :: OnInit");
+		ZMPrint("[ZenCampSitesPlugin] :: OnInit");
 		GetZenCampSitesConfig();
 		m_DeltaTime = 0;
 	}

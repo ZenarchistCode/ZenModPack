@@ -12,7 +12,7 @@ class ZenZombieDoorsPlugin extends PluginBase
 
 	override void OnInit()
 	{
-		Print("[ZenZombieDoorsPlugin] :: OnInit");
+		ZMPrint("[ZenZombieDoorsPlugin] :: OnInit");
 		GetZombieDoorsConfig();
 
 		if (!m_DoorHitData)

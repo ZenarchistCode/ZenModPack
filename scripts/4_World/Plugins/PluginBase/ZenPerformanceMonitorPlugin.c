@@ -36,7 +36,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
 
     override void OnInit()
     {
-        Print("[ZenPerformanceMonitorPlugin] :: OnInit");
+        ZMPrint("[ZenPerformanceMonitorPlugin] :: OnInit");
         m_DeltaTime = 0;
         m_HighestFPS = 0;
         m_LowestFPS = 99999999;

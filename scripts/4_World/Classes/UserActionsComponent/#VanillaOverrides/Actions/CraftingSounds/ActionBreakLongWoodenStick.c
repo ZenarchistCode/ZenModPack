@@ -1,4 +1,4 @@
-modded class ActionBreakLongWoodenStick
+/*modded class ActionBreakLongWoodenStick
 {
 	override string GetSoundCategory(ActionData action_data)
 	{
@@ -7,4 +7,4 @@ modded class ActionBreakLongWoodenStick
 
 		return "Zen_BreakStick";
 	}
-};
+};*/
