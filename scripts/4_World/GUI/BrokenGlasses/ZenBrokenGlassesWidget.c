@@ -1,7 +1,7 @@
 // I'm a big dummy who cbf learning how PPE fx work, so this is how I do things. Sue me.
 class ZenBrokenGlassesWidget extends Managed
 {
-	static const string MOD_DIRECTORY = "ZenModPack/data/layouts/brokenglasses/";
+	static const string MOD_DIRECTORY = "ZenModPack/data/gui/layouts/brokenglasses/";
 
 	ref Widget				m_layout;
 	ref ImageWidget			m_glass1;

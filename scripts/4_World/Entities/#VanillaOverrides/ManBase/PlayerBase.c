@@ -13,6 +13,7 @@ modded class PlayerBase
 		//! IMMERSIVE LOGIN
 		if (GetGame())
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ImmersiveLoginFailsafe, 10000);
+		
 		RegisterNetSyncVariableBool("m_ZenLoginHasFinishedServer");
 
 		//! SHARED
@@ -162,6 +163,9 @@ modded class PlayerBase
 		// Client-side (tells client to temporarily restrict movement after being shoved)
 		if (rpc_type == ZenRPCs.SHOVE_RPC)
 		{
+			if (!IsRestrained())
+				return;
+
 			Param1<int> shove_ClientParams;
 
 			if (!ctx.Read(shove_ClientParams))
@@ -593,7 +597,7 @@ modded class PlayerBase
 
 	void ZenImmersiveLogin_OnPlayerLoaded()
 	{
-		if (!ZenModEnabled("ZenImmersiveLogin"))
+		if (!ZenModEnabled("ZenImmersiveLogin") || !(GetGame().IsClient() && GetZenModPackClientConfig().ImmersiveLogin))
 		{
 			m_ZenLoginHasFinishedClient = true;
 			m_ZenLoginHasFinishedServer = true;
@@ -780,8 +784,8 @@ modded class PlayerBase
 		m_ZenLoginHasFinishedClient = true;
 
 #ifdef SERVER
-			m_ZenLoginHasFinishedServer = true;
-			SetSynchDirty();
+		m_ZenLoginHasFinishedServer = true;
+		SetSynchDirty();
 #endif
 	}
 

@@ -11,6 +11,7 @@ class ZenModPackClientConfig
 	// Config vars
 	int CassetteMusicSetting = 1;
 	bool ShowRadioBadge = true;
+	bool ImmersiveLogin = true;
 
 	void Load()
 	{

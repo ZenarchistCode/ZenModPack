@@ -1,7 +1,7 @@
 class ZenNoteGUI extends UIScriptedMenu
 {
 	// Layout constants
-	static const string LAYOUT_FILE = "ZenModPack/data/layouts/notes/NoteGUI.layout";
+	static const string LAYOUT_FILE = "ZenModPack/data/gui/layouts/notes/NoteGUI.layout";
 
 	// Font variables
 	int m_FontIndex = 0;

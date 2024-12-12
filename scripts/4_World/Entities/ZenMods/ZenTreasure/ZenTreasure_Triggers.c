@@ -26,7 +26,7 @@ class ZenTreasure_Triggers extends Managed
 		}
 	}
 
-	void SpawnTrigger(ZenTreasureTriggerConfig cfg)
+	void SpawnTrigger(ZenTreasureTriggerConfig cfg, PlayerBase player = NULL)
 	{
 		// Check if one already exists for this cfg first
 		for (int i = m_Triggers.Count() - 1; i >= 0; i--)
@@ -53,6 +53,9 @@ class ZenTreasure_Triggers extends Managed
 		trigger.SetCollisionSphere(TRIGGER_RADIUS);
 		m_Triggers.Insert(trigger);
 		ZMPrint("ZenTreasure_Triggers::SpawnTrigger() - Spawned trigger @ " + cfg.Position);
+
+		if (player && vector.Distance(trigger.GetPosition(), player.GetPosition()) <= TRIGGER_RADIUS)
+			trigger.OnEnter(player);
 	}
 
 	void RemoveTrigger(ZenTreasure_StashTrigger trigger)
@@ -74,7 +77,7 @@ class ZenTreasure_Triggers extends Managed
 }
 
 // This trigger spawns a buried stash when the player who activated the treasure hunt enters it
-class ZenTreasure_StashTrigger extends Trigger
+class ZenTreasure_StashTrigger extends ManTrigger
 {
 	private ref ZenTreasureTriggerConfig m_TreasureConfig;
 
@@ -90,7 +93,7 @@ class ZenTreasure_StashTrigger extends Trigger
 
 	override void OnEnter(Object obj)
 	{
-		if (!obj.IsMan() || !GetGame().IsDedicatedServer())
+		if (!GetGame().IsDedicatedServer())
 			return;
 
 		PlayerBase player = PlayerBase.Cast(obj);
@@ -115,7 +118,7 @@ class ZenTreasure_StashTrigger extends Trigger
 
 		// Spawn treasure, delete self + delete config.
 		SpawnTreasureLoot(player, stashType);
-	};
+	}
 
 	//! LOOT SPAWN CODE
 	void SpawnTreasureLoot(notnull PlayerBase player, int stashType)
@@ -149,7 +152,7 @@ class ZenTreasure_StashTrigger extends Trigger
 		}
 
 		// Clone loot array which auto-deletes after spawning everything (makes it easier to load generic loot from all possible loot configs)
-		autoptr array<ref ZenTreasureLootSpawn> tempLootArray = new autoptr array<ref ZenTreasureLootSpawn>;
+		array<ref ZenTreasureLootSpawn> tempLootArray = new array<ref ZenTreasureLootSpawn>;
 
 		// If loot type is 0 or 1 (generic) then fill Loot array with all possible loot 
 		if (stashType == 0 || stashType == 1)

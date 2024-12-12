@@ -17,8 +17,8 @@ class ZenChickenCoopsConfig
 	bool SpawnChickenCoops;
 	float ChanceOfSpawn = 0.5;
 	string NoFeathersLeftMessage;
-	autoptr array<ref ZenChickenCoopType> CoopTypes;
-	autoptr array<ref ZenChickenCoopObject> CoopPositions;
+	ref array<ref ZenChickenCoopType> CoopTypes;
+	ref array<ref ZenChickenCoopObject> CoopPositions;
 
 	// Load config file or create default file if config doesn't exsit
 	void Load()

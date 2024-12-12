@@ -72,7 +72,7 @@ class ZenTreasure_PhotoBase extends ItemBase
 
 	static bool IsWinterPhoto()
 	{
-		#ifdef WINTER // My winter define in @HardcoreDayZServerPack
+		#ifdef WINTER // My winter define in @HardcoreDayZServerPack, used for season changes
 		return true;
 		#endif
 
@@ -190,7 +190,7 @@ class ZenTreasure_PhotoBase extends ItemBase
 			return;
 		}
 
-		GetZenTreasure_Triggers().SpawnTrigger(GetZenTreasureConfig_SpawnTriggers().AddTreasureTrigger(m_StashPosition, player.GetCachedID(), m_StashType));
+		GetZenTreasure_Triggers().SpawnTrigger(GetZenTreasureConfig_SpawnTriggers().AddTreasureTrigger(m_StashPosition, player.GetCachedID(), m_StashType), player);
 		ZenModLogger.Log(player.GetCachedID() + " spawned treasure stash TRIGGER @ " + m_StashPosition + " with config " + treasureConfig.ConfigName, "ZenTreasure");
 	}
 };

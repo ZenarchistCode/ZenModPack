@@ -58,6 +58,10 @@ class Land_ZenIceSheet_4x4_Hole extends ItemBase
 			if (obj.GetType().Contains("Land_ZenIceSheet") && obj != this)
 				GetGame().ObjectDelete(obj);
 		}
+
+#ifdef WINTER // Custom define - delete any leftover ice holes between season changes on my server (HardcoreDayZ.com)
+		DeleteSafe();
+#endif
 	}
 
 	override bool DisableVicinityIcon()

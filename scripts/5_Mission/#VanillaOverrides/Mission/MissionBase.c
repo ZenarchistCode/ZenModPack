@@ -247,6 +247,9 @@ modded class MissionBase
 		{
 			GetZenModPackConfig().ModEnabled.Insert(data.param1.GetKey(i), data.param1.GetElement(i));
 		}
+
+        GetZenModPackClientConfig().ImmersiveLogin = ZenModEnabled("ZenImmersiveLogin");
+        GetZenModPackClientConfig().Save();
 	}
 
 	//! TREASURE 

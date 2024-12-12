@@ -1,4 +1,4 @@
-modded class InspectMenuNew extends UIScriptedMenu
+modded class InspectMenuNew
 {
 	// I made my alcohol items inherit from Vodka to make it much easier to be compatible with any alcohol mods out there
 	// but the whisky items just change the name from VODKA to WHISKY visually (liquid type is still vodka)

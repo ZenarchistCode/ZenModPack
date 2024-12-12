@@ -2,6 +2,7 @@ FrameWidgetClass rootFrame {
  visible 0
  clipchildren 0
  position 0 0
+ ignorepointer 1
  size 1 1
  hexactpos 0
  vexactpos 0
@@ -24,7 +25,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{E94A8292F11E71C6}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass1.edds"
+   imageTexture "{F02DF034A7853014}#Zenarchist/ZenBrokenGlasses/data/brokenglass1.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -46,7 +47,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{B7A2ABD14E93FFC9}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass2.edds"
+   imageTexture "{AEC5D9771808BE1B}#Zenarchist/ZenBrokenGlasses/data/brokenglass2.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -69,7 +70,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{43AAEC49434E97BD}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass3.edds"
+   imageTexture "{AEC5D9771808BE1B}#Zenarchist/ZenBrokenGlasses/data/brokenglass2.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -92,7 +93,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{43AAEC49434E97BD}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass3.edds"
+   imageTexture "{AEC5D9771808BE1B}#Zenarchist/ZenBrokenGlasses/data/brokenglass2.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -116,7 +117,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{B7A2ABD14E93FFC9}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass2.edds"
+   imageTexture "{AEC5D9771808BE1B}#Zenarchist/ZenBrokenGlasses/data/brokenglass2.edds"
    mode blend
    "src alpha" 1
    "stretch mode" stretch_w_h
@@ -139,7 +140,7 @@ FrameWidgetClass rootFrame {
    vexactsize 0
    scaled 1
    image0 ""
-   imageTexture "{E94A8292F11E71C6}ZenModPack/data/GUI/Layouts/BrokenGlasses/brokenglass1.edds"
+   imageTexture "{F02DF034A7853014}#Zenarchist/ZenBrokenGlasses/data/brokenglass1.edds"
    mode additive
    "src alpha" 1
    "stretch mode" stretch_w_h
