@@ -16,7 +16,7 @@ class ZenTreasure_UndergroundStash extends UndergroundStash
 			m_ClutterCutter = GetGame().CreateObjectEx("MediumTentClutterCutter", GetPosition(), ECE_PLACE_ON_SURFACE);
 
 #ifdef GAMELABS
-		_registeredInstanceZenGL = new _Event("Zen Treasure Stash", "trowel", this);
+		_registeredInstanceZenGL = new _Event(GetType(), "poo", this);
 		GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
 	}
@@ -42,6 +42,7 @@ class ZenTreasure_UndergroundStash extends UndergroundStash
 // For legacy purposes when WinterChernarusV2 had a different stash type. No longer used.
 class ZenTreasure_UndergroundStashWinter extends ZenTreasure_UndergroundStash {};
 
+/*
 modded class DigOutStashLambda : DropEquipAndDestroyRootLambda
 {
 	void DigOutStashLambda(EntityAI old_item, string new_item_type, PlayerBase player) 
@@ -53,3 +54,4 @@ modded class DigOutStashLambda : DropEquipAndDestroyRootLambda
 		}
 	}
 }
+*/

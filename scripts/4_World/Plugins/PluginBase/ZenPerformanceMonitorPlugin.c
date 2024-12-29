@@ -54,8 +54,19 @@ class ZenPerformanceMonitorPlugin extends PluginBase
             string msg = GetPerformanceDump();
             Print(msg);
             ZenModLogger.LogEx(msg, "performance");
-
         }
+    }
+
+    int GetServerFps()
+    {
+        int fps;
+#ifdef GAMELABS
+        fps = GetGameLabs().GetServerFPS();
+#else
+        fps = GetZenServerFPS();
+#endif
+
+        return fps;
     }
 
     string GetPerformanceDump()
@@ -106,7 +117,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         if (!m_MonitoringFPS)
             return;
 
-        int fps = GetZenServerFPS();
+        int fps = GetServerFps();
 
         //! CHECK FPS WARNING
         if (m_MonitoringFPS && fps <= GetZenUtilitiesConfig().ServerFPSWarning)
@@ -167,7 +178,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         if (!m_MonitoringFPS)
             return;
 
-        m_CurrentActionStartFPS = GetZenServerFPS();
+        m_CurrentActionStartFPS = GetServerFps();
         m_CurrentActionLowestFPS = m_CurrentActionStartFPS;
         m_CurrentActionClassName = action_data.m_Action.ClassName();
 
@@ -180,7 +191,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         if (!m_MonitoringFPS)
             return;
 
-        int fps = GetZenServerFPS();
+        int fps = GetServerFps();
         if (fps < m_CurrentActionLowestFPS)
             m_CurrentActionLowestFPS = fps;
     }

@@ -1,4 +1,4 @@
-modded class PetrolLighter
+/*modded class PetrolLighter
 {
 	override void EEInit()
 	{
@@ -26,7 +26,7 @@ modded class PetrolLighter
 	{
 		GetInventory().ReplaceItemWithNew(InventoryMode.SERVER, new ReplaceItemWithNewLambda(this, swapType, PlayerBase.Cast(GetHierarchyRootPlayer())));
 	}
-}
+}*/
 
 class ZenPetrolLighter extends PetrolLighter
 {

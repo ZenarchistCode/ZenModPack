@@ -536,4 +536,26 @@ class ZenFunctions
 	{
 		SetPlayerControl(false, false);
 	}
+
+	// Sends a GameLabs CFTools Cloud deployed message @ the given position.
+	// !NOTE: Will use a random player to "deploy" the message and position,
+	//		  so disregard the player in whatever message is sent.
+	static void GameLabs_SendServerDeployed(vector pos, string message)
+	{
+#ifdef SERVER
+#ifdef GAMELABS
+		array<Man> players = new array<Man>;
+		g_Game.GetWorld().GetPlayerList(players);
+		if (!players || players.Count() == 0)
+			return;
+
+		message.ToUpper();
+
+		_LogPlayerEx logObjectPlayer = new _LogPlayerEx(PlayerBase.Cast(players.Get(0)));
+		logObjectPlayer.position = pos;
+		_Payload_ItemPlace payload = new _Payload_ItemPlace(logObjectPlayer, message);
+		GetGameLabs().GetApi().ItemPlace(new _Callback(), payload);
+#endif
+#endif
+	}
 }

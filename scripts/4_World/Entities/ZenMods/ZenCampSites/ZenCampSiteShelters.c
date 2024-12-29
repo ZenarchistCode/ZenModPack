@@ -9,7 +9,7 @@ class ZenCamps_ShelterStick extends ShelterStick
 			SetAllowDamage(false);
 
 #ifdef GAMELABS 
-			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterStick", "tent", this);
+			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterStick", "heart", this);
 			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
 		}
@@ -50,7 +50,7 @@ class ZenCamps_ShelterFabric extends ShelterStick
 			SetAllowDamage(false);
 
 #ifdef GAMELABS 
-			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterFabric", "tent", this);
+			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterFabric", "heart", this);
 			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
 		}
@@ -91,7 +91,7 @@ class ZenCamps_ShelterLeather extends ShelterStick
 			SetAllowDamage(false);
 
 #ifdef GAMELABS 
-			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterLeather", "tent", this);
+			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterLeather", "heart", this);
 			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
 		}

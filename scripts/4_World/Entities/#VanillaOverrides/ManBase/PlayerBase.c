@@ -1080,82 +1080,82 @@ modded class PlayerBase
 			return;
 
 		// Store clothing & shoulder slots first
-		ItemBase Shoulder = ItemBase.Cast(FindAttachmentBySlotName("Shoulder"));
-		if (Shoulder && !Shoulder.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase shoulder = ItemBase.Cast(FindAttachmentBySlotName("shoulder"));
+		if (shoulder && !shoulder.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Shoulder.GetType(), 1, Shoulder.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(shoulder.GetType(), 1, shoulder.GetHealth(), true));
 		}
 
-		ItemBase Melee = ItemBase.Cast(FindAttachmentBySlotName("Melee"));
-		if (Melee && !Melee.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase melee = ItemBase.Cast(FindAttachmentBySlotName("melee"));
+		if (melee && !melee.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Melee.GetType(), 1, Melee.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(melee.GetType(), 1, melee.GetHealth(), true));
 		}
 
-		ItemBase Headgear = ItemBase.Cast(FindAttachmentBySlotName("Headgear"));
-		if (Headgear && !Headgear.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase headgear = ItemBase.Cast(FindAttachmentBySlotName("headgear"));
+		if (headgear && !headgear.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Headgear.GetType(), 1, Headgear.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(headgear.GetType(), 1, headgear.GetHealth(), true));
 		}
 
-		ItemBase Eyewear = ItemBase.Cast(FindAttachmentBySlotName("Eyewear"));
-		if (Eyewear && !Eyewear.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase eyewear = ItemBase.Cast(FindAttachmentBySlotName("eyewear"));
+		if (eyewear && !eyewear.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Eyewear.GetType(), 1, Eyewear.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(eyewear.GetType(), 1, eyewear.GetHealth(), true));
 		}
 
-		ItemBase Mask = ItemBase.Cast(FindAttachmentBySlotName("Mask"));
-		if (Mask && !Mask.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase mask = ItemBase.Cast(FindAttachmentBySlotName("mask"));
+		if (mask && !mask.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Mask.GetType(), 1, Mask.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(mask.GetType(), 1, mask.GetHealth(), true));
 		}
 
-		ItemBase Body = ItemBase.Cast(FindAttachmentBySlotName("Body"));
-		if (Body && !Body.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase body = ItemBase.Cast(FindAttachmentBySlotName("body"));
+		if (body && !body.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Body.GetType(), 1, Body.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(body.GetType(), 1, body.GetHealth(), true));
 		}
 
-		ItemBase Gloves = ItemBase.Cast(FindAttachmentBySlotName("Gloves"));
-		if (Gloves && !Gloves.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase gloves = ItemBase.Cast(FindAttachmentBySlotName("gloves"));
+		if (gloves && !gloves.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Gloves.GetType(), 1, Gloves.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(gloves.GetType(), 1, gloves.GetHealth(), true));
 		}
 
-		ItemBase Vest = ItemBase.Cast(FindAttachmentBySlotName("Vest"));
-		if (Vest && !Vest.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase vest = ItemBase.Cast(FindAttachmentBySlotName("vest"));
+		if (vest && !vest.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Vest.GetType(), 1, Vest.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(vest.GetType(), 1, vest.GetHealth(), true));
 		}
 
-		ItemBase Hips = ItemBase.Cast(FindAttachmentBySlotName("Hips"));
-		if (Hips && !Hips.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase hips = ItemBase.Cast(FindAttachmentBySlotName("hips"));
+		if (hips && !hips.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Hips.GetType(), 1, Hips.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(hips.GetType(), 1, hips.GetHealth(), true));
 		}
 
-		ItemBase Legs = ItemBase.Cast(FindAttachmentBySlotName("Legs"));
-		if (Legs && !Legs.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase legs = ItemBase.Cast(FindAttachmentBySlotName("legs"));
+		if (legs && !legs.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Legs.GetType(), 1, Legs.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(legs.GetType(), 1, legs.GetHealth(), true));
 		}
 
-		ItemBase Feet = ItemBase.Cast(FindAttachmentBySlotName("Feet"));
-		if (Feet && !Feet.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase feet = ItemBase.Cast(FindAttachmentBySlotName("feet"));
+		if (feet && !feet.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Feet.GetType(), 1, Feet.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(feet.GetType(), 1, feet.GetHealth(), true));
 		}
 
-		ItemBase Back = ItemBase.Cast(FindAttachmentBySlotName("Back"));
-		if (Back && !Back.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase back = ItemBase.Cast(FindAttachmentBySlotName("back"));
+		if (back && !back.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Back.GetType(), 1, Back.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(back.GetType(), 1, back.GetHealth(), true));
 		}
 
-		ItemBase Armband = ItemBase.Cast(FindAttachmentBySlotName("Armband"));
-		if (Armband && !Armband.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
+		ItemBase armband = ItemBase.Cast(FindAttachmentBySlotName("armband"));
+		if (armband && !armband.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
 		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(Armband.GetType(), 1, Armband.GetHealth(), true));
+			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(armband.GetType(), 1, armband.GetHealth(), true));
 		}
 
 		Ammunition_Base ammo;
@@ -1177,31 +1177,31 @@ modded class PlayerBase
 			if (item && !item.IsMan())
 			{
 				// Skip all clothing items as they're saved separately above
-				if (item == Shoulder)
+				if (item == shoulder)
 					continue;
-				if (item == Melee)
+				if (item == melee)
 					continue;
-				if (item == Headgear)
+				if (item == headgear)
 					continue;
-				if (item == Eyewear)
+				if (item == eyewear)
 					continue;
-				if (item == Mask)
+				if (item == mask)
 					continue;
-				if (item == Body)
+				if (item == body)
 					continue;
-				if (item == Gloves)
+				if (item == gloves)
 					continue;
-				if (item == Vest)
+				if (item == vest)
 					continue;
-				if (item == Hips)
+				if (item == hips)
 					continue;
-				if (item == Legs)
+				if (item == legs)
 					continue;
-				if (item == Feet)
+				if (item == feet)
 					continue;
-				if (item == Back)
+				if (item == back)
 					continue;
-				if (item == Armband)
+				if (item == armband)
 					continue;
 
 				// Skip if item is "dummy" item (eg. Magnum_Cylinder)

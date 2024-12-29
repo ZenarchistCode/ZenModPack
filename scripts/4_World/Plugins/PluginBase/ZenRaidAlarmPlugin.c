@@ -68,6 +68,11 @@ class ZenRaidAlarmPlugin extends PluginBase
             }
         }
 
+#ifdef GAMELABS
+        Zen_RaidAlarm_GameLabsDummy gameLabsDummy = Zen_RaidAlarm_GameLabsDummy.Cast(GetGame().CreateObject("Zen_RaidAlarm_GameLabsDummy", objectPos));
+        ZenFunctions.GameLabs_SendServerDeployed(objectPos, "RAID IN PROGRESS!");
+#endif
+
         // Trigger admin webhooks - only if no station is detected. Otherwise we send the same player alert to the admins in TriggerRaidAlarm() ^
         if (GetZenDiscordConfig().TriggerAdminRaidAlert)
         {

@@ -16,7 +16,7 @@ class Zen_RaidAlarmStation extends ItemBase
 	protected ref Timer m_ZenRoofCheckTimer;
 
 	// Client and/or Server
-	protected int m_ZenRaidAlarmStatus = ZEN_ALARM_STATUS_OFF; // todo: change to STATUS int. 0 = off, 1 = alarmed, 2 = green, 3 = yellow/orange
+	protected int m_ZenRaidAlarmStatus = ZEN_ALARM_STATUS_OFF;
 	protected int m_ZenRaidAlarmClientStatus = -1;
 	protected EffectSound m_ZenSoundAlarmLoop;
 	protected ZenRaidAlarmLight m_ZenBlinkingLight;
@@ -118,6 +118,10 @@ class Zen_RaidAlarmStation extends ItemBase
 	///////////////////////////////////////////////////////////////////////
 	//! SHARED
 	///////////////////////////////////////////////////////////////////////
+#ifdef GAMELABS
+	ref _Event _registeredInstanceZenGL;
+#endif
+
 	override void InitItemVariables()
 	{
 		super.InitItemVariables();
@@ -232,6 +236,14 @@ class Zen_RaidAlarmStation extends ItemBase
 #ifdef SERVER
 		UpdateBatteryEnergy();
 		RegisterRaidStation();
+
+#ifdef GAMELABS 
+		if (!_registeredInstanceZenGL)
+		{
+			_registeredInstanceZenGL = new _Event(GetType(), "bell", this);
+			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
+		}
+#endif
 #endif
 	}
 
@@ -255,6 +267,13 @@ class Zen_RaidAlarmStation extends ItemBase
 			SetAlarmStatus(ZEN_ALARM_STATUS_OFF);
 
 		m_ZenDontNotifyAboutPower = false;
+
+#ifdef GAMELABS 
+		if (GetGameLabs() && _registeredInstanceZenGL)
+		{
+			GetGameLabs().RemoveEvent(_registeredInstanceZenGL);
+		}
+#endif
 #endif
 	}
 

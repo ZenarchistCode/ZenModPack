@@ -784,6 +784,13 @@ class CfgVehicles
 		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\radar_co.paa" };
 	};
 
+	// Dummy invisible raid object purely for GameLabs integration
+	class Zen_RaidAlarm_GameLabsDummy : HouseNoDestruct
+	{
+		scope = 1;
+		model = "ZenModPack\data\models\woodreserves\zen_woodreserve.p3d";
+	};
+
 	//! GENERIC KIT BOX 
 	class ZenKitBoxBase : Inventory_Base
 	{
