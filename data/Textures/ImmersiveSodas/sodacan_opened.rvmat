@@ -20,7 +20,7 @@ class Stage1
 };
 class Stage2
 {
-	texture="ZenImmersiveSodas\data\textures\opened_soda_lid.paa";
+	texture="ZenModPack\data\textures\opened_soda_lid.paa";
 	uvSource="tex";
 	class uvTransform
 	{
@@ -32,7 +32,7 @@ class Stage2
 };
 class Stage3
 {
-	texture="ZenImmersiveSodas\data\textures\opened_soda_lid.paa";
+	texture="ZenModPack\data\textures\opened_soda_lid.paa";
 	uvSource="tex";
 	class uvTransform
 	{

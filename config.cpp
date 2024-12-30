@@ -339,7 +339,7 @@ class CfgVehicles
 	{
 		// Dumps all CfgVehicle types with scope=2 to script.txt file in profiles folder for types.xml'ing.
 		dumpCfgVehicles = 0;
-	}
+	};
 
 	//! VANILLA CLASS CONFIG REQUIREMENTS
 	class M18SmokeGrenade_Green;
@@ -377,12 +377,12 @@ class CfgVehicles
 	class Screwdriver : Inventory_Base
 	{
 		inventorySlot[] += { "ZenCWB_Screwdriver" };
-	}
+	};
 	//! MEGAPHONE PRE-DEFINE - add megaphone attachment for raid station
 	class Megaphone : Inventory_Base
 	{
 		inventorySlot[] += { "ZenMegaphone" };
-	}
+	};
 
 	//! FLINT
 	class ZenFlint : Inventory_Base
@@ -1772,7 +1772,7 @@ class CfgVehicles
 				};
 			};
 		};
-	}
+	};
 
 	//! HAND SAW 
 	class ZenSwissKnife_SmallSaw: HandSaw
@@ -2738,7 +2738,7 @@ class CfgVehicles
 	{
 		scope = 2;
 		itemsCargoSize[] = { 10,10 };
-	}
+	};
 
 	//! RAYBANS 
 	class ZenRaybans_ColorBase: Clothing
@@ -2902,7 +2902,7 @@ class CfgVehicles
 			itemsCargoSize[] = { 10,2 };
 			openable = 0;
 			allowOwnedCargoManipulation = 1;
-		}
+		};
 		inventorySlot[] +=
 		{
 			"ZenCarGlovebox"
@@ -2915,7 +2915,7 @@ class CfgVehicles
 		{
 			"#(argb,8,8,3)color(1,1,1,0,CA)"
 		};
-	}
+	};
 
 	//! MUSIC
 	class Zen_CassetteCase : Inventory_Base
@@ -3313,7 +3313,7 @@ class CfgVehicles
 				{
 					"ZenCassette"
 				};
-			}
+			};
 			class ZenPimpMyRide
 			{
 				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
@@ -3323,16 +3323,16 @@ class CfgVehicles
 				{
 					"Chemlight"
 				};
-			}
+			};
 			class ZenCarGlovebox
 			{
 				name = "$STR_CfgVehicles_ZenGlovebox";
 				description = "$STR_CfgVehicles_ZenGlovebox";
 				icon = "missing";
 				attachmentSlots[] = { "ZenCarGlovebox" };
-			}
-		}
-	}
+			};
+		};
+	};
 	class Offroad_02 : CarScript
 	{
 		attachments[] +=
@@ -3353,7 +3353,7 @@ class CfgVehicles
 				{
 					"ZenCassette"
 				};
-			}
+			};
 			class ZenPimpMyRide
 			{
 				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
@@ -3363,16 +3363,16 @@ class CfgVehicles
 				{
 					"Chemlight"
 				};
-			}
+			};
 			class ZenCarGlovebox
 			{
 				name = "$STR_CfgVehicles_ZenGlovebox";
 				description = "$STR_CfgVehicles_ZenGlovebox";
 				icon = "missing";
 				attachmentSlots[] = { "ZenCarGlovebox" };
-			}
-		}
-	}
+			};
+		};
+	};
 	class CivilianSedan : CarScript
 	{
 		attachments[] +=
@@ -3393,7 +3393,7 @@ class CfgVehicles
 				{
 					"ZenCassette"
 				};
-			}
+			};
 			class ZenPimpMyRide
 			{
 				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
@@ -3403,16 +3403,16 @@ class CfgVehicles
 				{
 					"Chemlight"
 				};
-			}
+			};
 			class ZenCarGlovebox
 			{
 				name = "$STR_CfgVehicles_ZenGlovebox";
 				description = "$STR_CfgVehicles_ZenGlovebox";
 				icon = "missing";
 				attachmentSlots[] = { "ZenCarGlovebox" };
-			}
-		}
-	}
+			};
+		};
+	};
 	class Hatchback_02 : CarScript
 	{
 		attachments[] +=
@@ -3433,7 +3433,7 @@ class CfgVehicles
 				{
 					"ZenCassette"
 				};
-			}
+			};
 			class ZenPimpMyRide
 			{
 				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
@@ -3443,16 +3443,16 @@ class CfgVehicles
 				{
 					"Chemlight"
 				};
-			}
+			};
 			class ZenCarGlovebox
 			{
 				name = "$STR_CfgVehicles_ZenGlovebox";
 				description = "$STR_CfgVehicles_ZenGlovebox";
 				icon = "missing";
 				attachmentSlots[] = { "ZenCarGlovebox" };
-			}
-		}
-	}
+			};
+		};
+	};
 	class Sedan_02 : CarScript
 	{
 		attachments[] +=
@@ -3473,7 +3473,7 @@ class CfgVehicles
 				{
 					"ZenCassette"
 				};
-			}
+			};
 			class ZenPimpMyRide
 			{
 				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
@@ -3483,16 +3483,16 @@ class CfgVehicles
 				{
 					"Chemlight"
 				};
-			}
+			};
 			class ZenCarGlovebox
 			{
 				name = "$STR_CfgVehicles_ZenGlovebox";
 				description = "$STR_CfgVehicles_ZenGlovebox";
 				icon = "missing";
 				attachmentSlots[] = { "ZenCarGlovebox" };
-			}
-		}
-	}
+			};
+		};
+	};
 
 	//! TREASURE 
 	// Turns into a random ammo box
@@ -3542,7 +3542,7 @@ class CfgVehicles
 		itemSize[] = { 1,1 };
 		isMeleeWeapon=1;
 		absorbency=1;
-		rotationFlags=1; // 1 = rotate front-up, 16 = rotate front-down
+		rotationFlags=16; // 1 = rotate front-up, 16 = rotate front-down
 		varWetMax=1;
 		treasure_stash_x = -1.0;
 		treasure_stash_z = -1.0;
@@ -3597,7 +3597,7 @@ class CfgVehicles
 						}
 					};
 				};
-			}
+			};
 		};
 		class AnimEvents
 		{
@@ -3619,7 +3619,7 @@ class CfgVehicles
 	{
 		scope = 2;
 		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\treasure\photo_random.paa" };
-	}
+	};
 
 	//! ZIPPO 
 	// Vanilla Petrol lighter EnergyManager config
@@ -3650,7 +3650,7 @@ class CfgVehicles
 				};
 			};
 		};
-	}
+	};
 
 	// My zippos
 	class ZenZippoLighter: ZenPetrolLighter
@@ -4046,8 +4046,8 @@ class CfgVehicles
 				class Health
 				{
 					hitpoints = 9999;
-				}
-			}
+				};
+			};
 		};
 	};
 
@@ -4218,7 +4218,7 @@ class CfgVehicles
             itemsCargoSize[] = { 10,4 };
             openable = 0;
             allowOwnedCargoManipulation = 1;
-        }
+        };
 		attachments[]=
 		{
 			"Back",
@@ -4247,53 +4247,53 @@ class CfgVehicles
 				class Health
 				{
 					hitpoints=120;
-					healthLevels[]=
+					healthLevels[] =
 					{
-						
+
 						{
 							1,
-							
+
 							{
-								"DZ\gear\camping\data\camo_net_p.rvmat"
+								"DZ\characters\backpacks\data\ghillie_green_co.paa"
 							}
 						},
-						
+
 						{
 							0.69999999,
-							
+
 							{
-								"DZ\gear\camping\data\camo_net_p.rvmat"
+								"DZ\characters\backpacks\data\ghillie_tan_co.paa"
 							}
 						},
-						
+
 						{
 							0.5,
-							
+
 							{
-								"DZ\gear\camping\data\camo_net_p_damage.rvmat"
+								"DZ\characters\backpacks\data\ghillie_tan_damage_co.paa"
 							}
 						},
-						
+
 						{
 							0.30000001,
-							
+
 							{
-								"DZ\gear\camping\data\camo_net_p_damage.rvmat"
+								"DZ\characters\backpacks\data\ghillie_tan_damage_co.paa"
 							}
 						},
-						
+
 						{
 							0,
-							
+
 							{
-								"DZ\gear\camping\data\camo_net_p_destruct.rvmat"
+								"DZ\characters\backpacks\data\ghillie_tan_destruct_co.paa"
 							}
 						}
 					};
 				};
 			};
 		};
-    }
+    };
 
 	//! NOTES 
 	// Make paper stackable up to 5
@@ -4871,7 +4871,7 @@ class CfgVehicles
 				};
 			};
 		};
-	}
+	};
 
 	class Zen_ChessPieceWhiteBase : Zen_ChessPieceBase
 	{
@@ -5425,7 +5425,7 @@ class CfgVehicles
 		{
 			"VestGrenadeA"
 		};
-	}
+	};
 
 	//! OPEN CANS ON ROCKS 
 	class SmallStone : Inventory_Base
@@ -6038,8 +6038,8 @@ class CfgVehicles
 				};
 				icon = "gascanister";
 				view_index = 7;
-			}
-		}
+			};
+		};
 	};
 	class FireplaceIndoor : FireplaceBase
 	{
@@ -6059,8 +6059,8 @@ class CfgVehicles
 				};
 				icon = "gascanister";
 				view_index = 7;
-			}
-		}
+			};
+		};
 	};
 	class OvenIndoor : FireplaceBase
 	{
@@ -6080,8 +6080,8 @@ class CfgVehicles
 				};
 				icon = "gascanister";
 				view_index = 7;
-			}
-		}
+			};
+		};
 	};
 	class BarrelHoles_ColorBase : FireplaceBase
 	{
@@ -6101,9 +6101,9 @@ class CfgVehicles
 				};
 				icon = "gascanister";
 				view_index = 7;
-			}
-		}
-	}
+			};
+		};
+	};
 
 	//! CONCUSSION GRENADE 
 	class Zen_ConcussionGrenade : Grenade_Base
@@ -8079,7 +8079,7 @@ class CfgVehicles
 		scope=1;
 		model="\ZenModPack\data\models\iceplane\ice_plane_simple.p3d";
 		forceFarBubble = "true";
-	}
+	};
 	class Land_ZenIceSheet_4x4 : HouseNoDestruct
 	{
 		scope = 1;
@@ -8138,7 +8138,7 @@ class CfgVehicles
 				};
 			};
 		};
-	}
+	};
 	class Land_ZenIceSheet_4x4_Hole : Inventory_Base
 	{
 		scope = 2;
@@ -8197,7 +8197,7 @@ class CfgVehicles
 				};
 			};
 		};
-	}
+	};
 	class Zen_IceaxeDebug : Inventory_Base
 	{
 		scope = 2;
@@ -8383,7 +8383,7 @@ class CfgVehicles
 		hiddenSelections[]={"bag"};
 		weight=10000;
 		hiddenSelectionsTextures[]={"ZenModPack\data\textures\sleepingbags\sleepingbag_black_co.paa"};
-	}
+	};
 	class ZenSleepingBagStatic_Blue: HouseNoDestruct 
 	{ 
 		scope=1;
@@ -8648,7 +8648,7 @@ class CfgSlots
 		name = "ZenMegaphone";
 		displayName = "$STR_CfgVehicles_Megaphone0";
 		ghostIcon = "missing";
-	}
+	};
 
 	//! SLEEPING BAGS 
 	class Slot_ZenSleepingBag
@@ -9192,13 +9192,13 @@ class CfgNonAIVehicles
 		scope = 2;
 		inventorySlot = "Back";
 		model = "ZenModPack/data/models/RaidAlarm/proxy/zenbaseradio_prox.p3d";
-	}
+	};
 	class Proxyzenmegaphone_prox : ProxyAttachment
 	{
 		scope = 2;
 		inventorySlot = "ZenMegaphone";
 		model = "ZenModPack/data/models/RaidAlarm/proxy/zenmegaphone_prox.p3d";
-	}
+	};
 
 	//! CAMONET SHELTER
 	class Proxyalicebackpack_g : ProxyAttachment
@@ -9206,13 +9206,13 @@ class CfgNonAIVehicles
 		scope = 2;
 		inventorySlot[] = {"Back"};
 		model = "\DZ\characters\backpacks\alicebackpack_g.p3d";
-	}
+	};
 	class Proxymosin9130 : ProxyAttachment
 	{
 		scope = 2;
 		inventorySlot[] = {"Shoulder"};
 		model = "\DZ\weapons\firearms\mosin9130\mosin9130.p3d";
-	}
+	};
 
 	//! WORKBENCH 
 	class ProxyZenCWBTireRepairKit : ProxyAttachment
@@ -9297,7 +9297,7 @@ class CfgNonAIVehicles
 	{
 		scope = 1;
 		inventorySlot = "ZenCWB_Wrench";
-		model = "\ZenModPack\data\models\workbench\proxy\ProxyZenCWBWrench.p3d";
+		model = "\ZenModPack\data\models\workbench\proxy\ZenCWBWrench.p3d";
 	};
 	class ProxyZenCWBPaint1 : ProxyAttachment
 	{
@@ -9551,7 +9551,7 @@ class CfgSoundShaders
 		{
 			{ "ZenModPack\data\sounds\raidalarm\alarm", 1 }
 		};
-	}
+	};
 
 	//! NOTIFICATION AUDIO 
 	class Zen_NotificationAudio_SoundShader_Base
@@ -10006,7 +10006,7 @@ class CfgSoundShaders
 			{ "DZ\sounds\Characters\actions\items\shelters\Shelter_Attach_Wooden_Stick", 1 }
 		};
 		volume=1.0;
-	}
+	};
 	class Zen_MetalPlateAttach_Soundshader: baseCharacter_SoundShader
 	{
 		samples[]=
@@ -10049,8 +10049,8 @@ class CfgSoundSets
 		{
 			strength = 500;
 			type = "shot";
-		}
-	}
+		};
+	};
 
 	//! NOTIFICATION 
 	// Tip: Apply a 1000hz High Pass Filter in Audacity to get radio-sounding tinny voice audio

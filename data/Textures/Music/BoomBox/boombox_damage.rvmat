@@ -7,7 +7,7 @@ specularPower = 35;
 PixelShaderID = "Super";
 VertexShaderID = "Super";
 class Stage1 {
-	texture="ZenModPack\data\textures\music\zen_boombox_nohq.paa";
+	texture="ZenModPack\data\textures\music\boombox\zen_boombox_nohq.paa";
 	uvSource="tex";
 	class uvTransform
 	{
@@ -49,7 +49,7 @@ class Stage4 {
 	};
 };
 class Stage5 {
-	texture="ZenModPack\data\textures\music\zen_boombox_smdi.paa";
+	texture="ZenModPack\data\textures\music\boombox\zen_boombox_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{
@@ -70,7 +70,7 @@ class Stage6 {
 	};
 };
 class Stage7 {
-	texture = "a3\data_f\env_land_ca.paa";
+	texture = "dz\data\data\env_land_co.paa";
 	useWorldEnvMap = "true";
 	uvSource = "tex";
 	class uvTransform {

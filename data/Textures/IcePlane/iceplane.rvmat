@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="ZenModPack\data\Textures\iceplane\IcePlane_smdi.paa";
+	texture="ZenModPack\data\Textures\iceplane\Ice_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{
