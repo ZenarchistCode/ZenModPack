@@ -20,8 +20,9 @@ class ZenPlayerMessageConfig
 		else // Config file does not exist, create default file
 		{
 			SetupDefaultCfg();
-			Save();
 		}
+
+		Save();
 	}
 
 	// Set up default config 

@@ -5,16 +5,11 @@ class Zen_BoomBox extends Zen_MusicDeviceBase
 		return !IsPlayingSong();
 	}
 
-	override bool CanPutIntoHands(EntityAI parent)
-	{
-		return !IsPlayingSong();
-	}
-
-	// Force boomboxes to re-spawn every 2 hours when they are created by the Central Loot Economy (once touched by players, regular types.xml lifetime applies)
+	// Force boomboxes to re-spawn every 4 hours when they are created by the Central Loot Economy (once touched by players, regular types.xml lifetime applies)
 	override void EEOnCECreate()
 	{
 		super.EEOnCECreate();
-		this.SetLifetime(7200);
+		this.SetLifetime(14400);
 	}
 
 	override bool IsRefresherSignalingViable()

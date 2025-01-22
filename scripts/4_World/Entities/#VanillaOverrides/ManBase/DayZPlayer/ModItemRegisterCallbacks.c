@@ -39,6 +39,7 @@ modded class ModItemRegisterCallbacks
 		//! MUSIC 
 		pType.AddItemInHandsProfileIK("Zen_Cassette_Base", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/paper.anm");
 		pType.AddItemInHandsProfileIK("Zen_CassetteCase", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/cleaning_kit_wood.anm");
+		pType.AddItemInHandsProfileIK("Zen_Walkman", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/cleaning_kit_wood.anm");
 
 		//! ZIPPO
 		pType.AddItemInHandsProfileIK("ZenZippoLighter", "dz/anims/workspaces/player/player_main/props/player_main_1h_lighter.asi", pBehavior,	"dz/anims/anm/player/ik/gear/petrol_lighter.anm");

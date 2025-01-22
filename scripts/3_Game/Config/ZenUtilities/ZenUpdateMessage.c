@@ -8,6 +8,7 @@ class ZenUpdateMessage
 	string UPDATE_PREFIX = "Lastest Update: ";
 	string UPDATE_SUFFIX = " | For more information: HardcoreDayZ.com/changes";
 	string UPDATE_MESSAGE = "";
+	bool PopupInGame = false;
 	ref map<string, ref ZenPlayerUpdateMsg> PlayerUpdates;
 
 	// Load config file or create default file if config doesn't exist
@@ -32,8 +33,6 @@ class ZenUpdateMessage
 						PlayerUpdates.Remove(PlayerUpdates.GetKey(i));
 				}
 			}
-
-			return;
 		}
 
 		// Config file does not exist, create default file

@@ -161,6 +161,8 @@ modded class CarScript
 
 		// All is well - continue to rock out with your small stones out.
 		m_MusicPlaySecs += SONG_UPDATE_TIMER_SECS;
+		SetSynchDirty();
+
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateSongDuration, SONG_UPDATE_TIMER_SECS * 1000, false);
 	}
 
@@ -186,6 +188,11 @@ modded class CarScript
 	{
 		super.OnVariablesSynchronized();
 
+		CheckMusicSync();
+	}
+
+	protected void CheckMusicSync()
+	{
 		if (m_MusicPlaySecs >= 0)
 		{
 			if (m_MusicPlaySecs < GetSongDuration() && (!m_Song || !m_Song.IsSoundPlaying()))

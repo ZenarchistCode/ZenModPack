@@ -8,6 +8,7 @@ modded class MissionBase
 
 		//! UTILITIES
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingeplayerExecutionType.Server);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", this, SingeplayerExecutionType.Server);
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPollChoice", this, SingeplayerExecutionType.Server);
 
         //! RAID ALARM
@@ -363,7 +364,7 @@ modded class MissionBase
             Param1<bool> data;
             if (!ctx.Read(data))
             {
-                Error("Error receiving data - RPC_SendReadReportToServer");
+                Error("Error receiving data - RPC_SendZenPlayerMessageConfirmRead");
                 return;
             }
 
@@ -379,8 +380,38 @@ modded class MissionBase
 					return;
 				}
 
-                ZenModLogger.Log("Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your reply.");
+                ZenModLogger.Log("Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your admin message.");
                 player.SpawnZenAdminMessageItems();
+            }
+        }
+    }
+
+    // Client -> server :: confirm that the player has clicked OK and read the admin update message
+    void RPC_SendZenPlayerUpdateMessageConfirmRead(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+    {
+        if (type == CallType.Server && GetGame().IsDedicatedServer())
+        {
+            Param1<bool> data;
+            if (!ctx.Read(data))
+            {
+                Error("Error receiving data - RPC_SendZenPlayerUpdateMessageConfirmRead");
+                return;
+            }
+
+            // Handle report confirmation server-side
+            if (sender && data.param1)
+            {
+                int highBits, lowBits;
+                GetGame().GetPlayerNetworkIDByIdentityID(sender.GetPlayerId(), lowBits, highBits);
+                PlayerBase player = PlayerBase.Cast(GetGame().GetObjectByNetworkId(lowBits, highBits));
+                if (!player)
+                {
+                    Error("[ZenModPack Utilities] RPC_SendZenPlayerUpdateMessageConfirmRead :: Error converting player ID into player object: " + sender.GetId());
+                    return;
+                }
+
+                ZenModLogger.Log("Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your update message.");
+                player.MarkReadZenUpdateMessage();
             }
         }
     }
@@ -417,7 +448,7 @@ modded class MissionBase
     {
         if (type == CallType.Client && GetGame().IsClient())
         {
-            Param1<string> data;
+            Param2<string, bool> data;
             if (!ctx.Read(data))
             {
                 Error("Error sync'ing server-side data to client - RPC_ReceiveZenAdminMessage");
@@ -428,7 +459,7 @@ modded class MissionBase
             {
                 ZenAdminMessageGUI gui = ZenAdminMessageGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL));
                 if (gui)
-                    gui.SetAdminMessage(data.param1);
+                    gui.SetAdminMessage(data.param1, data.param2);
             }
         }
     }

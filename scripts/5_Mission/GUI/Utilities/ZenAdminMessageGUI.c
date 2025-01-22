@@ -3,6 +3,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 	// Title widgets
 	private ref MultilineTextWidget m_ReplyText;
 	private ref ButtonWidget m_BtnOK;
+	private bool m_PopupUpdateMsg;
 
 	// Init widgets
 	override Widget Init()
@@ -29,10 +30,11 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 		return layoutRoot;
 	}
 
-	void SetAdminMessage(string msg)
+	void SetAdminMessage(string msg, bool updateMsg)
 	{
 		m_ReplyText.SetText(msg);
 		m_ReplyText.Update();
+		m_PopupUpdateMsg = updateMsg;
 	}
 
 	// Diable controls & hud
@@ -56,8 +58,11 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 	private bool OnOkBtnClick()
 	{
 		// Inform server player has read the reply
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", new Param1< bool >(true), true, NULL);
-		
+		if (m_PopupUpdateMsg)
+			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", new Param1< bool >(true), true, NULL);
+		else
+			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", new Param1< bool >(true), true, NULL);
+			
 		// Close window
 		UIManager uiManager = GetGame().GetUIManager();
 

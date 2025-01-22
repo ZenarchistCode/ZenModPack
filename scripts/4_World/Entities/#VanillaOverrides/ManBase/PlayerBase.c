@@ -1574,10 +1574,24 @@ modded class PlayerBase
 		// Send latest update message
 		if (GetZenUpdateMessage().UPDATE_MESSAGE != "" && updateConfig.updateID != GetZenUpdateMessage().UPDATE_VERSION)
 		{
-			Zen_SendMessageDelayed(GetZenUpdateMessage().UPDATE_PREFIX + GetZenUpdateMessage().UPDATE_MESSAGE + GetZenUpdateMessage().UPDATE_SUFFIX, 5000);
-			updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
-			updateConfig.lastLoginTimestamp = timestamp;
-			GetZenUpdateMessage().PlayerUpdates.Set(GetCachedID(), updateConfig);
+			if (GetZenUpdateMessage().PopupInGame)
+			{
+				// Popup confirm dialog
+				GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param2<string, bool>(GetZenUpdateMessage().UPDATE_MESSAGE + GetZenUpdateMessage().UPDATE_SUFFIX, true), true, GetIdentity());
+				return;
+			}
+			else
+			{
+				// Regular in-game notification
+				Zen_SendMessageDelayed(GetZenUpdateMessage().UPDATE_PREFIX + GetZenUpdateMessage().UPDATE_MESSAGE + GetZenUpdateMessage().UPDATE_SUFFIX, 5000);
+			}
+
+			if (!GetZenUpdateMessage().PopupInGame)
+			{
+				updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
+				updateConfig.lastLoginTimestamp = timestamp;
+				GetZenUpdateMessage().PlayerUpdates.Set(GetCachedID(), updateConfig);
+			}
 		}
 
 		// Check for admin -> player replies
@@ -1599,6 +1613,25 @@ modded class PlayerBase
 		}
 	}
 
+	// Marks the update message pop-up as read
+	void MarkReadZenUpdateMessage()
+	{
+		// Load last update ID 
+		int timestamp = JMDate.Now(false).GetTimestamp();
+
+		ZenPlayerUpdateMsg updateConfig;
+		GetZenUpdateMessage().PlayerUpdates.Find(GetCachedID(), updateConfig);
+		if (!updateConfig)
+			updateConfig = new ZenPlayerUpdateMsg(GetCachedID(), "-1", timestamp);
+
+		if (GetZenUpdateMessage().PopupInGame && updateConfig)
+		{
+			updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
+			updateConfig.lastLoginTimestamp = timestamp;
+			GetZenUpdateMessage().PlayerUpdates.Set(GetCachedID(), updateConfig);
+		}
+	}
+
 	// Sends a reply to the given player cfg
 	protected void SendZenPlayerMessageReply(ZenPlayerMessage message)
 	{
@@ -1614,7 +1647,7 @@ modded class PlayerBase
 		// Cache message
 		m_CachedZenPlayerMessage = message;
 
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param1<string>(message.Message), true, GetIdentity());
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param2<string, bool>(message.Message, false), true, GetIdentity());
 	}
 
 	// Called only when player confirms they read the admin text message (via RPC MissionBase)
