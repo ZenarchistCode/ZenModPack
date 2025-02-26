@@ -5961,7 +5961,7 @@ class CfgVehicles
 							1,
 
 							{
-								"DZ\gear\consumables\data\weaponcamo.rvmat"
+								"DZ\characters\backpacks\data\ghillie_green_co.paa"
 							}
 						},
 
@@ -5969,7 +5969,7 @@ class CfgVehicles
 							0.69999999,
 
 							{
-								"DZ\gear\consumables\data\weaponcamo.rvmat"
+								"DZ\characters\backpacks\data\ghillie_green_co.paa"
 							}
 						},
 
@@ -5977,7 +5977,7 @@ class CfgVehicles
 							0.5,
 
 							{
-								"DZ\gear\consumables\data\weaponcamo_damage.rvmat"
+								"DZ\characters\backpacks\data\ghillie_green_damage_co.paa"
 							}
 						},
 
@@ -5985,7 +5985,7 @@ class CfgVehicles
 							0.30000001,
 
 							{
-								"DZ\gear\consumables\data\weaponcamo_damage.rvmat"
+								"DZ\characters\backpacks\data\ghillie_green_damage_co.paa"
 							}
 						},
 
@@ -5993,7 +5993,7 @@ class CfgVehicles
 							0,
 
 							{
-								"DZ\gear\consumables\data\weaponcamo_destruct.rvmat"
+								"DZ\characters\backpacks\data\ghillie_green_destruct_co.paa"
 							}
 						}
 					};

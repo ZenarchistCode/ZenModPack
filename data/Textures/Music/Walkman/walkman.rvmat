@@ -67,7 +67,7 @@ class Stage6 {
 	};
 };
 class Stage7 {
-	texture = "a3\data_f\env_land_ca.paa";
+	texture = "dz\data\data\env_land_co.paa";
 	useWorldEnvMap = "true";
 	uvSource = "tex";
 	class uvTransform {

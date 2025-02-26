@@ -56,7 +56,7 @@ class Stage4
 };
 class Stage5
 {
-	texture="ZenModPack\data\textures\sleepingbags\sleepingbag_folded_smdi.paa";
+	texture="ZenModPack\data\Textures\SleepingBags\sleepingbagfolded_smdi.paa";
 	uvSource="tex";
 	class uvTransform
 	{
