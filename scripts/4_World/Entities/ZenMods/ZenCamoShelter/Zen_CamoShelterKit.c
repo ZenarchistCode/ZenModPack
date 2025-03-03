@@ -45,12 +45,12 @@ class Zen_CamoShelterKit extends KitBase
 		return true;
 	}
 
-	override bool CanReleaseCargo(EntityAI attachment)
+	override bool CanReleaseCargo(EntityAI cargo)
 	{
 		return true;
 	}
 
-	override bool CanBePlaced(Man player, vector pos)
+	override bool CanBePlaced(Man player, vector position)
 	{
 		return true;
 	}

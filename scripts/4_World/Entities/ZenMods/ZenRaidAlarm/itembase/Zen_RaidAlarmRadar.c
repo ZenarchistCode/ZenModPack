@@ -26,7 +26,7 @@ class Zen_RaidAlarmRadar extends DeployableContainer_Base
 		return false;
 	}
 
-	override bool CanPutIntoHands(EntityAI player) 
+	override bool CanPutIntoHands(EntityAI parent) 
 	{
 		return false;
 	}
