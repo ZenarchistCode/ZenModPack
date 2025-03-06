@@ -4,7 +4,7 @@ modded class RecipeBase
 
 	// Hi-jack ingredient sound here whenever appropriate to cover multiple recipes
 	// and to allow compatability with future vanilla updates (InsertIngredientEx() will be used directly to add sounds and this would be ignored)
-	override void InsertIngredient(int index, string ingredient)
+	override void InsertIngredient(int index, string ingredient, DayZPlayerConstants uid = DayZPlayerConstants.CMD_ACTIONFB_CRAFTING)
 	{
 		if (!ZenModEnabled("ZenCraftingSounds"))
 		{
@@ -77,6 +77,6 @@ modded class RecipeBase
 				break;
 		}
 
-		InsertIngredientEx(index, ingredient, "");
-	};
+		InsertIngredientEx(index, ingredient, "", uid);
+	}
 }
