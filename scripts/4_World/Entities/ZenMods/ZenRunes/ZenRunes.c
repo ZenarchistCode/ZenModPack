@@ -1,0 +1,11 @@
+class ZenRune_Base extends ItemBase {};
+class ZenRune_Air extends ZenRune_Base {};
+class ZenRune_Body extends ZenRune_Base {};
+class ZenRune_Chaos extends ZenRune_Base {};
+class ZenRune_Cosmic extends ZenRune_Base {};
+class ZenRune_Earth extends ZenRune_Base {};
+class ZenRune_Fire extends ZenRune_Base {};
+class ZenRune_Law extends ZenRune_Base {};
+class ZenRune_Mind extends ZenRune_Base {};
+class ZenRune_Nature extends ZenRune_Base {};
+class ZenRune_Water extends ZenRune_Base {};

@@ -1,0 +1,1 @@
+class ZenWolfMask extends HelmetBase {};

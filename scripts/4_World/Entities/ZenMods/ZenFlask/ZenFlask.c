@@ -1,0 +1,1 @@
+class ZenFlask extends Bottle_Base {};

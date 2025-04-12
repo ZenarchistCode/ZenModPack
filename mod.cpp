@@ -1,0 +1,10 @@
+name = "Zenarchist's Enormous Package"; // name
+picture = "ZenModPack\data\modicon.edds"; // picture in expanded description
+logoSmall = "ZenModPack\data\modicon.edds"; // icon next to mod name when description is not expanded
+logo = "ZenModPack\data\modicon.edds"; // logo below game menu
+logoOver = "ZenModPack\data\modicon.edds"; // on mouse hover over logo
+tooltip = "Zenarchist's Enormous Package"; // tool tip on mouse hover
+overview = "Includes 36+ of Zenarchist's best mods."; // overview
+action = "https://zenarchist.io/"; // link
+author = "Zenarchist"; // author
+version = "1.0"; // version

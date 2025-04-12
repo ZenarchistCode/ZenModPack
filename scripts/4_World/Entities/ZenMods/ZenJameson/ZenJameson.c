@@ -1,0 +1,1 @@
+class ZenJameson extends Bottle_Base {};

@@ -1,0 +1,37 @@
+ImageWidgetClass icon {
+ visible 1
+ clipchildren 1
+ inheritalpha 0
+ ignorepointer 1
+ keepsafezone 0
+ color 1 1 1 0
+ position 0.96 0.45
+ size 42 42
+ halign right_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 1
+ vexactsize 1
+ mode blend
+ "src alpha" 1
+ "stretch mode" stretch_w_h
+ {
+  TextWidgetClass volume {
+   visible 1
+   clipchildren 0
+   inheritalpha 0
+   ignorepointer 1
+   position 0 1
+   size 42 25
+   halign right_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 1
+   vexactsize 1
+   text ""
+   font "gui/fonts/metron-bold12"
+   "text halign" center
+   "text valign" center
+  }
+ }
+}

@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{06669ACD56B488E2}#Zenarchist/ZenMods/ZenModPack/data/modicon.edds"
+ Author "mjs"
+ ChangeDate -1756073746
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "modicon.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

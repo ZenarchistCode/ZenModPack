@@ -1,0 +1,62 @@
+ImageSetClass {
+ Name "zencarworkbenchslots"
+ RefSize 768 768
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{5D64D477CC42E470}ZenModPack/data/gui/workbench/carworkbench_slots.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass tirerepairkit {
+   Name "tirerepairkit"
+   Pos 0 0
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass gasoline {
+   Name "gasoline"
+   Pos 256 0
+   Size 256 257
+   Flags 0
+  }
+  ImageSetDefClass tireiron {
+   Name "tireiron"
+   Pos 512 0
+   Size 256 257
+   Flags 0
+  }
+  ImageSetDefClass sledgehammer {
+   Name "sledgehammer"
+   Pos 0 256
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass pliers {
+   Name "pliers"
+   Pos 256 256
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass screwdriver {
+   Name "screwdriver"
+   Pos 512 256
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass wrench {
+   Name "wrench"
+   Pos 0 512
+   Size 256 256
+   Flags 0
+  }
+  ImageSetDefClass spraycan {
+   Name "spraycan"
+   Pos 256 512
+   Size 256 256
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

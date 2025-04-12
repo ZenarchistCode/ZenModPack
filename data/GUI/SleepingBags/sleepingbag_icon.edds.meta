@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{CA78FD7EDCEF2881}#Zenarchist/ZenMods/ZenModPack/data/GUI/SleepingBags/sleepingbag_icon.edds"
+ Author "mjs"
+ ChangeDate 667676882
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "sleepingbag_icon.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

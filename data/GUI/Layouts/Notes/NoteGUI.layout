@@ -1,0 +1,843 @@
+FrameWidgetClass MainFrame {
+ inheritalpha 0
+ ignorepointer 1
+ position 0 0
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ {
+  ImageWidgetClass PageWidget {
+   visible 1
+   ignorepointer 1
+   position 0 0
+   size 600 800
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   priority 1
+   image0 "ZenModPack/data/gui/layouts/notes/notebg.edds"
+   imageTexture "{7819C907890D2FF0}ZenModPack/data/gui/layouts/notes/notebg.edds"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
+   {
+    ButtonWidgetClass FontBtn {
+     visible 1
+     inheritalpha 1
+     position 0 0.94
+     size 1 0.03
+     halign right_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     userID 2
+     text "Select Style"
+     font "gui/fonts/amorserifpro-bold22"
+     "text color" 0.3922 0 0 1
+    }
+    ButtonWidgetClass CloseBtn {
+     visible 1
+     inheritalpha 1
+     position 0.008 0.0125
+     size 0.04 0.03
+     halign right_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     userID 2
+     text "X"
+     font "gui/fonts/metron-bold22"
+     "text color" 0.3922 0 0 1
+    }
+    MultilineEditBoxWidgetClass NoteText0 {
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "gui/fonts/amorserifpro22"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText1 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/papernotes"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText2 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/matthildur"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText3 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/turntablz"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText4 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/bringthanoize"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText5 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/jamesfajardo"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText6 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/ladylike"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText7 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/multikultural"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText8 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/scriptina"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText9 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/love"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText10 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/youmurderer"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    MultilineEditBoxWidgetClass NoteText11 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/andthishappened"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 30
+     "limit visible" 1
+    }
+    TextWidgetClass DateText0 {
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "gui/fonts/amorserifpro22"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText1 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/papernotes"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText2 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/matthildur"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText3 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/turntablz"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText4 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/bringthanoize"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText5 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/jamesfajardo"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText6 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/ladylike"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText7 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/multikultural"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText8 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/scriptina"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText9 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/love"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText10 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/youmurderer"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    TextWidgetClass DateText11 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0 -0.43
+     size 1 0.05
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Normal
+     text "28/8/2022"
+     font "ZenModPack/data/gui/layouts/notes/fonts/andthishappened"
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+    }
+    MultilineTextWidgetClass NoteReadText0 {
+     visible 1
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "gui/fonts/amorserifpro22"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText1 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/papernotes"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText2 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/matthildur"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText3 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/turntablz"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText4 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/bringthanoize"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText5 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/jamesfajardo"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText6 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/ladylike"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText7 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/multikultural"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText8 {
+     visible 1
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/scriptina"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText9 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/love"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText10 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/youmurderer"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    MultilineTextWidgetClass NoteReadText11 {
+     visible 0
+     disabled 1
+     inheritalpha 0
+     color 0 0 0 1
+     position 0.01 0.02
+     size 0.9 0.8
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style DayZNormal
+     font "ZenModPack/data/gui/layouts/notes/fonts/andthishappened"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     wrap 1
+    }
+    ImageWidgetClass DamageLayer {
+     visible 0
+     inheritalpha 0
+     ignorepointer 1
+     position 0.00033 -0.00626
+     size 0.9967 0.9626
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     image0 "DZ\characters\data\generic_worn_mc.paa"
+     mode blend
+     "src alpha" 1
+    }
+   }
+  }
+  ImageWidgetClass Background {
+   visible 1
+   clipchildren 0
+   ignorepointer 1
+   color 0 0 0 1
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   imageTexture "{E6B3EF816E067499}gui/textures/inventory_bgvignette.edds"
+   mode blend
+   "src alpha" 1
+   "stretch mode" stretch_w_h
+   filter 0
+   "Transition width" 1
+  }
+ }
+}

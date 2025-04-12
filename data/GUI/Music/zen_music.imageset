@@ -1,0 +1,20 @@
+ImageSetClass {
+ Name "zen_music"
+ RefSize 256 256
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{3AB7788B9AA9F726}ZenModPack/data/GUI/Music/cassette_icon.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass cassette_icon {
+   Name "cassette_icon"
+   Pos 0 0
+   Size 256 256
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

@@ -1,0 +1,213 @@
+FrameWidgetClass root_frame {
+ color 1 1 1 0.9412
+ position 0 0
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ priority 996
+ {
+  PanelWidgetClass gui {
+   inheritalpha 1
+   ignorepointer 1
+   position 0 0
+   size 0.45 0.45
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   priority 1
+   style blank
+   {
+    PanelWidgetClass header {
+     inheritalpha 0
+     ignorepointer 1
+     color 0.0196 0.0235 0.0196 0.9804
+     position 0 0
+     size 1 0.18
+     halign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass title_text {
+       clipchildren 0
+       ignorepointer 1
+       position 0.05 0.1
+       size 0.95 0.5
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       text "#STR_ZenGui_AdminTitle"
+       font "gui/fonts/metron-bold"
+       "exact text" 0
+       "size to text h" 0
+       "size to text v" 0
+      }
+      TextWidgetClass title_sub_text0 {
+       clipchildren 0
+       ignorepointer 1
+       color 0.7843 0.7843 0.7843 1
+       position 0.05 0.6
+       size 0.95 0.2
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       text "#STR_ZenGui_AdminSubtitle"
+       font "gui/fonts/metron"
+       "exact text" 0
+       "size to text h" 0
+       "size to text v" 0
+      }
+     }
+    }
+    PanelWidgetClass body {
+     inheritalpha 1
+     ignorepointer 1
+     color 0 0 0 1
+     position 0 0.02
+     size 1 0.68
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      PanelWidgetClass information_panel {
+       inheritalpha 1
+       color 0.1098 0.1098 0.1098 1
+       position 0 0.02
+       size 0.96 0.9
+       halign center_ref
+       valign bottom_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style EditorPanel
+       {
+        MultilineTextWidgetClass reply_text {
+         visible 1
+         position 0 -0.00529
+         size 0.99 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         userID 102
+         text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+         font "gui/fonts/metron"
+         "exact text" 1
+         wrap 1
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass footer {
+     inheritalpha 1
+     ignorepointer 1
+     color 0 0 0 1
+     position 0 0
+     size 1 0.14
+     halign center_ref
+     valign bottom_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      WrapSpacerWidgetClass button_wrapper {
+       ignorepointer 1
+       position 0.02 0
+       size 0.2 0.45
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       Padding 20
+       Margin 0
+       content_halign center
+       content_valign bottom
+       {
+        ButtonWidgetClass ok_button {
+         inheritalpha 0
+         color 0 0.502 0.1255 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         priority 1
+         userID 1
+         style DayZDefaultButton
+         font "gui/fonts/Metron22"
+         {
+          TextWidgetClass ok_text {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "OK"
+           font "gui/fonts/Metron22"
+           "exact text" 1
+           "size to text h" 1
+           "size to text v" 1
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  ImageWidgetClass vignette {
+   ignorepointer 1
+   color 0 0 0 0.7843
+   position 0 0
+   size 1.6 0.9
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   fixaspect outside
+   imageTexture "{E6B3EF816E067499}gui/textures/inventory_bgvignette.edds"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
+   filter 0
+   nocache 1
+  }
+ }
+}
