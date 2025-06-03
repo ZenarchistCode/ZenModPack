@@ -7,8 +7,8 @@ Change Notes:
 - Fixed several minor bugs across many mods, and any 1.28 issues along with any server & client error logs I could find
 - Fixed all missing types.xml entries in the mod's extras folder - everything is up to date now with current mod list
 - Removed ZenWeatherConfig altogether (can't get it to work how I'd like it to)
-- Removed Ice Planes mod from the modpack (too niche to keep it in 
-  - Use my standalone mod if you wish to keep it on your server: https://steamcommunity.com/sharedfiles/filedetails/?id=3334870001)
+- Removed Ice Planes mod from the modpack (too niche to keep it in)
+  - Use my standalone mod if you wish to keep it on your server: https://steamcommunity.com/sharedfiles/filedetails/?id=3334870001
 - Removed deprecated sleeping bag objects (and replaced them with my new ZenSleepV2 sleeping bags)
 - Removed ZenWolfMask since vanilla added a model which is way superior to my crappy one
 - Removed broken glass effect from scopes & NVGs since vanilla finally added their own visual fx
