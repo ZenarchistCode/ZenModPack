@@ -15,9 +15,9 @@ class Zen_BaseballCap_Camo : BaseballCap_ColorBase {};
 class Zen_BaseballCap_DarkCamo : BaseballCap_ColorBase {};
 class Zen_BaseballCap_Zenarchist : BaseballCap_ColorBase {};
 
-class Zen_BaseballCap_BackCamo: BaseballCap_BackColorBase {};
-class Zen_BaseballCap_BackDarkCamo: BaseballCap_BackColorBase {};
-class Zen_BaseballCap_BackZenarchist: BaseballCap_BackColorBase {};
+class Zen_BaseballCap_BackCamo: BaseballCap_ColorBase {};
+class Zen_BaseballCap_BackDarkCamo: BaseballCap_ColorBase {};
+class Zen_BaseballCap_BackZenarchist: BaseballCap_ColorBase {};
 
 class MilitaryBoots_BlackPunk: MilitaryBoots_ColorBase {};
 
