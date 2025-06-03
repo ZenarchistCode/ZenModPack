@@ -75,6 +75,6 @@ class ActionCheckCauseOfDeath : ActionContinuousBase
         if (!targetPlayer.IsMale())
             gender = GetCauseOfDeathConfig().FemaleGender;
 
-        player.Zen_SendMessage(GetCauseOfDeathConfig().CauseOfDeathPrefix1 + " " + GetCauseOfDeathConfig().DeadPlayerPrefix + " " + gender + " " + GetCauseOfDeathConfig().CauseOfDeathPrefix2 + " " + targetPlayer.m_CauseOfDeath);
+        player.Zen_SendMessage(GetCauseOfDeathConfig().CauseOfDeathPrefix1 + " " + GetCauseOfDeathConfig().DeadPlayerPrefix + " " + gender + " " + GetCauseOfDeathConfig().CauseOfDeathPrefix2 + " " + targetPlayer.GetCauseOfDeath());
     }
-};
+}

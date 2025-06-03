@@ -19,16 +19,16 @@ class ZenModPackClientConfig
 		if (GetGame().IsDedicatedServer())
 			return;
 
-		if (FileExist(zenModFolder + zenConfigName))
-		{
-			JsonFileLoader<ZenModPackClientConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
+		string serverPath;
+		GetCLIParam("connect", serverPath);
+		serverPath.Replace(":", "");
+		serverPath.Replace(".", "");
 
-			if (CONFIG_VERSION != CURRENT_VERSION)
-			{
-				// Mismatch, back up old version.
-				JsonFileLoader<ZenModPackClientConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
-			}
-			else
+		if (FileExist(zenModFolder + serverPath + "\\" + zenConfigName))
+		{
+			JsonFileLoader<ZenModPackClientConfig>.JsonLoadFile(zenModFolder + serverPath + "\\" + zenConfigName, this);
+
+			if (CONFIG_VERSION == CURRENT_VERSION)
 			{
 				// Config exists and version matches.
 				return;
@@ -37,7 +37,7 @@ class ZenModPackClientConfig
 
 		CONFIG_VERSION = CURRENT_VERSION;
 		Save();
-	};
+	}
 
 	void Save()
 	{
@@ -46,7 +46,17 @@ class ZenModPackClientConfig
 			MakeDirectory(zenModFolder);
 		}
 
-		JsonFileLoader<ZenModPackClientConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
+		string serverPath;
+		GetCLIParam("connect", serverPath);
+		serverPath.Replace(":", "");
+		serverPath.Replace(".", "");
+
+		if (!FileExist(zenModFolder + serverPath))
+		{
+			MakeDirectory(zenModFolder + serverPath);
+		}
+
+		JsonFileLoader<ZenModPackClientConfig>.JsonSaveFile(zenModFolder + serverPath + "\\" + zenConfigName, this);
 	}
 }
 

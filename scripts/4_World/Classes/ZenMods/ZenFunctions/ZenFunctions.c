@@ -206,7 +206,7 @@ class ZenFunctions
 			PlayerBase pb = PlayerBase.Cast(players.Get(x));
 			if (pb)
 			{
-				pb.Zen_SendMessage(prefix + msg);
+				SendPlayerMessage(pb, prefix + msg);
 			}
 		}
 		#endif
@@ -241,6 +241,9 @@ class ZenFunctions
 	static void SendPlayerMessage(PlayerBase player, string msg)
 	{
 #ifdef SERVER
+		if (msg == "" || msg == string.Empty)
+			return;
+
 		if (!player || player.IsPlayerDisconnected() || !player.GetIdentity())
 			return;
 
@@ -324,14 +327,15 @@ class ZenFunctions
 	//! Generate a random point inside a circle. minDistance = minimum distance in meters from center (again thanks ChatGPT)
 	static vector GetRandomPointInCircle(vector position, float radius, float minDistance = 0, bool placeOnSurface = true)
 	{
-		// Get a random angle between 0 and 2*PI
-        float angle = Math.RandomFloatInclusive(0.0, Math.PI2);
-        
-        // Convert polar coordinates to Cartesian coordinates
-        float x = (minDistance + Math.RandomFloatInclusive(0.0, radius - minDistance)) * Math.Cos(angle);
-        float z = (minDistance + Math.RandomFloatInclusive(0.0, radius - minDistance)) * Math.Sin(angle);
-        
-        // Adjust new position and return it
+		float angle = Math.RandomFloatInclusive(0.0, Math.PI2);
+
+		// Uniform distribution by using sqrt of random float
+		float rand = Math.RandomFloatInclusive(0.0, 1.0);
+		float distance = Math.Sqrt(rand) * (radius - minDistance) + minDistance;
+
+		float x = distance * Math.Cos(angle);
+		float z = distance * Math.Sin(angle);
+
 		vector newPos = position;
 		newPos[0] = newPos[0] + x;
 		newPos[2] = newPos[2] + z;
@@ -339,7 +343,7 @@ class ZenFunctions
 		if (placeOnSurface)
 			newPos[1] = GetGame().SurfaceY(newPos[0], newPos[2]);
 
-        return newPos;
+		return newPos;
 	}
 
 	//! "Pulls" backwards the entity's position slightly from its current location towards the player.
@@ -499,7 +503,6 @@ class ZenFunctions
 	}
 
 	//! Enable/disable player controls - WARNING: This function does not check if controls should be enabled given what the player is doing at the time when it's called, so use carefully and thoughtfully
-	//! TODO: it also uses deprecated code, but the devs haven't made it very clear what the new best practice is for disabling controls in the vanilla scripts
 	static void SetPlayerControl(bool isEnabled = true, bool hideHud = false)
 	{
 		if (!GetGame().IsClient())
@@ -507,23 +510,17 @@ class ZenFunctions
 
 		if (isEnabled)
 		{
-			if (GetGame().GetMission().IsControlDisabled())
-			{
-				GetGame().GetMission().PlayerControlEnable(true);
+			GetGame().GetMission().AddActiveInputExcludes({"menu"});
 
-				if (hideHud)
-					GetGame().GetMission().GetHud().Show(true);
-			}
+			if (hideHud)
+				GetGame().GetMission().GetHud().Show(true);
 		}
 		else
 		{
-			if (!GetGame().GetMission().IsControlDisabled())
-			{
-				GetGame().GetMission().PlayerControlDisable(INPUT_EXCLUDE_ALL);
+			GetGame().GetMission().RemoveActiveInputExcludes({"menu"});
 
-				if (hideHud)
-					GetGame().GetMission().GetHud().Show(false);
-			}
+			if (hideHud)
+				GetGame().GetMission().GetHud().Show(false);
 		}
 	}
 

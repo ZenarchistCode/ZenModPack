@@ -48,6 +48,9 @@ modded class OptionsMenu
 		if (super.IsAnyTabChanged())
 			return true;
 
-		return m_ZenModPackTab.IsChanged();
+		if (m_ZenModPackTab)
+			return m_ZenModPackTab.IsChanged();
+
+		return false;
 	}
 }

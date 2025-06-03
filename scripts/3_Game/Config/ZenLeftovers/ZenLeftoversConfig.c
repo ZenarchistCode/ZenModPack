@@ -78,6 +78,9 @@ class LeftoversConfig
 		LeftoverItems.Insert(new LeftoverItem("Morphine", "Used_Morphine", 1, true));
 		LeftoverItems.Insert(new LeftoverItem("Epinephrine", "Used_Epinephrine", 1, true));
 		LeftoverItems.Insert(new LeftoverItem("AntiChemInjector", "Used_AntiChemInjector", 1, true));
+		// My custom items 
+		LeftoverItems.Insert(new LeftoverItem("ZenJameson", "Empty_ZenJameson", 0));
+		LeftoverItems.Insert(new LeftoverItem("ZenFlask", "Empty_ZenFlask", 0));
 		// Example modded items
 		LeftoverItems.Insert(new LeftoverItem("MassMREPB", "MassMREPB", 1));
 		LeftoverItems.Insert(new LeftoverItem("MassMREJelly", "MassMREJelly", 1));

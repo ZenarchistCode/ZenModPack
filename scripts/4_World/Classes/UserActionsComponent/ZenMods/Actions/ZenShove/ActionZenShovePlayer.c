@@ -25,6 +25,9 @@ class ActionZenShovePlayer : ActionInteractBase
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
+		if (!ZenModEnabled("ZenShove"))
+			return false;
+
 		PlayerBase ntarget = PlayerBase.Cast(target.GetObject());
 		if(!ntarget || !ntarget.IsAlive())
 			return false;

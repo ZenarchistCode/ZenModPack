@@ -1,6 +1,6 @@
 // This plugin tracks items spawned by dynamic contaminated zones.
 // If enabled in the config (ItemLifetime = -1), any leftover items
-// will be deleted when the zone is deleted or the server shuts down.
+// will be set to ruined when the zone is deleted or the server shuts down.
 class ZenContaminatedItemsPlugin extends PluginBase
 {
 	protected ref map<string, ref map<string, ItemBase>> m_ZenSpawnedItems;
@@ -38,14 +38,14 @@ class ZenContaminatedItemsPlugin extends PluginBase
 					if (trackedItems.GetElement(j).GetPosition() != trackedItems.GetKey(j).ToVector())
 						continue;
 
-					trackedItems.GetElement(j).DeleteSafe();
+					trackedItems.GetElement(j).SetHealth(0);
 					deleted++;
 				}
 			}
 		}
 
 		m_ZenSpawnedItems.Clear();
-		ZMPrint("[ZenContaminatedItemsPlugin] OnDestroy :: Deleted " + deleted + " leftover items on server shutdown.");
+		ZMPrint("[ZenContaminatedItemsPlugin] OnDestroy :: Ruined " + deleted + " leftover items on server shutdown.");
 	}
 
 	void HandleZoneRemoval(vector zonePosition)
@@ -63,11 +63,11 @@ class ZenContaminatedItemsPlugin extends PluginBase
 				if (trackedItems.GetElement(j).GetPosition() != trackedItems.GetKey(j).ToVector())
 					continue;
 
-				trackedItems.GetElement(j).DeleteSafe();
+				trackedItems.GetElement(j).SetHealth(0);
 				deleted++;
 			}
 		}
 
-		ZMPrint("[ZenContaminatedItemsPlugin] HandleZoneRemoval :: Deleted " + deleted + " leftover items from expired zone.");
+		ZMPrint("[ZenContaminatedItemsPlugin] HandleZoneRemoval :: Ruined " + deleted + " leftover items from expired zone.");
 	}
 }

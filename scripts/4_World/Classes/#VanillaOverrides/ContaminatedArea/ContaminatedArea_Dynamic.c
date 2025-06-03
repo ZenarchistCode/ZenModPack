@@ -69,7 +69,7 @@ modded class ContaminatedArea_Dynamic
 	{
 		super.EEDelete(parent);
 
-		if (GetZenContaminatedZoneLootConfig().ItemLifetime > -1)
+		if (!GetGame().IsDedicatedServer() || GetZenContaminatedZoneLootConfig().ItemLifetime > -1)
 			return;
 
 		ZenContaminatedItemsPlugin zenPlugin = ZenContaminatedItemsPlugin.Cast(GetPlugin(ZenContaminatedItemsPlugin));

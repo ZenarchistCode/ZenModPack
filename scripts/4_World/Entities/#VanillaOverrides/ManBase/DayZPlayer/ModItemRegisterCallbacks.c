@@ -18,6 +18,12 @@ modded class ModItemRegisterCallbacks
 	{
 		super.RegisterOneHanded(pType, pBehavior);
 
+		//! NBC CASE
+		pType.AddItemInHandsProfileIK("Zen_NBCCase",  "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/protector_case.anm");	
+
+		//! JOURNAL
+		pType.AddItemInHandsProfileIK("ZenBook_Base", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/book.anm");
+
 		//! FLASK
 		pType.AddItemInHandsProfileIK("ZenFlask", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
 		pType.AddItemInHandsProfileIK("Empty_ZenFlask", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
@@ -43,9 +49,6 @@ modded class ModItemRegisterCallbacks
 
 		//! ZIPPO
 		pType.AddItemInHandsProfileIK("ZenZippoLighter", "dz/anims/workspaces/player/player_main/props/player_main_1h_lighter.asi", pBehavior,	"dz/anims/anm/player/ik/gear/petrol_lighter.anm");
-
-		//! TREASURE 
-		pType.AddItemInHandsProfileIK("ZenTreasure_PhotoBase", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/paper.anm");
 
 		//! NOTES
 		pType.AddItemInHandsProfileIK("ZenNote", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/paper.anm");
@@ -116,4 +119,4 @@ modded class ModItemRegisterCallbacks
 		//! WORKBENCH 
 		pType.AddItemInHandsProfileIK("Zen_CarWorkbenchKit", "dz/anims/workspaces/player/player_main/player_main_heavy.asi", pBehavior, "dz/anims/anm/player/ik/heavy/wooden_crate.anm");
 	}
-};
+}

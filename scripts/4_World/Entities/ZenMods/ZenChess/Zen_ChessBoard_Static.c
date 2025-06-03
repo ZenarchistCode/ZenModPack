@@ -4,6 +4,9 @@ class Zen_ChessBoard_Static extends Zen_ChessBoard
 	{
 		super.EEInit();
 
+		SetLifetimeMax(999999);
+		SetLifetime(999999);
+
 		SetAllowDamage(false);
 
 		// Spawn pieces if required

@@ -1,5 +1,5 @@
 ﻿/*
-	© 2024 | Zenarchist.io | HardcoreDayZ.com | Zen's Enormous Package™️
+	© 2025 | Zenarchist.com | Zen's Enormous Package™️
 
 	This mod consolidates all of my custom mods that are finished 
 	and don't require much maintenance. This is for my server, but
@@ -8,7 +8,9 @@
 	I will update this mod only when bugs are fixed or new stable content is added.
 
 	I made this combined modpack because "modding" too many vanilla classes
-	can cause this bug: https://feedback.bistudio.com/T176938 | (Update: This bug has been fixed as of 1.24!)
+	can cause this bug: https://feedback.bistudio.com/T176938 
+	(Update: This bug has been fixed as of 1.24! From now on I will incldue any new mods as separate PBO files and use #ifdef ZENMODPACK)
+
 
 	Notes/Credit: 
 	- This pack also includes ViewInventory mod made by affenb3rt: https://steamcommunity.com/sharedfiles/filedetails/?id=2833363308
@@ -89,25 +91,113 @@
 	    allowOwnedCargoManipulation = 1; 
 
 	CfgVehicles Types with scope=2 as of 23/9/24 (scope=2 means you can manipulate in-game as an item, scope=1 is static object):
-		ZenSleepingBag_PackedBase
-		ZenSleepingBagBlack_Packed
-		ZenSleepingBagBlue_Packed
-		ZenSleepingBagGrey_Packed
-		ZenSleepingBagRed_Packed
-		ZenSleepingBagGreen_Packed
-		ZenSleepingBag_DeployedBase
-		ZenSleepingBagBlack_Deployed
-		ZenSleepingBagBlue_Deployed
-		ZenSleepingBagGrey_Deployed
-		ZenSleepingBagRed_Deployed
-		ZenSleepingBagGreen_Deployed
-		ZenSwissKnife
-		ZenSwissKnife_CanOpener
-		ZenSwissKnife_Lockpick
-		ZenSwissKnife_Screwdriver
-		ZenSwissKnife_Knife
-		ZenSwissKnife_Scissors
-		ZenSwissKnife_SmallSaw
+		Empty_BakedBeansCan_Opened
+		Empty_BoxCerealCrunchin
+		Empty_BrisketSpread_Opened
+		Empty_Can_Opened
+		Empty_CatFoodCan_Opened
+		Empty_Chips
+		Empty_Crackers
+		Empty_DogFoodCan_Opened
+		Empty_FoodCan_250g_Opened_ColorBase
+		Empty_Honey
+		Empty_Honey_NoLiquid
+		Empty_Lunchmeat_Opened
+		Empty_Marmalade
+		Empty_Marmalade_NoLiquid
+		Empty_Pajka_Opened
+		Empty_Pate_Opened
+		Empty_PeachesCan_Opened
+		Empty_PorkCan_Opened
+		Empty_PowderedMilk
+		Empty_Rice
+		Empty_SaltySticks
+		Empty_SardinesCan_Opened
+		Empty_SodaCan_Cola
+		Empty_SodaCan_Fronta
+		Empty_SodaCan_Kvass
+		Empty_SodaCan_Pipsi
+		Empty_SodaCan_Spite
+		Empty_SpaghettiCan_Opened
+		Empty_TacticalBaconCan_Opened
+		Empty_TunaCan_Opened
+		Empty_UnknownFoodCan_Opened
+		Empty_Zagorky
+		Empty_ZagorkyChocolate
+		Empty_ZagorkyPeanuts
+		Empty_ZenFlask
+		Empty_ZenJameson
+		EyeMask_ZenRabbit_Black
+		EyeMask_ZenRabbit_Blue
+		EyeMask_ZenRabbit_Green
+		EyeMask_ZenRabbit_Pink
+		Pen_Black
+		Pen_Red
+		Pen_Green
+		Pen_Orange
+		Pen_Pink
+		Pen_Purple
+		Used_AntiChemInjector
+		Used_BloodBagIV
+		Used_Epinephrine
+		Used_Morphine
+		Used_SalineBagIV
+		Zen_ArtillerySmokeGrenade
+		Zen_ArtillerySmokeGrenadeChem
+		Zen_BoomBox
+		Zen_CamoNet_GhillieAtt
+		Zen_CamoNet_GhillieBushrag
+		Zen_CamoNet_GhillieHood
+		Zen_CamoNet_GhillieSuit
+		Zen_CamoNet_GhillieTop
+		Zen_CamoNet_Strip
+		Zen_CamoShelterKit
+		Zen_Canteen_Black
+		Zen_CarWorkbench
+		Zen_CarWorkbenchKit
+		Zen_CassetteCase
+		Zen_ChessBlackBishop
+		Zen_ChessBlackKing
+		Zen_ChessBlackKnight
+		Zen_ChessBlackPawn
+		Zen_ChessBlackQueen
+		Zen_ChessBlackRook
+		Zen_ChessBoard
+		Zen_ChessBoard_Static
+		Zen_ChessWhiteBishop
+		Zen_ChessWhiteKing
+		Zen_ChessWhiteKnight
+		Zen_ChessWhitePawn
+		Zen_ChessWhiteQueen
+		Zen_ChessWhiteRook
+		Zen_CommunityBarrel
+		Zen_CommunityBarrel_Holes
+		Zen_ConcussionGrenade
+		Zen_EternalFireplace
+		Zen_ImprovisedShelter
+		Zen_RaidAlarmRadar
+		Zen_RaidAlarmRadarKit
+		Zen_RaidAlarmStation
+		Zen_RaidAlarmStationKit
+		Zen_ShelterFabric
+		Zen_ShelterLeather
+		Zen_ShelterStick
+		Zen_TireRack
+		Zen_VikingAxe
+		Zen_Walkman
+		ZenFlask
+		ZenFlint
+		ZenGraves_DeadPlayerCross
+		ZenGraves_DeadPlayerSkeleton
+		ZenGraves_UndergroundStash
+		ZenJameson
+		ZenNote
+		ZenPetrolLighter
+		ZenRandomAmmoBox // Don't spawn in types.xml: for JSON spawn config only, as the classname will shift into a different item causing types.xml to spawn infinitely
+		ZenRaybans_Black
+		ZenRaybans_Blue
+		ZenRaybans_Green
+		ZenRaybans_Red
 		ZenRune_Air
 		ZenRune_Body
 		ZenRune_Chaos
@@ -118,119 +208,23 @@
 		ZenRune_Mind
 		ZenRune_Nature
 		ZenRune_Water
-		ZenJameson
-		Empty_ZenJameson
-		ZenFlask
-		Empty_ZenFlask
-		EyeMask_ZenRabbit_Black
-		EyeMask_ZenRabbit_Blue
-		EyeMask_ZenRabbit_Pink
-		EyeMask_ZenRabbit_Green
-		ZenCamps_ShelterStick
-		ZenCamps_ShelterFabric
-		ZenCamps_ShelterLeather
-		ZenRaybans_Black
-		ZenRaybans_Red
-		ZenRaybans_Green
-		ZenRaybans_Blue
-		Zen_CassetteCase
-		Zen_BoomBox
-		Zen_Walkman
-		Zen_MusicNoise
-		ZenRandomAmmoBox
-		ZenTreasure_UndergroundStash
-		ZenTreasure_WoodenCrate
-		ZenTreasure_SeaChest
-		ZenTreasure_DebugShovel
-		ZenTreasure_RandomPhoto
-		ZenPetrolLighter
+		ZenSwissKnife
+		ZenSwissKnife_CanOpener
+		ZenSwissKnife_Knife
+		ZenSwissKnife_Lockpick
+		ZenSwissKnife_Scissors
+		ZenSwissKnife_Screwdriver
+		ZenSwissKnife_SmallSaw
+		ZenTreasure_DebugShovel // Admin tool
+		ZenTreasure_RandomPhoto // Don't spawn in types.xml: for JSON spawn config only, as the classname will shift into a different item causing types.xml to spawn infinitely
+		ZenTreasure_SeaChest // Don't add to types.xml: lifetime is governed by ZenTreasureConfig.json
+		ZenTreasure_UndergroundStash // Don't add to types.xml: lifetime is governed by ZenTreasureConfig.json
+		ZenTreasure_UndergroundStashWinter // Don't add to types.xml: lifetime is governed by ZenTreasureConfig.json
+		ZenTreasure_WoodenCrate // Don't add to types.xml: lifetime is governed by ZenTreasureConfig.json
 		ZenZippoLighter
-		ZenZippoLighter_Peace
 		ZenZippoLighter_Anarchy
+		ZenZippoLighter_Peace
 		ZenZippoLighter_Zenarchist
-		ZenWolfMask
-		ZenGraves_DeadPlayerCross
-		ZenGraves_DeadPlayerSkeleton
-		ZenGraves_UndergroundStash
-		Zen_CombatLogFlare
-		Zen_CamoShelterKit
-		Zen_ImprovisedShelter
-		ZenNote
-		Pen_Pink
-		Pen_Purple
-		Pen_Orange
-		Zen_VikingAxe
-		Zen_ChessBoard
-		Zen_ChessBoard_Static
-		Zen_ChessWhitePawn
-		Zen_ChessBlackPawn
-		Zen_ChessWhiteBishop
-		Zen_ChessBlackBishop
-		Zen_ChessWhiteKing
-		Zen_ChessBlackKing
-		Zen_ChessWhiteKnight
-		Zen_ChessBlackKnight
-		Zen_ChessWhiteQueen
-		Zen_ChessBlackQueen
-		Zen_ChessWhiteRook
-		Zen_ChessBlackRook
-		Zen_CarWorkbenchKit
-		Zen_CarWorkbench
-		Zen_TireRack
-		Zen_ArtillerySmokeGrenade
-		Zen_ArtillerySmokeGrenadeChem
-		Zen_ArtilleryBomb
-		Zen_CamoNet_GhillieSuit
-		Zen_CamoNet_GhillieHood
-		Zen_CamoNet_GhillieTop
-		Zen_CamoNet_GhillieBushrag
-		Zen_CamoNet_GhillieAtt
-		Zen_CamoNet_Strip
-		Zen_ConcussionGrenade
-		Empty_SodaCan_Pipsi
-		Empty_SodaCan_Cola
-		Empty_SodaCan_Spite
-		Empty_SodaCan_Kvass
-		Empty_SodaCan_Fronta
-		Empty_BoxCerealCrunchin
-		Empty_Rice
-		Empty_PowderedMilk
-		Empty_Honey_NoLiquid
-		Empty_Marmalade_NoLiquid
-		Empty_Honey
-		Empty_Marmalade
-		Empty_Zagorky
-		Empty_ZagorkyChocolate
-		Empty_ZagorkyPeanuts
-		Empty_SaltySticks
-		Empty_Crackers
-		Empty_Chips
-		Empty_Can_Opened
-		Empty_BakedBeansCan_Opened
-		Empty_PeachesCan_Opened
-		Empty_TacticalBaconCan_Opened
-		Empty_SpaghettiCan_Opened
-		Empty_UnknownFoodCan_Opened
-		Empty_SardinesCan_Opened
-		Empty_TunaCan_Opened
-		Empty_FoodCan_250g_Opened_ColorBase
-		Empty_DogFoodCan_Opened
-		Empty_CatFoodCan_Opened
-		Empty_PorkCan_Opened
-		Empty_Lunchmeat_Opened
-		Empty_Pajka_Opened
-		Empty_Pate_Opened
-		Empty_BrisketSpread_Opened
-		Used_BloodBagIV
-		Used_SalineBagIV
-		Used_Morphine
-		Used_Epinephrine
-		Used_AntiChemInjector
-		ZenFlint
-		Zen_RaidAlarmStationKit
-		Zen_RaidAlarmStation
-		Zen_RaidAlarmRadarKit
-		Zen_RaidAlarmRadar
 */
 
 class CfgPatches
@@ -240,19 +234,26 @@ class CfgPatches
 		requiredVersion = 0.1;
 		requiredAddons[] =
 		{
+			"0_ZenModPackDefine",
 			"DZ_Data",
 			"DZ_Scripts",
+			"DZ_Radio",
 			"DZ_Gear_Tools",
+			"DZ_Characters",
 			"DZ_Gear_Drinks",
 			"DZ_Gear_Cooking",
 			"DZ_Gear_Camping",
+			"DZ_Gear_Navigation",
 			"DZ_Gear_Consumables",
 			"DZ_Vehicles_Wheeled",
 			"DZ_Weapons_Supports",
 			"DZ_Weapons_Explosives",
-			"DZ_Characters",
 			"DZ_Characters_Headgear",
-			"DZ_Radio"
+			"DZ_Characters_Tops",
+			"DZ_Characters_Pants",
+			"DZ_Characters_Shoes",
+			"DZ_Characters_Gloves",
+			"DZ_Characters_Masks"
 		};
 	};
 };
@@ -285,47 +286,44 @@ class CfgMods
 					"ZenModPack/data/gui/chess/zenchess_whiteslot.imageset",
 					"ZenModPack/data/gui/chess/zenchess_blackslot.imageset",
 					"ZenModPack/data/gui/music/zen_music.imageset",
-					"ZenModPack/data/gui/sleepingbags/sleepingbag_icon.imageset"
+					"ZenModPack/data/gui/sleepingbags/sleepingbag_icon.imageset",
+					"ZenModPack/data/gui/journal/zenjournal.imageset"
 				};
 			};
 			class engineScriptModule
 			{
 				files[]=
 				{
-					"ZenModPack/scripts/1_Core",
-					"ZenModPack/scripts/Common"
+					"ZenModPack/scripts/1_Core"
+					
 				};
 			};
 			class gameLibScriptModule
 			{
 				files[]=
 				{
-					"ZenModPack/scripts/2_GameLib",
-					"ZenModPack/scripts/Common"
+					"ZenModPack/scripts/2_GameLib"
 				};
 			};
 			class gameScriptModule
 			{
 				files[] = 
 				{ 
-					"ZenModPack/scripts/3_Game",
-					"ZenModPack/scripts/Common"
+					"ZenModPack/scripts/3_Game"
 				};
 			};
 			class worldScriptModule
 			{
 				files[] = 
 				{ 
-					"ZenModPack/scripts/4_World",
-					"ZenModPack/scripts/Common"
+					"ZenModPack/scripts/4_World"
 				};
 			};
 			class missionScriptModule
 			{
 				files[] = 
 				{ 
-					"ZenModPack/scripts/5_mission",
-					"ZenModPack/scripts/common"
+					"ZenModPack/scripts/5_mission"
 				};
 			};
 		};
@@ -346,7 +344,9 @@ class CfgVehicles
 	class GhillieAtt_ColorBase;
 	class M18SmokeGrenade_Red;
 	class SodaCan_ColorBase;
+	class Barrel_ColorBase;
 	class UndergroundStash;
+	class BaseBuildingBase;
 	class HouseNoDestruct;
 	class Container_Base;
 	class ShelterLeather;
@@ -357,9 +357,10 @@ class CfgVehicles
 	class KitchenKnife;
 	class Grenade_Base;
 	class ShelterStick;
+	class Edible_Base;
 	class Bottle_Base;
-	
 	class WoodenCrate;
+	class ItemCompass;
 	class Roadflare;
 	class CarScript;
 	class CanOpener;
@@ -370,8 +371,228 @@ class CfgVehicles
 	class Lockpick;
 	class Hatchet;
 	class HandSaw;
+	class ItemMap;
 	class Shovel;
 	class Man;
+
+	//! JOURNAL 
+	class ZenBook_Base: Inventory_Base
+	{
+		simulation="ItemBook";
+		model="\DZ\gear\books\Book_kniga.p3d";
+		inventorySlot[]=
+		{
+			"Book"
+		};
+		itemSize[]={2,2};
+		absorbency=0.89999998;
+		hiddenSelections[]=
+		{
+			"camoGround"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"dz\gear\books\data\book_bible_co.paa"
+		};
+		repairableWithKits[] = { 5 }; // duct tape
+		repairCosts[] = { 20 };
+		rotationFlags=16;
+		quantityShow=0;
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints=100;
+					healthLevels[]=
+					{
+						
+						{
+							1,
+							
+							{
+								"DZ\gear\books\Data\book.rvmat"
+							}
+						},
+						
+						{
+							0.69999999,
+							
+							{
+								"DZ\gear\books\Data\book.rvmat"
+							}
+						},
+						
+						{
+							0.5,
+							
+							{
+								"DZ\gear\books\Data\book_damage.rvmat"
+							}
+						},
+						
+						{
+							0.30000001,
+							
+							{
+								"DZ\gear\books\Data\book_damage.rvmat"
+							}
+						},
+						
+						{
+							0,
+							
+							{
+								"DZ\gear\books\Data\book_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+	};
+	class ZenJournal: ZenBook_Base
+	{
+		scope=2;
+		displayName="$STR_CfgVehicles_ZenJournal0";
+		descriptionShort="$STR_CfgVehicles_ZenJournal1";
+		attachments[] =
+		{
+			"ZenJournal_Map",
+			"ZenJournal_Compass",
+			"ZenJournal_Pen",
+			"ZenJournal_Paper1",
+			"ZenJournal_Paper2",
+			"ZenJournal_Paper3",
+			"ZenJournal_Paper4",
+			"ZenJournal_Paper5"
+		};
+	};
+	class ChernarusMap: ItemMap
+	{
+		inventorySlot[] +=
+		{
+			"ZenJournal_Map"
+		};
+	};
+	class Compass: ItemCompass
+	{
+		inventorySlot[] +=
+		{
+			"ZenJournal_Compass"
+		};
+	};
+	class OrienteeringCompass: ItemCompass
+	{
+		inventorySlot[] +=
+		{
+			"ZenJournal_Compass"
+		};
+	};
+
+	//! FIRE FUEL 
+	// Define fire fuel object. This object is locked to fire when poured so players should never be able to interact with it unless it's spawned in by an admin
+	class Zen_FireFuel : Inventory_Base
+	{
+		scope = 1;
+		itemSize[] = { 1,1 };
+		model = "\dz\vehicles\parts\JerryCan.p3d";
+		displayName = "$STR_ZenFireFuel0";
+		descriptionShort = "$STR_ZenFireFuel1";
+		inventorySlot[] = { "ZenFuel" };
+		canBeSplit = 0;
+		varQuantityInit = 1;
+		varQuantityMin = 0;
+		varQuantityMax = 1;
+		varQuantityDestroyOnMin = 1;
+	};
+
+	// Add fuel attachment to fireplaces
+	class Fireplace : FireplaceBase
+	{
+		attachments[] +=
+		{
+			"ZenFuel"
+		};
+		class GUIInventoryAttachmentsProps
+		{
+			class Gasoline
+			{
+				name = "$STR_ZenFireFuel0";
+				description = "";
+				attachmentSlots[] =
+				{
+					"ZenFuel"
+				};
+				icon = "gascanister";
+				view_index = 7;
+			};
+		};
+	};
+	class FireplaceIndoor : FireplaceBase
+	{
+		attachments[] +=
+		{
+			"ZenFuel"
+		};
+		class GUIInventoryAttachmentsProps
+		{
+			class Gasoline
+			{
+				name = "$STR_ZenFireFuel0";
+				description = "";
+				attachmentSlots[] =
+				{
+					"ZenFuel"
+				};
+				icon = "gascanister";
+				view_index = 7;
+			};
+		};
+	};
+	class OvenIndoor : FireplaceBase
+	{
+		attachments[] +=
+		{
+			"ZenFuel"
+		};
+		class GUIInventoryAttachmentsProps
+		{
+			class Gasoline
+			{
+				name = "$STR_ZenFireFuel0";
+				description = "";
+				attachmentSlots[] =
+				{
+					"ZenFuel"
+				};
+				icon = "gascanister";
+				view_index = 7;
+			};
+		};
+	};
+	class BarrelHoles_ColorBase : FireplaceBase
+	{
+		attachments[] +=
+		{
+			"ZenFuel"
+		};
+		class GUIInventoryAttachmentsProps
+		{
+			class Gasoline
+			{
+				name = "$STR_ZenFireFuel0";
+				description = "";
+				attachmentSlots[] =
+				{
+					"ZenFuel"
+				};
+				icon = "gascanister";
+				view_index = 7;
+			};
+		};
+	};
 
 	//! SCREWDRIVER PRE-DEFINE - add workbench slot
 	class Screwdriver : Inventory_Base
@@ -860,250 +1081,70 @@ class CfgVehicles
 		};
 	};
 
-	//! SLEEPING BAGS 
-	class ZenSleepingBag_PackedBase: Inventory_Base
+	//! COMMUNITY BARREL (UNMOVEABLE)
+	class Zen_CommunityBarrel : Barrel_ColorBase
 	{
-		scope=2;
-		displayName="$STR_CfgVehicles_ZenSleepingBag0";
-		descriptionShort="$STR_CfgVehicles_ZenSleepingBag1";
-		model="ZenModPack\data\models\sleepingbags\sleepingbag_case.p3d";
-		hiddenSelections[]=
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenCommunityBarrel0";
+		descriptionShort = "$STR_CfgVehicles_ZenCommunityBarrel1";
+		hiddenSelectionsTextures[] =
 		{
-			"bag"
+			"\ZenModPack\data\textures\communitybarrel\barrel_community_co.paa"
 		};
-		inventorySlot[] =
-		{
-			"ZenSleepingBag"
-		};
-		hiddenSelectionsTextures[]={};
-		isMeleeWeapon=0;
-		weight=1000;
-		absorbency=0;
-		rotationFlags=16;
-		itemSize[]={4,2};
-		repairableWithKits[] = { 5,2 };
-		repairCosts[] = { 30,25 };
-		reversed=0;
-		itemBehaviour=2;
 		class DamageSystem
 		{
 			class GlobalHealth
 			{
 				class Health
 				{
-					hitpoints = 250;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_case.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_case.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_case_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_case_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_case_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
+					hitpoints = 999999;
+				}
+			}
 		};
 	};
-	class ZenSleepingBagBlack_Packed: ZenSleepingBag_PackedBase
+	class Zen_CommunityBarrel_Holes : BarrelHoles_ColorBase
 	{
-		scope=2;
+		scope = 2;
+		displayName = "$STR_CfgVehicles_ZenCommunityBarrel0";
+		descriptionShort = "$STR_CfgVehicles_ZenCommunityBarrel1";
 		hiddenSelectionsTextures[]=
 		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbagfolded_black_co.paa"
+			"\dz\gear\cooking\data\stoneground_co.paa",
+			"\ZenModPack\data\textures\communitybarrel\barrel_community_co.paa",
+			"\ZenModPack\data\textures\communitybarrel\barrel_community_co.paa"
 		};
-	};
-	class ZenSleepingBagBlue_Packed: ZenSleepingBag_PackedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbagfolded_blue_co.paa"
-		};
-	};
-	class ZenSleepingBagGrey_Packed: ZenSleepingBag_PackedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbagfolded_grey_co.paa"
-		};
-	};
-	class ZenSleepingBagRed_Packed: ZenSleepingBag_PackedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbagfolded_red_co.paa"
-		};
-	};
-	class ZenSleepingBagGreen_Packed: ZenSleepingBag_PackedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbagfolded_green_co.paa"
-		};
-	};
-	class ZenSleepingBag_DeployedBase: Container_Base
-	{
-		scope=2;
-		displayName="$STR_CfgVehicles_ZenSleepingBag0";
-		descriptionShort="$STR_CfgVehicles_ZenSleepingBag1";
-		model="ZenModPack\data\models\sleepingbags\sleepingbag.p3d";
-		bounding="BSphere";
-		overrideDrawArea="5.0";
-		slopeTolerance=0.25;
-		hiddenSelections[]=
-		{
-			"bag"
-		};
-		hiddenSelectionsTextures[]={};
-		openable=0;
-		weight=10000;
-		carveNavmesh=1;
-		itemSize[]={15,15};
-		itemBehaviour=2;
-		lootCategory="Tents";
-		placement="ForceSlopeOnTerrain";
-		repairableWithKits[]={5,2};
-		repairCosts[]={30,25};
-		attachments[]={};
-		rotationFlags=2;
 		class DamageSystem
 		{
 			class GlobalHealth
 			{
 				class Health
 				{
-					hitpoints = 250;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\sleepingbags\sleepingbag_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		class Cargo
-		{
-			itemsCargoSize[]={4,2};
-			openable=0;
-			allowOwnedCargoManipulation=1;
+					hitpoints = 999999;
+				}
+			}
 		};
 	};
-	class ZenSleepingBagBlack_Deployed : ZenSleepingBag_DeployedBase
+	class Zen_CommunityBarrel_DebugPrinter : Barrel_ColorBase
 	{
-		scope=2;
-		hiddenSelectionsTextures[]=
+		// For debug purposes only.
+		scope = 2;
+		displayName = "WILL DESPAWN";
+		descriptionShort = "This barrel will print its location in the server's logs when it is spawned. Useful for placing them on the map and then checking logs on local server restart to spawn using init.c method.";
+		hiddenSelectionsTextures[] =
 		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbag_black_co.paa"
+			"\ZenModPack\data\textures\communitybarrel\barrel_community_co.paa"
 		};
-	};
-	class ZenSleepingBagBlue_Deployed : ZenSleepingBag_DeployedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
+		class DamageSystem
 		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbag_blue_co.paa"
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 999999;
+				}
+			}
 		};
-	};
-	class ZenSleepingBagGrey_Deployed : ZenSleepingBag_DeployedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbag_grey_co.paa"
-		};
-	};
-	class ZenSleepingBagRed_Deployed : ZenSleepingBag_DeployedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbag_red_co.paa"
-		};
-	};
-	class ZenSleepingBagGreen_Deployed : ZenSleepingBag_DeployedBase
-	{
-		scope=2;
-		hiddenSelectionsTextures[]=
-		{
-			"ZenModPack\data\textures\sleepingbags\sleepingbag_green_co.paa"
-		};
-	};
+	}
 
 	//! SWISS KNIFE 
 	// Swiss knife base
@@ -2100,7 +2141,7 @@ class CfgVehicles
 		overdosedIncrement = 0.05;
 		// Vanilla
 		weight = 300;
-		itemSize[] = { 2,2 };
+		itemSize[] = { 1,2 };
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 2048;
@@ -2115,6 +2156,21 @@ class CfgVehicles
 		hiddenSelectionsTextures[] =
 		{
 			"zenmodpack\data\textures\flask\zenflask_co.paa"
+		};
+		flammability=10;
+		liquidBoilingThreshold=999;
+		inventorySlot[] +=
+		{
+			"Belt_Left"
+		};
+		class Nutrition
+		{
+			fullnessIndex=1;
+			energy=231;
+			water=15;
+			nutritionalIndex=75;
+			toxicity=0.2;
+			digestibility=2;
 		};
 		class DamageSystem
 		{
@@ -2219,7 +2275,7 @@ class CfgVehicles
 		descriptionShort = "A stainless steel hip flask. Might have some booze left in it, but if not then it would make a decent container for boiling water to purify it.";
 		model = "zenmodpack\data\models\flask\zenflask.p3d";
 		weight = 300;
-		itemSize[] = { 2,2 };
+		itemSize[] = { 1,2 };
 		destroyOnEmpty = 0;
 		varQuantityDestroyOnMin = 0;
 		varLiquidTypeInit = 512;
@@ -2232,6 +2288,7 @@ class CfgVehicles
 		repairCosts[] = { 25 };
 		inventorySlot[] +=
 		{
+			"Belt_Left",
 			"DirectCookingA",
 			"DirectCookingB",
 			"DirectCookingC"
@@ -2348,7 +2405,7 @@ class CfgVehicles
 		zenLiquidName = "#STR_ZenGui_LiquidWhisky";
 		model="ZenModPack\data\models\jameson\jameson.p3d";
 		weight=450;
-		itemSize[]={2,3};
+		itemSize[]={1,3};
 		destroyOnEmpty=0;
 		varQuantityDestroyOnMin=0;
 		varLiquidTypeInit=2048;
@@ -2368,6 +2425,17 @@ class CfgVehicles
 		hiddenSelectionsTextures[]=
 		{
 			"ZenModPack\data\textures\jameson\jameson_co.paa"
+		};
+		flammability=10;
+		liquidBoilingThreshold=999;
+		class Nutrition
+		{
+			fullnessIndex=1;
+			energy=231;
+			water=15;
+			nutritionalIndex=75;
+			toxicity=0.2;
+			digestibility=2;
 		};
 		class DamageSystem
 		{
@@ -3191,6 +3259,8 @@ class CfgVehicles
 		playSeconds = -1;
 		copyrighted = 0;
 		isMusic = 1;
+		repairableWithKits[] = { 7 }; // electronic repair kit
+		repairCosts[] = { 20 };
         inventorySlot[] =
         {
             "ZenCassette"
@@ -3272,10 +3342,10 @@ class CfgVehicles
             };
         };
     };
-	class Zen_MusicNoise : Inventory_Base
+	class Zen_MusicNoise : HouseNoDestruct
 	{
-		// Zombie noises
-		scope = 2;
+		// Zombie noises config
+		scope = 0;
 		class Quiet
 		{
 			strength = 120;
@@ -3291,6 +3361,12 @@ class CfgVehicles
 			strength = 1000;
 			type = "sound";
 		};
+	};
+	class Zen_Cassette_RandomTape : Zen_Cassette_Base
+	{
+		scope = 2;
+		displayName = "Random Tape";
+		descriptionShort = "Will convert to random cassette for money";
 	};
 	// Vehicles
 	class OffroadHatchback : CarScript
@@ -3494,133 +3570,6 @@ class CfgVehicles
 		};
 	};
 
-	//! TREASURE 
-	// Turns into a random ammo box
-	class ZenRandomAmmoBox: Box_Base
-	{
-		scope=2;
-		displayName="$STR_CfgVehicles_AmmoBox_556x45_20Rnd0";
-		descriptionShort="$STR_CfgVehicles_AmmoBox_556x45_20Rnd1";
-		model="\dz\weapons\ammunition\556_20RoundBox.p3d";
-		debug_ItemCategory=5;
-		rotationFlags=17;
-		weight=85;
-	};
-
-	class ZenTreasure_UndergroundStash			: UndergroundStash {};
-
-	// For legacy purposes when WinterChernarusV2 had a different stash type. No longer used.
-	class ZenTreasure_UndergroundStashWinter	: ZenTreasure_UndergroundStash {};
-
-	class ZenTreasure_WoodenCrate : WoodenCrate
-	{
-		scope = 2;
-		descriptionShort = "$STR_CfgVehicles_ZenDamagedBox";
-		inventorySlot[] = {};
-	};
-	class ZenTreasure_SeaChest : SeaChest
-	{
-		scope = 2;
-		descriptionShort = "$STR_CfgVehicles_ZenDamagedBox";
-	};
-
-	class ZenTreasure_DebugShovel : Shovel
-	{
-		scope = 2;
-		displayName = "TREASURE DEBUG SHOVEL";
-		descriptionShort = "NOT FOR ORDINARY HUMANS - WILL DIG UP STASHES VERY FAST!";
-	};
-
-	class ZenTreasure_PhotoBase : Inventory_Base
-	{
-		scope = 0;
-		displayName = "$STR_CfgVehicles_ZenPhoto0";
-		descriptionShort = "$STR_CfgVehicles_ZenPhoto1";
-		model = "ZenModPack\data\models\treasure\photo.p3d";
-		hiddenSelections[] = { "front" };
-		weight = 1;
-		itemSize[] = { 1,1 };
-		isMeleeWeapon=1;
-		absorbency=1;
-		rotationFlags=16; // 1 = rotate front-up, 16 = rotate front-down
-		varWetMax=1;
-		treasure_stash_x = -1.0;
-		treasure_stash_z = -1.0;
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=15;
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\treasure\photo_material.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\treasure\photo_material.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\treasure\photo_damage.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\treasure\photo_damage.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\treasure\photo_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class pickUpItem
-				{
-					soundSet="pickUpPaper_SoundSet";
-					id=797;
-				};
-			};
-		};
-		soundImpactType = "cloth";
-	};
-
-	// This turns into a random photograph upon spawn. The spawn list is determined by photo *.cpp entries.
-	// Name any child photos in treasure addons 'ZenTreasure_PhotoXX', where XX is the photo number, in order, from 01-99+ (eg. ZenTreasure_Photo69)
-	class ZenTreasure_RandomPhoto : ZenTreasure_PhotoBase
-	{
-		scope = 2;
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\treasure\photo_random.paa" };
-	};
-
 	//! ZIPPO 
 	// Vanilla Petrol lighter EnergyManager config
 	class ZenPetrolLighter: PetrolLighter
@@ -3629,6 +3578,7 @@ class CfgVehicles
 		varQuantityMax=900; 
 		varQuantityInit=900;
 		varQuantityDestroyOnMin=0;
+		weightPerQuantityUnit=0;
 		class EnergyManager
 		{
 			autoSwitchOff=1;
@@ -3672,6 +3622,7 @@ class CfgVehicles
 		varQuantityInit=1800;
 		varQuantityDestroyOnMin=0;
 		varTotalLifetime=7200; // How many seconds does this zippo work for before ruining from Pristine?
+		weightPerQuantityUnit=0;
 		simpleHiddenSelections[]= 
 		{
 			"top_open",
@@ -3766,184 +3717,6 @@ class CfgVehicles
 	class ZenZippoLighter_Zenarchist: ZenZippoLighter
 	{
 		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zippo\zippo_zenarchist_co.paa" };
-	};
-
-	//! WOLF MASK 
-	class ZenWolfMask: Clothing
-	{
-		scope=2;
-		displayName="$STR_CfgVehicles_ZenWolfMask0";
-		descriptionShort="$STR_CfgVehicles_ZenWolfMask1";
-		model="\ZenModPack\data\models\wolfmask\wolfmask_g.p3d";
-		weight=1000;
-		itemSize[]={4,3};
-		repairableWithKits[]={8}; // todo
-		repairCosts[]={25};
-		inventorySlot[]=
-		{
-			"Headgear"
-		};
-		simulation="clothing";
-		vehicleClass="Clothing";
-		itemInfo[]=
-		{
-			"Clothing",
-			"Headgear"
-		};
-		visibilityModifier=0.89999998;
-		varWetMax=0.249;
-		heatIsolation=1.0;
-		headSelectionsToHide[]=
-		{
-			"Clipping_HelmetMich"
-		};
-		hiddenSelections[]=
-		{
-			"zbytek"
-		};
-		hiddenSelectionsTextures[]=
-		{
-			"\ZenModPack\data\textures\wolfmask\wolfmask_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=75;
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"\ZenModPack\data\textures\wolfmask\wolfmask.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"\ZenModPack\data\textures\wolfmask\wolfmask.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"\ZenModPack\data\textures\wolfmask\wolfmask_damage.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"\ZenModPack\data\textures\wolfmask\wolfmask_damage.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"\ZenModPack\data\textures\wolfmask\wolfmask_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-			// Copied from Ballistic Helmet
-			class GlobalArmor
-			{
-				class Projectile
-				{
-					class Health
-					{
-						damage=0.25;
-					};
-					class Blood
-					{
-						damage=0;
-					};
-					class Shock
-					{
-						damage=0.5;
-					};
-				};
-				class Melee
-				{
-					class Health
-					{
-						damage=0.55000001;
-					};
-					class Blood
-					{
-						damage=0.2;
-					};
-					class Shock
-					{
-						damage=0.5;
-					};
-				};
-				class Infected
-				{
-					class Health
-					{
-						damage=0.55000001;
-					};
-					class Blood
-					{
-						damage=0.2;
-					};
-					class Shock
-					{
-						damage=0.5;
-					};
-				};
-				class FragGrenade
-				{
-					class Health
-					{
-						damage=0.5;
-					};
-					class Blood
-					{
-						damage=0;
-					};
-					class Shock
-					{
-						damage=0.25999999;
-					};
-				};
-			};
-		};
-		class ClothingTypes
-		{
-			male="\ZenModPack\data\models\wolfmask\wolfmask.p3d";
-			female="\ZenModPack\data\models\wolfmask\wolfmask.p3d";
-		};
-		soundImpactType="organic";
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class pickUpItem
-				{
-					soundSet="pickUpPot_SoundSet";
-					id=797;
-				};
-				class drop
-				{
-					soundset="BallisticHelmet_drop_SoundSet";
-					id=898;
-				};
-			};
-		};
 	};
 
 	//! GRAVES 
@@ -4305,7 +4078,16 @@ class CfgVehicles
 		varQuantityMax = 5;
 		varStackMax = 5;
 		varQuantityDestroyOnMin = 1;
+		inventorySlot[] +=
+		{
+			"ZenJournal_Paper1",
+			"ZenJournal_Paper2",
+			"ZenJournal_Paper3",
+			"ZenJournal_Paper4",
+			"ZenJournal_Paper5"
+		};
 	};
+
 
 	// Make punched card non-stackable as it inherits from Paper
 	class PunchedCard : Paper
@@ -4330,16 +4112,30 @@ class CfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 1;
 		varStackMax = 1;
+		inventorySlot[] +=
+		{
+			"ZenJournal_Paper1",
+			"ZenJournal_Paper2",
+			"ZenJournal_Paper3",
+			"ZenJournal_Paper4",
+			"ZenJournal_Paper5"
+		};
 	};
 
 	// Define colored pens
 	class Pen_ColorBase : Inventory_Base
 	{
+		scope = 0;
 		quantityBar = 1;
 		varQuantityInit = 100;
 		varQuantityMin = 0;
 		varQuantityMax = 100;
+		//varQuantityDestroyOnMin = 0;
 		stackedUnit = "percentage";
+		inventorySlot[] +=
+		{
+			"ZenJournal_Pen"
+		};
 	};
 	class Pen_Black : Pen_ColorBase
 	{
@@ -5395,7 +5191,7 @@ class CfgVehicles
 	// Define bomb
 	class Zen_ArtilleryBomb : Grenade_Base
 	{
-		scope = 2;
+		scope = 1;
 		displayName = "ZenBangBang";
 		model = "DZ\weapons\explosives\grenade.p3d";
 		itemSize[] = { 1,1 };
@@ -6002,109 +5798,6 @@ class CfgVehicles
 		};
 	};
 
-	//! FIRE FUEL 
-	// Define fire fuel object. This object is locked to fire when poured so players should never be able to interact with it unless it's spawned in by an admin
-	class Zen_FireFuel : Inventory_Base
-	{
-		scope = 2;
-		itemSize[] = { 1,1 };
-		model = "\dz\vehicles\parts\JerryCan.p3d";
-		displayName = "$STR_ZenFireFuel0";
-		descriptionShort = "$STR_ZenFireFuel1";
-		inventorySlot[] = { "ZenFuel" };
-		canBeSplit = 0;
-		varQuantityInit = 1;
-		varQuantityMin = 0;
-		varQuantityMax = 1;
-		varQuantityDestroyOnMin = 1;
-	};
-
-	// Add fuel attachment to fireplaces
-	class Fireplace : FireplaceBase
-	{
-		attachments[] +=
-		{
-			"ZenFuel"
-		};
-		class GUIInventoryAttachmentsProps
-		{
-			class Gasoline
-			{
-				name = "$STR_ZenFireFuel0";
-				description = "";
-				attachmentSlots[] =
-				{
-					"ZenFuel"
-				};
-				icon = "gascanister";
-				view_index = 7;
-			};
-		};
-	};
-	class FireplaceIndoor : FireplaceBase
-	{
-		attachments[] +=
-		{
-			"ZenFuel"
-		};
-		class GUIInventoryAttachmentsProps
-		{
-			class Gasoline
-			{
-				name = "$STR_ZenFireFuel0";
-				description = "";
-				attachmentSlots[] =
-				{
-					"ZenFuel"
-				};
-				icon = "gascanister";
-				view_index = 7;
-			};
-		};
-	};
-	class OvenIndoor : FireplaceBase
-	{
-		attachments[] +=
-		{
-			"ZenFuel"
-		};
-		class GUIInventoryAttachmentsProps
-		{
-			class Gasoline
-			{
-				name = "$STR_ZenFireFuel0";
-				description = "";
-				attachmentSlots[] =
-				{
-					"ZenFuel"
-				};
-				icon = "gascanister";
-				view_index = 7;
-			};
-		};
-	};
-	class BarrelHoles_ColorBase : FireplaceBase
-	{
-		attachments[] +=
-		{
-			"ZenFuel"
-		};
-		class GUIInventoryAttachmentsProps
-		{
-			class Gasoline
-			{
-				name = "$STR_ZenFireFuel0";
-				description = "";
-				attachmentSlots[] =
-				{
-					"ZenFuel"
-				};
-				icon = "gascanister";
-				view_index = 7;
-			};
-		};
-	};
-
 	//! CONCUSSION GRENADE 
 	class Zen_ConcussionGrenade : Grenade_Base
 	{
@@ -6210,11 +5903,13 @@ class CfgVehicles
 	class Zen_WoodReserve : HouseNoDestruct
 	{
 		scope = 1;
+		physLayer="item_small";
 		model = "ZenModPack\data\models\woodreserves\zen_woodreserve.p3d";
 	};
 	class Zen_WoodReserve_Debug : HouseNoDestruct
 	{
 		scope = 1;
+		physLayer="item_small";
 		model = "ZenModPack\data\models\woodreserves\zen_woodreserve_debug.p3d";
 	};
 
@@ -6223,21 +5918,25 @@ class CfgVehicles
 	class Zen_ChickenCoop : HouseNoDestruct
 	{
 		scope = 1;
+		physLayer="item_small";
 		model = "ZenModPack\data\models\chickencoops\zen_coop.p3d";
 	};
 	class Zen_ChickenCoop_Debug : Zen_ChickenCoop
 	{
 		scope = 1;
+		physLayer="item_small";
 		model = "ZenModPack\data\models\chickencoops\zen_coop_debug.p3d";
 	};
 	class Zen_ChickenCoop2 : Zen_ChickenCoop
 	{
 		scope = 1;
+		physLayer="item_small";
 		model = "ZenModPack\data\models\chickencoops\zen_coop2.p3d";
 	};
 	class Zen_ChickenCoop2_Debug : Zen_ChickenCoop
 	{
 		scope = 1;
+		physLayer="item_small";
 		model = "ZenModPack\data\models\chickencoops\zen_coop2_debug.p3d";
 	};
 
@@ -8056,6 +7755,559 @@ class CfgVehicles
 		};
 	};
 
+	//! Shelter variations
+	class Zen_ShelterStick: ShelterStick
+	{
+		itemsCargoSize[]={10,8};
+	};
+	class Zen_ShelterFabric: ShelterFabric
+	{
+		itemsCargoSize[]={10,10};
+	};
+	class Zen_ShelterLeather : ShelterLeather
+	{
+		itemsCargoSize[]={10,12};
+	};
+
+	//! Canteen chlorine tabs slot
+	class PurificationTablets : Edible_Base
+	{
+		scope = 2;
+		inventorySlot[] = { "Material_ZenChlorine" };
+	};
+	class Canteen : Bottle_Base
+	{
+		attachments[] = { "Material_ZenChlorine" };
+		class GUIInventoryAttachmentsProps
+		{
+			class ZenChlorineTablets
+			{
+				attachmentSlots[] = { "Material_ZenChlorine" };
+				icon = "missing";
+			};
+		};
+	};
+	class Zen_Canteen_Black : Canteen
+	{
+		scope = 2;
+		hiddenSelections[] =
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[] =
+		{
+			"ZenModPack\data\textures\vanillaretexture\items\canteen\canteen_black_co.paa"
+		};
+	};
+
+	//! Vanilla retextures
+	class Zen_DexBottle: Edible_Base
+	{
+		scope=2;
+		displayName="$STR_CfgVehicles_ZenDex0";
+		descriptionShort="$STR_CfgVehicles_ZenDex1";
+		model="\dz\gear\medical\VitaminBottle.p3d";
+		debug_ItemCategory=7;
+		varQuantityInit=1;
+		varQuantityMin=0;
+		varQuantityMax=10;
+		varQuantityDestroyOnMin=1;
+		itemSize[]={1,2};
+		weight=20;
+		stackedUnit="pills";
+		quantityBar=0;
+		hiddenSelections[]=
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"ZenModPack\data\textures\VanillaRetexture\Items\dex\dex_bottle_co.paa"
+		};
+		// Syberia
+		medAdrenalinLevel=1;
+		medAdrenalinTimeSec=600;
+		overdosedIncrement=0.1;
+		medicalItem=1;
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints=50;
+					healthLevels[]=
+					{
+						
+						{
+							1,
+							
+							{
+								"DZ\gear\medical\data\vitamin_bottle.rvmat"
+							}
+						},
+						
+						{
+							0.69999999,
+							
+							{
+								"DZ\gear\medical\data\vitamin_bottle.rvmat"
+							}
+						},
+						
+						{
+							0.5,
+							
+							{
+								"DZ\gear\medical\data\vitamin_bottle_damage.rvmat"
+							}
+						},
+						
+						{
+							0.30000001,
+							
+							{
+								"DZ\gear\medical\data\vitamin_bottle_damage.rvmat"
+							}
+						},
+						
+						{
+							0,
+							
+							{
+								"DZ\gear\medical\data\vitamin_bottle_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+		class AnimEvents
+		{
+			class SoundWeapon
+			{
+				class VitaminBottle_open
+				{
+					soundSet="VitaminBottle_open_SoundSet";
+					id=201;
+				};
+				class VitaminBottle_shake
+				{
+					soundSet="VitaminBottle_shake_SoundSet";
+					id=202;
+				};
+				class VitaminBottle_close
+				{
+					soundSet="VitaminBottle_close_SoundSet";
+					id=203;
+				};
+				class pickUpItem
+				{
+					soundSet="vitaminbottle_pickup_SoundSet";
+					id=797;
+				};
+			};
+		};
+	};
+
+	class Flag_Base;
+	class Zen_TradingFlag: Flag_Base
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa"
+		};
+		color="Trader";
+	};
+
+	class Armband_ColorBase;
+	class Armband_ZenTrader: Armband_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.94999999;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\armbands\flag_trader_co.paa"
+		};
+	};
+
+	class Mich2001Helmet;
+	class Zen_Mich2001Helmet_Black: Mich2001Helmet
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_black_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_black_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_black_co.paa"
+		};
+	};
+	class Zen_Mich2001Helmet_Camo: Mich2001Helmet
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_camo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_camo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_camo_co.paa"
+		};
+	};
+	class Zen_Mich2001Helmet_DarkCamo: Mich2001Helmet
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_darkcamo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_darkcamo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_darkcamo_co.paa"
+		};
+	};
+	class Zen_Mich2001Helmet_Zenarchist: Mich2001Helmet
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_zenarchist_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_zenarchist_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_zenarchist_co.paa"
+		};
+	};
+
+	class TacticalShirt_ColorBase;
+	class Zen_TacticalShirt_Zenarchist: TacticalShirt_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.19999999;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_blackzen_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_blackzen_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_blackzen_co.paa"
+		};
+	};
+	class Zen_TacticalShirt_Black_Australia: TacticalShirt_ColorBase
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_black_aus_co",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_black_aus_co",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_black_aus_co"
+		};
+	};
+	class Zen_TacticalShirt_Olive_Australia: TacticalShirt_ColorBase
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_olive_aus_co",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_olive_aus_co",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_olive_aus_co"
+		};
+	};
+	class Zen_TacticalShirt_Tan_Australia: TacticalShirt_ColorBase
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_tan_aus_co",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_tan_aus_co",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\pcu5jacket_tan_aus_co"
+		};
+	};
+
+	class BaseballCap_ColorBase;
+	class BaseballCap_BackColorBase;
+
+	class Zen_BaseballCap_Camo: BaseballCap_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_camo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_camo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_camo_co.paa"
+		};
+	};
+	class Zen_BaseballCap_BackCamo: BaseballCap_BackColorBase
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_camo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_camo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_camo_co.paa"
+		};
+	};
+	class Zen_BaseballCap_DarkCamo: BaseballCap_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_darkcamo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_darkcamo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_darkcamo_co.paa"
+		};
+	};
+	class Zen_BaseballCap_BackDarkCamo: BaseballCap_BackColorBase
+	{
+		scope=2;
+		visibilityModifier=0.55000001;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_darkcamo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_darkcamo_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_darkcamo_co.paa"
+		};
+	};
+	class Zen_BaseballCap_Zenarchist: BaseballCap_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.04999999;
+		descriptionShort="Zenarchist's cap. One of a kind, extremely rare.";
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_blackzen_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_blackzen_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_blackzen_co.paa"
+		};
+	};
+	class Zen_BaseballCap_BackZenarchist: BaseballCap_BackColorBase
+	{
+		scope=2;
+		visibilityModifier=0.04999999;
+		descriptionShort="Zenarchist's cap. One of a kind, extremely rare.";
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_blackzen_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_blackzen_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\hats\baseballcap_blackzen_co.paa"
+		};
+	};
+
+	class MilitaryBoots_ColorBase;
+	class MilitaryBoots_BlackPunk: MilitaryBoots_ColorBase
+	{
+		scope=2;
+		visibilityModifier=0.69999999;
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\shoes\MilitaryBoots_blackpunk_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\shoes\MilitaryBoots_blackpunk_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\shoes\MilitaryBoots_blackpunk_co.paa"
+		};
+	};
+
+	class Shirt_ColorBase;
+	class Zen_Shirt_HunterCat: Shirt_ColorBase
+	{
+		scope=2;
+		heatIsolation=0.80000001;
+		displayName="Hunter Shirt";
+		descriptionShort="A shirt with the infamous Hunter cat on it. If you find the other cat shirt and combine it, you can be the most fashionable survivor in the apocalypse!";
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_huntercat_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_huntercat_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_huntercat_co.paa"
+		};
+	};
+	class Zen_Shirt_PharaohCat: Shirt_ColorBase
+	{
+		scope=2;
+		heatIsolation=0.80000001;
+		displayName="Pharaoh Shirt";
+		descriptionShort="A shirt with the infamous Pharaoh cat on it. If you find the other cat shirt and combine it, you can be the most fashionable survivor in the apocalypse!";
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_pharaohcat_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_pharaohcat_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_pharaohcat_co.paa"
+		};
+	};
+	class Zen_Shirt_BothCat: Shirt_ColorBase
+	{
+		scope=2;
+		itemsCargoSize[]={7,6};
+		quickBarBonus=2;
+		heatIsolation=1;
+		displayName="Kitty Best Friends Shirt";
+		descriptionShort="A shirt with the two infamous Hunter & Pharaoh cats on it. Congratulations, you are the most fashionable survivor in the apocalypse!";
+		hiddenSelectionsTextures[]=
+		{
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_bothcat_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_bothcat_co.paa",
+			"\ZenModPack\data\textures\vanillaretexture\clothing\tops\tshirt_black_bothcat_co.paa"
+		};
+	};
+
+	//! NBC Case 
+	class Zen_NBCCase: Container_Base
+	{
+		scope=2;
+		displayName="$STR_CfgVehicles_SmallProtectorCase0";
+		descriptionShort="$STR_CfgVehicles_SmallProtectorCase1";
+		model="\dz\gear\containers\Protector_Case.p3d";
+		rotationFlags=17;
+		weight=980;
+		itemSize[]={3,4};
+		canBeDigged=1;
+		isMeleeWeapon=1;
+		allowOwnedCargoManipulation=1;
+		randomQuantity=2;
+		repairableWithKits[]={8};
+		repairCosts[]={25};
+		attachments[] = 
+		{ 
+			"ZenNBC_Hood",
+			"ZenNBC_Mask",
+			"ZenNBC_Jacket",
+			"ZenNBC_Gloves",
+			"ZenNBC_Pants",
+			"ZenNBC_Shoes"
+		};
+		hiddenSelections[] =
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[] =
+		{
+			"ZenModPack\data\textures\nbccase\nbc_protectorcase_co.paa"
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints=750;
+					healthLevels[]=
+					{
+						
+						{
+							1,
+							
+							{
+								"DZ\gear\containers\data\Protector_Case.rvmat"
+							}
+						},
+						
+						{
+							0.69999999,
+							
+							{
+								"DZ\gear\containers\data\Protector_Case.rvmat"
+							}
+						},
+						
+						{
+							0.5,
+							
+							{
+								"DZ\gear\containers\data\Protector_Case_damage.rvmat"
+							}
+						},
+						
+						{
+							0.30000001,
+							
+							{
+								"DZ\gear\containers\data\Protector_Case_damage.rvmat"
+							}
+						},
+						
+						{
+							0,
+							
+							{
+								"DZ\gear\containers\data\Protector_Case_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+			class GlobalArmor
+			{
+				class FragGrenade
+				{
+					class Health
+					{
+						damage=8;
+					};
+					class Blood
+					{
+						damage=8;
+					};
+					class Shock
+					{
+						damage=8;
+					};
+				};
+			};
+		};
+		soundImpactType="plastic";
+		class AnimEvents
+		{
+			class SoundWeapon
+			{
+				class pickUpItem
+				{
+					soundSet="smallprotectorcase_pickup_SoundSet";
+					id=797;
+				};
+				class drop
+				{
+					soundset="smallprotectorcase_drop_SoundSet";
+					id=898;
+				};
+			};
+		};
+	};
+	class GasMask: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Mask" };
+	};
+	class GP5GasMask: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Mask" };
+	};
+	class NBCHoodBase: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Hood" };
+	};
+	class NBCJacketBase: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Jacket" };
+	};
+	class NBCPantsBase: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Pants" };
+	};
+	class NBCBootsBase: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Shoes" };
+	};
+	class NBCGloves_ColorBase: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Gloves" };
+	};
+	
 	//! MISCELLANEOUS STATIC OBJECTS
 
 	//! Mural
@@ -8071,233 +8323,6 @@ class CfgVehicles
 		scope=1;
 		hiddenSelections[]={"texture"};
 		hiddenSelectionsTextures[]={"ZenModPack\data\textures\mural\mural_decal_28dayslater.paa"};
-	};
-
-	//! Ice plane (useful for winter/snow maps to block certain lakes etc)
-	class Land_ZenIceSheet : HouseNoDestruct
-	{
-		scope=1;
-		model="\ZenModPack\data\models\iceplane\ice_plane_simple.p3d";
-		forceFarBubble = "true";
-	};
-	class Land_ZenIceSheet_4x4 : HouseNoDestruct
-	{
-		scope = 1;
-		model = "\ZenModPack\data\models\iceplane\ice_plane_4x4.p3d";
-		forceFarBubble = "true";
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 99999;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-	};
-	class Land_ZenIceSheet_4x4_Hole : Inventory_Base
-	{
-		scope = 2;
-		model = "\ZenModPack\data\models\iceplane\ice_plane_4x4_hole.p3d";
-		forceFarBubble = "true";
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 99999;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"zenmodpack\data\textures\iceplane\iceplane.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-	};
-	class Zen_IceaxeDebug : Inventory_Base
-	{
-		scope = 2;
-		debug_ItemCategory = 2;
-		displayName = "DEBUG ITEM";
-		descriptionShort = "DEBUG ITEM";
-		model = "\dz\gear\tools\Ice_Axe.p3d";
-		rotationFlags = 17;
-		repairableWithKits[] = { 4 };
-		repairCosts[] = { 20 };
-		suicideAnim = "woodaxe";
-		weight = 425;
-		itemSize[] = { 2,5 };
-		hiddenSelections[] =
-		{
-			"camo"
-		};
-		hiddenSelectionsTextures[] =
-		{
-			"dz\weapons\melee\blade\data\Pickaxe_co.paa"
-		};
-		build_action_type = 4;
-		dismantle_action_type = 14;
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 250;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"DZ\gear\tools\data\IceAxe.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"DZ\gear\tools\data\IceAxe.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"DZ\gear\tools\data\IceAxe_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"DZ\gear\tools\data\IceAxe_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"DZ\gear\tools\data\IceAxe_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo = "MeleeSickle";
-				range = 1.4;
-			};
-			class Heavy
-			{
-				ammo = "MeleeSickle_Heavy";
-				range = 1.4;
-			};
-			class Sprint
-			{
-				ammo = "MeleeSickle_Heavy";
-				range = 3.3;
-			};
-		};
-		class Horticulture
-		{
-			ToolAnim = "defaultSingle";
-			DiggingTimeToComplete = 6;
-		};
-		soundImpactType = "metal";
 	};
 
 	//! Tree houses
@@ -8375,49 +8400,7 @@ class CfgVehicles
 		forceFarBubble = "true";
 	};
 
-	// Static Sleeping Bags 
-	class ZenSleepingBagStatic_Black: HouseNoDestruct
-	{
-		scope=1;
-		model="ZenModPack\data\models\sleepingbags\sleepingbag.p3d";
-		hiddenSelections[]={"bag"};
-		weight=10000;
-		hiddenSelectionsTextures[]={"ZenModPack\data\textures\sleepingbags\sleepingbag_black_co.paa"};
-	};
-	class ZenSleepingBagStatic_Blue: HouseNoDestruct 
-	{ 
-		scope=1;
-		model="ZenModPack\data\models\sleepingbags\sleepingbag.p3d";
-		hiddenSelections[]={"bag"};
-		weight=10000;
-		hiddenSelectionsTextures[]={"ZenModPack\data\textures\sleepingbags\sleepingbag_blue_co.paa"}; 
-	};
-	class ZenSleepingBagStatic_Grey: HouseNoDestruct 
-	{ 
-		scope=1;
-		model="ZenModPack\data\models\sleepingbags\sleepingbag.p3d";
-		hiddenSelections[]={"bag"};
-		weight=10000;
-		hiddenSelectionsTextures[]={"ZenModPack\data\textures\sleepingbags\sleepingbag_grey_co.paa"}; 
-	};
-	class ZenSleepingBagStatic_Red: HouseNoDestruct 
-	{
-		scope=1;
-		model="ZenModPack\data\models\sleepingbags\sleepingbag.p3d";
-		hiddenSelections[]={"bag"};
-		weight=10000;
-		hiddenSelectionsTextures[]={"ZenModPack\data\textures\sleepingbags\sleepingbag_red_co.paa"}; 
-	};
-	class ZenSleepingBagStatic_Green: HouseNoDestruct 
-	{ 
-		scope=1;
-		model="ZenModPack\data\models\sleepingbags\sleepingbag.p3d";
-		hiddenSelections[]={"bag"};
-		weight=10000;
-		hiddenSelectionsTextures[]={"ZenModPack\data\textures\sleepingbags\sleepingbag_green_co.paa"}; 
-	};
-
-	// Some various lighting objects
+	//! Some various lighting objects
 	class Zen_SpotlightObject: Inventory_Base
 	{
 		scope=1;
@@ -8642,6 +8625,18 @@ class CfgVehicles
 
 class CfgSlots
 {
+	//! CHLORINE TABLET CANTEEN SLOT 
+	class Slot_Material_ZenChlorine
+	{
+		name = "Material_ZenChlorine";
+		displayName = "Chlorine Tablets";
+		selection = "Material_ZenChlorine";
+		ghostIcon = "missing";
+		show = "true";
+		stackMax = 0;
+		description = "Chlorine Tablets.";
+	};
+
 	//! RAID ALARM
 	class Slot_ZenMegaphone
 	{
@@ -8673,6 +8668,94 @@ class CfgSlots
 		name = "ZenFuel";
 		displayName = "$STR_ZenFireFuel0";
 		ghostIcon = "gascanister";
+	};
+
+	//! NBC Case
+	class Slot_ZenNBC_Mask
+	{
+		name = "ZenNBC_Mask";
+		displayName = "$STR_CfgVehicles_GP5GasMask0";
+		ghostIcon = "set:dayz_inventory image:mask";
+	};
+	class Slot_ZenNBC_Hood
+	{
+		name = "ZenNBC_Hood";
+		displayName = "$STR_CfgVehicles_NBCHoodBase0";
+		ghostIcon = "set:dayz_inventory image:headgear";
+	};
+	class Slot_ZenNBC_Jacket
+	{
+		name = "ZenNBC_Jacket";
+		displayName = "$STR_CfgVehicles_NBCJacketBase0";
+		ghostIcon = "set:dayz_inventory image:body";
+	};
+	class Slot_ZenNBC_Pants
+	{
+		name = "ZenNBC_Pants";
+		displayName = "$STR_CfgVehicles_NBCPantsBase0";
+		ghostIcon = "set:dayz_inventory image:legs";
+	};
+	class Slot_ZenNBC_Shoes
+	{
+		name = "ZenNBC_Shoes";
+		displayName = "$STR_CfgVehicles_NBCBootsBase0";
+		ghostIcon = "set:dayz_inventory image:feet";
+	};
+	class Slot_ZenNBC_Gloves
+	{
+		name = "ZenNBC_Gloves";
+		displayName = "$STR_cfgvehicles_nbcglovesbase0";
+		ghostIcon = "set:dayz_inventory image:gloves";
+	};
+
+	//! JOURNAL
+	class Slot_ZenJournal_Map
+	{
+		name = "ZenJournal_Map";
+		displayName = "$STR_CfgVehicles_ChernarusMap0";
+		ghostIcon = "set:zenjournal image:mapicon";
+	};
+	class Slot_ZenJournal_Compass
+	{
+		name = "ZenJournal_Compass";
+		displayName = "$STR_CfgVehicles_Compass0";
+		ghostIcon = "set:zenjournal image:compassicon";
+	};
+	class Slot_ZenJournal_Pen
+	{
+		name = "ZenJournal_Pen";
+		displayName = "$STR_CfgVehicles_ZenPen";
+		ghostIcon = "set:zenjournal image:penicon";
+	};
+	class Slot_ZenJournal_Paper1
+	{
+		name = "ZenJournal_Paper1";
+		displayName = "$STR_ZenNoteTxt";
+		ghostIcon = "set:dayz_inventory image:paper";
+	};
+	class Slot_ZenJournal_Paper2
+	{
+		name = "ZenJournal_Paper2";
+		displayName = "$STR_ZenNoteTxt";
+		ghostIcon = "set:dayz_inventory image:paper";
+	};
+	class Slot_ZenJournal_Paper3
+	{
+		name = "ZenJournal_Paper3";
+		displayName = "$STR_ZenNoteTxt";
+		ghostIcon = "set:dayz_inventory image:paper";
+	};
+	class Slot_ZenJournal_Paper4
+	{
+		name = "ZenJournal_Paper4";
+		displayName = "$STR_ZenNoteTxt";
+		ghostIcon = "set:dayz_inventory image:paper";
+	};
+	class Slot_ZenJournal_Paper5
+	{
+		name = "ZenJournal_Paper5";
+		displayName = "$STR_ZenNoteTxt";
+		ghostIcon = "set:dayz_inventory image:paper";
 	};
 
 	//! MUSIC 

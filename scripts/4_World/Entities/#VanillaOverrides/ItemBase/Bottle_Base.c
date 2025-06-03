@@ -54,7 +54,7 @@ modded class Bottle_Base
 	{
 		return m_IsCatchingRain;
 	}
-};
+}
 
 //! CATCH RAIN 
 class RainProcurementComponentBottle : RainProcurementComponentBase 
@@ -63,4 +63,4 @@ class RainProcurementComponentBottle : RainProcurementComponentBase
 	{
 		return ZenRainWaterConstants.FILL_GROUND_SPEED; // Fill twice as fast as barrels
 	}
-};
+}

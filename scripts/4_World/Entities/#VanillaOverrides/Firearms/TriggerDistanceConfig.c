@@ -4,6 +4,15 @@
 * This lists all the various firearms and their combat log raycast distance (shorter for pistols & shotties, longer for scoped rifles etc)
 */
 
+// Crossbow 
+modded class Archery_Base : Weapon_Base
+{
+	override float GetAntiCombatLogWeaponDistance()
+	{
+		return 150;
+	}
+}
+
 // Shotguns
 modded class Izh43Shotgun_Base
 {
@@ -29,7 +38,7 @@ modded class Mp133Shotgun_Base
 	}
 };
 
-modded class Remington12
+modded class R12_Base
 {
 	override float GetAntiCombatLogWeaponDistance()
 	{
@@ -108,9 +117,9 @@ modded class Rifle_Base
 	override float GetAntiCombatLogWeaponDistance()
 	{
 		if (FindAttachmentBySlotName("weaponOpticsHunting"))
-			return 2000; // Hunting scope
+			return 1000; // Hunting scope
 
-		return 1000;
+		return 500;
 	}
 };
 
@@ -119,9 +128,9 @@ modded class BoltRifle_Base
 	override float GetAntiCombatLogWeaponDistance()
 	{
 		if (FindAttachmentBySlotName("weaponOpticsHunting"))
-			return 2000; // Hunting scope
+			return 1000; // Hunting scope
 
-		return 1000;
+		return 500;
 	}
 };
 
@@ -130,8 +139,8 @@ modded class BoltActionRifle_Base
 	override float GetAntiCombatLogWeaponDistance()
 	{
 		if (FindAttachmentBySlotName("weaponOpticsHunting"))
-			return 2000; // Hunting scope
+			return 1000; // Hunting scope
 
-		return 1000;
+		return 500;
 	}
 }

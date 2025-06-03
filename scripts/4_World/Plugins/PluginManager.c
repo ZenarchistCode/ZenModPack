@@ -10,9 +10,6 @@ modded class PluginManager
 		if (GetZenUtilitiesConfig().CountServerFPS)
 			RegisterPlugin("ZenPerformanceMonitorPlugin", false, true);
 
-		if (ZenModEnabled("ZenWeatherConfig"))
-			RegisterPlugin("ZenWeatherPlugin", false, true);
-
 		if (ZenModEnabled("ZenRaidAlarm"))
 			RegisterPlugin("ZenRaidAlarmPlugin", false, true);
 
@@ -26,6 +23,12 @@ modded class PluginManager
 		{
 			if (GetZenContaminatedZoneLootConfig().ItemLifetime < 0)
 				RegisterPlugin("ZenContaminatedItemsPlugin", false, true);
+		}
+
+		if (ZenModEnabled("ZenNightConfig"))
+		{
+			if (GetZenNightConfig().OvercastToTriggerDarkNights > 0)
+				RegisterPlugin("ZenNightLightingPlugin", false, true);
 		}
 
 		RegisterPlugin("ZenAdminMessagePlugin", false, true);

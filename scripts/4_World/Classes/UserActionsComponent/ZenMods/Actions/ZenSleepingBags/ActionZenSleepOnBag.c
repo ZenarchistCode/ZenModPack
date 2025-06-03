@@ -1,3 +1,4 @@
+/*
 class ActionZenSleepOnBagCB : ActionInteractBaseCB
 {
 	override void CreateActionComponent()
@@ -49,3 +50,4 @@ class ActionZenSleepOnBag : ActionInteractBase
         }
     }
 }
+*/

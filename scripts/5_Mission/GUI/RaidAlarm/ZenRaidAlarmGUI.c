@@ -74,14 +74,26 @@ class ZenRaidAlarmGUI extends UIScriptedMenu
 	{
 		super.OnShow();
 
-		ZenFunctions.SetPlayerControl(false, true);
+		GetGame().GetInput().ChangeGameFocus(1);
+		SetFocus(layoutRoot);
+		
+		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		if (player) 
+			player.GetInputController().SetDisabled(true);
+		
+		GetGame().GetUIManager().ShowCursor(true);
 	}
 
 	override void OnHide()
 	{
 		super.OnHide();
 
-		ZenFunctions.SetPlayerControl(false, true);
+		GetGame().GetInput().ResetGameFocus();
+		GetGame().GetUIManager().ShowCursor(false);
+
+		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		if (player) 
+			player.GetInputController().SetDisabled(false);
 	}
 
 	override bool OnChange(Widget w, int x, int y, bool finished)

@@ -15,7 +15,54 @@ modded class ActionDeployObject
 			return true;
 		#endif
 
-		return super.ActionCondition(player, target, item);
+		if (!super.ActionCondition(player, target, item))
+		{
+			return false;
+		}
+
+		if (!ZenModEnabled("ZenBasebuldingConfig"))
+		{
+			return true;
+		}
+
+		if (GetGame().IsDedicatedServer())
+		{
+			// Check no build zones first.
+			ZenNoBuildZone noBuildZone;
+			vector noBuildPos;
+			vector ourPos;
+
+			for (int i = 0; i < GetZenBasebuildingConfig().NoBuildZones.Count(); i++)
+			{
+				noBuildZone = GetZenBasebuildingConfig().NoBuildZones.Get(i);
+				noBuildPos = noBuildZone.Position;
+				ourPos = player.GetPosition();
+
+				if (noBuildZone.IgnoreHeight)
+				{
+					noBuildPos[1] = 0;
+					ourPos[1] = 0;
+				}
+
+				if (vector.Distance(noBuildPos, ourPos) <= noBuildZone.MinimumDistance)
+				{
+					string msg = GetZenBasebuildingConfig().NoBuildZoneDefaultMessage;
+
+					if (noBuildZone.WarningMessage != "")
+						msg = noBuildZone.WarningMessage;
+
+					msg.Replace("%distance%", (Math.Round(noBuildZone.MinimumDistance - vector.Distance(noBuildPos, ourPos)) + 1).ToString() + "m");
+					NotificationSystem.SendNotificationToPlayerIdentityExtended(player.GetIdentity(), 10.0, noBuildZone.ZoneName, msg, "set:dayz_gui image:icon_hammer");
+
+					player.PlacingCancelLocal();
+					player.PlacingCancelServer();
+
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	override void SetupAnimation(ItemBase item)
@@ -29,4 +76,4 @@ modded class ActionDeployObject
 
         super.SetupAnimation(item);
     }
-};
+}

@@ -74,7 +74,7 @@ class ZenSplitItemUI extends ZenSplitItemUIBase
 		// This lil bit makes it possible to backspace to empty to enter a first number higher than 1.
 		string txt = "";
 		if (m_SplitQuantity > 0)
-			txt =m_SplitQuantity.ToString();
+			txt = m_SplitQuantity.ToString();
 
 		m_SplitText.SetText("#STR_split0: " + txt + "/" + GetItemQuantity().ToString());
 		m_QuantityEditBox.SetText(txt);

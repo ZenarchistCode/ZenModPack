@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<spawnabletypes>
+	<type name="ZenSwissKnife">
+		<damage min="0.0" max="0.0" />
+	</type>
+	<type name="Zen_NBCCase">
+        <attachments chance="0.1">
+            <item name="GP5GasMask" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCBootsGray" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCBootsYellow" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCBootsWhite" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCHoodWhite" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCHoodYellow" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCHoodGray" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCJacketGray" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCJacketWhite" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCJacketYellow" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCPantsGray" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCPantsWhite" chance="0.1" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="NBCPantsYellow" chance="0.1" />
+        </attachments>
+    </type>
+	<type name="Zen_ChessBoard">
+        <attachments chance="0.1">
+            <item name="Zen_ChessWhitePawn" chance="1.0" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="Zen_ChessWhiteKing" chance="1.0" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="Zen_ChessBlackKing" chance="1.0" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="Zen_ChessBlackPawn" chance="1.0" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="Zen_ChessWhiteQueen" chance="1.0" />
+        </attachments>
+		<attachments chance="0.1">
+            <item name="Zen_ChessBlackQueen" chance="1.0" />
+        </attachments>
+    </type>
+	<type name="ZenJournal">
+        <attachments chance="0.5">
+            <item name="ChernarusMap" chance="1.0" />
+        </attachments>
+		<attachments chance="0.2">
+            <item name="Compass" chance="1.0" />
+        </attachments>
+		<attachments chance="0.2">
+            <item name="OrienteeringCompass" chance="1.0" />
+        </attachments>
+		<attachments chance="0.9">
+            <item name="Paper" chance="1.0" />
+        </attachments>
+    </type>
+	<type name="Zen_CassetteCase">
+		<cargo chance="1.0">
+			<item name="Zen_Cassette_Zen1" chance="0.01" />
+			<item name="Zen_Cassette_Zen2" chance="0.01" />
+			<item name="Zen_Cassette_Zen3" chance="0.01" />
+			<item name="Zen_Cassette_Zen4" chance="0.01" />
+			<item name="Zen_Cassette_Zen5" chance="0.01" />
+			<item name="Zen_Cassette_Zen6" chance="0.01" />
+			<item name="Zen_Cassette_Zen7" chance="0.01" />
+			<item name="Zen_Cassette_Zen8" chance="0.01" />
+			<item name="Zen_Cassette_Zen9" chance="0.01" />
+			<item name="Zen_Cassette_Zen10" chance="0.01" />
+			<item name="Zen_Cassette_Zen11" chance="0.01" />
+			<item name="Zen_Cassette_Zen12" chance="0.01" />
+			<item name="Zen_Cassette_Zen13" chance="0.01" />
+			<item name="Zen_Cassette_Zen14" chance="0.01" />
+			<item name="Zen_Cassette_Zen15" chance="0.01" />
+			<item name="Zen_Cassette_Classical1" chance="0.01" />
+			<item name="Zen_Cassette_Classical2" chance="0.01" />
+			<item name="Zen_Cassette_Classical3" chance="0.01" />
+			<item name="Zen_Cassette_Classical4" chance="0.01" />
+			<item name="Zen_Cassette_Classical5" chance="0.01" />
+			<item name="Zen_Cassette_Classical6" chance="0.01" />
+			<item name="Zen_Cassette_Classical7" chance="0.01" />
+			<item name="Zen_Cassette_Classical8" chance="0.01" />
+			<item name="Zen_Cassette_Classical9" chance="0.01" />
+			<item name="Zen_Cassette_Alan1" chance="0.01" />
+			<item name="Zen_Cassette_Alan2" chance="0.01" />
+			<item name="Zen_Cassette_Alan3" chance="0.01" />
+			<item name="Zen_Cassette_Alan4" chance="0.01" />
+			<item name="Zen_Cassette_Alan5" chance="0.01" />
+			<item name="Zen_Cassette_Alan6" chance="0.01" />
+			<item name="Zen_Cassette_Alan7" chance="0.01" />
+			<item name="Zen_Cassette_Alan8" chance="0.01" />
+			<item name="Zen_Cassette_Alan9" chance="0.01" />
+		</cargo>
+	</type>
+</spawnabletypes>

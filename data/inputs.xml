@@ -6,9 +6,9 @@
 			<input name="UAZenEarPlugsIncreaseVol" loc="STR_ZenEarPlugsIncreaseTxt"/>
 			<input name="UAZenEarPlugsDecreaseVol" loc="STR_ZenEarPlugsDecreaseTxt"/>
 			<input name="UAZenAutorunToggle" loc="STR_ZenAutoRunTxt" />
-			<input name="UAZenMusic" loc="CarMusic - Toggle On/Off" />
-			<input name="UAZenMusicUp" loc="CarMusic - Volume Up" />
-			<input name="UAZenMusicDn" loc="CarMusic - Volume Down" />
+			<input name="UAZenMusic" loc="STR_ZenCarMusicToggleTxt" />
+			<input name="UAZenMusicUp" loc="STR_ZenCarMusicVolumeUpTxt" />
+			<input name="UAZenMusicDn" loc="STR_ZenCarMusicVolumeDownTxt" />
 		</actions>
 		<sorting name="ZEN" loc="ZEN">
 			<input name="UAZenEarPlugsToggle"/>

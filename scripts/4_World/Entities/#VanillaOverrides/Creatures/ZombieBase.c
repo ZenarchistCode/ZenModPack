@@ -31,7 +31,7 @@ modded class ZombieBase
 	{
 		super.EEKilled(killer);
 
-		if (ZenModEnabled("ZenEngraveWeapon"))
+		if (ZenModEnabled("ZenWeaponEngrave"))
 		{
 			if (killer)
 			{

@@ -29,7 +29,7 @@ class ActionZenEngraveWeapon : ActionContinuousBase
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
-		if (!ZenModEnabled("ZenEngraveWeapon"))
+		if (!ZenModEnabled("ZenWeaponEngrave"))
 		{
 			return false;
 		}

@@ -4,6 +4,7 @@ modded class Screwdriver
 	{
 		super.SetActions();
 		
+		AddAction(ActionCreateGreenhouseGardenPlotZenKnife);
 		AddAction(ActionBuildZenRaidAlarmStation);
 		AddAction(ActionDismantleZenRaidAlarmStation);
 		AddAction(ActionDismantleZenRaidAlarmRadar);

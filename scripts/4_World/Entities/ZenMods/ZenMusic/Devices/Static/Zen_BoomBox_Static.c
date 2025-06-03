@@ -14,13 +14,18 @@ class Zen_BoomBox_Static extends Zen_MusicDeviceBase
 		SetTakeable(false);
 
 		if (GetType() == "Zen_BoomBox_Static")
+		{
 			m_MusicPausedServer = !GetZenMusicConfig().StaticBoomboxAutoPlay;
-		else
+		} else
 		if (GetType() == "Zen_BoomBox_Invisible_Static")
+		{
 			m_MusicPausedServer = !GetZenMusicConfig().StaticInvisibleBoomboxAutoPlay;
+		}
 
 		m_SongIndex = 0;
 		m_CassetteSpawnFails = 0;
+
+		Print("[ZenMusic] Spawned " + GetType() + ". IsPaused=" + m_MusicPausedServer);
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PrepareForNewMusic, 1500.0, false, false);
 	}
@@ -44,7 +49,7 @@ class Zen_BoomBox_Static extends Zen_MusicDeviceBase
 
 		if (!GetBattery())
 		{
-			ItemBase battery = ItemBase.Cast(GetInventory().CreateAttachment("Battery9VLithium"));
+			ItemBase battery = ItemBase.Cast(GetInventory().CreateAttachment("Battery9V"));
 			if (battery)
 				battery.LockToParent();
 		}

@@ -1,13 +1,12 @@
-#ifdef SERVER
-#include "$profile:\\Zenarchist\\ZenIceLakes.c"
-#endif
-
 modded class MissionServer
 {
 	//! SHARED
 	ref ZenModLogger m_ModLogger;
 	ref map<string, int> m_ZenPlayerUIDs;
 	static int ZEN_UNIQUE_PLAYER_ID_TRACKER;
+
+	//! NIGHT CONFIG 
+	protected int m_ZenNightConfigID;
 
 	override void OnInit()
 	{
@@ -19,36 +18,15 @@ modded class MissionServer
 		GetZenUtilitiesConfig();
 		GetZenPlayerMessageConfig();
 		GetZenUpdateMessage();
+		GetZenUpdateMessagePersistence();
 		GetZenPollConfig();
 		GetZenServerDiversionConfig();
 		m_ModLogger = new ZenModLogger;
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.ZenDeferredInit, 30000, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenDeferredInit, 30000, false);
 
 		//! GENERAL CONFIG
 		ZMPrint("[ZenModPack] Loading config");
 		GetZenModPackConfig();
-
-		//! ICE LAKES 
-		if (ZenModEnabled("ZenIceLakes"))
-		{
-#ifdef SERVER
-			string worldName = "empty";
-			GetGame().GetWorldName(worldName);
-			worldName.ToUpper();
-			ZenIcePlanesDefault.CheckDefaultCFile(worldName);
-			IGNORE_ICE_PLANE_POSITIONS = new array<string>;
-			ZenIceLakes_Spawn();
-			IGNORE_ICE_PLANE_POSITIONS.Clear();
-			delete IGNORE_ICE_PLANE_POSITIONS;
-#endif
-		}
-
-		//! TREASURE
-		if (ZenModEnabled("ZenTreasure"))
-		{
-			GetZenTreasureConfig();
-			GetZenTreasure_Triggers().SpawnStartupTriggers();
-		}
 
 		//! CAUSE OF DEATH
 		if (ZenModEnabled("ZenCauseOfDeath") || ZenModEnabled("ZenGraves"))
@@ -85,6 +63,10 @@ modded class MissionServer
 		if (ZenModEnabled("ZenMusic"))
 			GetZenMusicConfig();
 
+		//! BASEBUILDING CONFIG 
+		if (ZenModEnabled("ZenBasebuildingConfig"))
+			GetZenBasebuildingConfig();
+
 		//! ANTI-COMBAT LOG 
 		if (ZenModEnabled("ZenAntiCombatLogout"))
 		{
@@ -120,8 +102,34 @@ modded class MissionServer
 		//! IMMERSIVE LOGIN 
 		m_ZenDisableFireSpawn = FileExist("$profile:\\Zenarchist\\disablespawnfire.txt");
 
+		//! NIGHT CONFIG 
+		if (ZenModEnabled("ZenNightConfig"))
+		{
+			if (GetZenNightConfig().OvercastToTriggerDarkNights <= 0)
+			{
+				if (Math.RandomFloat01() < GetZenNightConfig().ChanceOfDarkNight)
+				{
+					m_ZenNightConfigID = GetZenNightConfig().DarkNightLightingConfigID;
+					ZMPrint("[ZenNightConfig] Night lighting config set to dark config id: " + m_ZenNightConfigID);
+				}
+				else 
+				{
+					m_ZenNightConfigID = GetZenNightConfig().BrightNightLightingConfigID;
+					ZMPrint("[ZenNightConfig] Night lighting config set to bright config id: " + m_ZenNightConfigID);
+				}
+			}
+		}
+
 		//! DISCORD API
 		GetZenDiscordConfig();
+	}
+
+	void ~MissionServer()
+	{
+		if (GetGame() && GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM))
+		{
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenDeferredInit);
+		}
 	}
 
 	override void OnMissionStart()
@@ -134,17 +142,13 @@ modded class MissionServer
 		if (ZenModEnabled("ZenPersistentTrees"))
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zen_Deforestation, 2500, false);
 
-		//! ANTI-COMBAT LOG 
-		if (ZenModEnabled("ZenAntiCombatLogout"))
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zen_CombatLogFlare.SetServerRestarted, 5000, false);
-
 		//! GRAVES 
 		if (ZenModEnabled("ZenGraves"))
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zen_SpawnGraves, 5000);
 
 		//! GENERAL SERVER-SIDE DEBUG 
 		ZenServerDebugStartup();
-	};
+	}
 
 	override void OnMissionFinish()
 	{
@@ -166,9 +170,10 @@ modded class MissionServer
 		if (ZenModEnabled("ZenGraves"))
 			Zen_Save_Graves();
 
-		//! UTILITIES 
-		GetZenUpdateMessage().Save();
+		//! UTILITIES
+		GetZenUpdateMessagePersistence().Save();
 		GetZenPollConfig().UpdateResults();
+
 		//PrintZenPlayerDropCounts();
 	}
 
@@ -200,34 +205,34 @@ modded class MissionServer
 	// Perform some general debuggin'
 	private void ZenServerDebugStartup()
 	{
-		if (GetGame().ConfigGetInt("CfgVehicles ZenModPackConfig dumpCfgVehicles") == 1)
+		if (GetGame().ConfigGetInt("CfgVehicles ZenModPackConfig dumpCfgVehicles") != 1)
+			return;
+		
+		string cfg_name = "";
+		bool foundZenModPack = false;
+
+		ZenModLogger.Log("[ZENMODPACK CFGVEHICLES DUMP START]", "CfgVehicles");
+		ZenModLogger.Log("", "CfgVehicles");
+
+		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgVehicles"); i++)
 		{
-			string cfg_name = "";
-			bool foundZenModPack = false;
+			GetGame().ConfigGetChildName("CfgVehicles", i, cfg_name);
 
-			ZenModLogger.Log("[ZENMODPACK CFGVEHICLES DUMP START]", "CfgVehicles");
-			ZenModLogger.Log("", "CfgVehicles");
-
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgVehicles"); i++)
+			if (cfg_name == "ZenModPackConfig")
 			{
-				GetGame().ConfigGetChildName("CfgVehicles", i, cfg_name);
-
-				if (cfg_name == "ZenModPackConfig")
-				{
-					foundZenModPack = true;
-					continue;
-				}
-
-				if (cfg_name == "ZenModPack_EndDump")
-					break;
-
-				if (foundZenModPack && GetGame().ConfigGetInt("CfgVehicles " + cfg_name + " scope") == 2)
-					ZenModLogger.Log(cfg_name, "CfgVehicles", false);
+				foundZenModPack = true;
+				continue;
 			}
 
-			ZenModLogger.Log("", "CfgVehicles");
-			ZenModLogger.Log("[ZENMODPACK CFGVEHICLES DUMP END]", "CfgVehicles");
+			if (cfg_name == "ZenModPack_EndDump")
+				break;
+
+			if (foundZenModPack && GetGame().ConfigGetInt("CfgVehicles " + cfg_name + " scope") == 2)
+				ZenModLogger.Log(cfg_name, "CfgVehicles", false);
 		}
+
+		ZenModLogger.Log("", "CfgVehicles");
+		ZenModLogger.Log("[ZENMODPACK CFGVEHICLES DUMP END]", "CfgVehicles");
 	}
 
 	override void EquipCharacter(MenuDefaultCharacterData char_data)
@@ -242,6 +247,9 @@ modded class MissionServer
 	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity) 
 	{
 		super.InvokeOnConnect(player, identity);
+
+		//! SEND GENERAL CONFIG IMMEDIATELY
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param2<map<string, bool>, map<string, bool>>(GetZenModPackConfig().ModEnabled, GetZenModPackConfig().PersistentModEnabled), true, identity);
 
 		//! UTILITIES 
 		if (player && identity)
@@ -286,14 +294,11 @@ modded class MissionServer
 		// Delay sending of client config to avoid spamming new client login along with data from other mods
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendNotificationConfig, 500 + Math.RandomInt(0, 500), false, player);
 
-		//! SEND GENERAL CONFIG IMMEDIATELY
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", new Param1<map<string, bool>>(GetZenModPackConfig().ModEnabled), true, identity);
-
-		if (ZenModEnabled("ZenTreasure"))
-			SendZenTreasureConfig(player, identity);
-
 		if (ZenModEnabled("ZenMusic"))
 			SendZenMusicConfig(player, identity);
+
+		if (ZenModEnabled("ZenBasebuildingConfig"))
+			SendZenBasebuildingConfig(player, identity);
 	}
 
 	override void InvokeOnDisconnect(PlayerBase player)
@@ -772,9 +777,11 @@ modded class MissionServer
 	{
 		ZenFirewoodLogger.Log("Start object dump.");
 
+		vector centerPos = GetGame().ConfigGetVector(string.Format("CfgWorlds %1 centerPosition", GetGame().GetWorldName()));
+
 		// Get all objects on the map in a 20km radius from the center of that 20km radius (enough for most maps?)
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(Vector(10000, 0, 10000), 20000, objectsOnMap, null);
+		GetGame().GetObjectsAtPosition3D(centerPos, 20000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach(ZenFirewoodType woodType : GetZenFirewoodConfig().WoodTypes)
@@ -924,9 +931,11 @@ modded class MissionServer
 	{
 		ZenChickenCoopsLogger.Log("Start object dump.");
 
-		// Get all objects on the map in a 30km radius from the center of that 30km radius (enough for most maps?)
+		vector centerPos = GetGame().ConfigGetVector(string.Format("CfgWorlds %1 centerPosition", GetGame().GetWorldName()));
+
+		// Get all objects on the map in a 20km radius from the center of that 20km radius (enough for most maps?)
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(Vector(10000, 0, 10000), 30000, objectsOnMap, null);
+		GetGame().GetObjectsAtPosition3D(centerPos, 20000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach(ZenChickenCoopType coopType : GetZenChickenCoopsConfig().CoopTypes)
@@ -1293,22 +1302,16 @@ modded class MissionServer
 		return spawnedItem;
 	}
 
-	//! TREASURE 
-	void SendZenTreasureConfig(PlayerBase player, PlayerIdentity identity) 
-	{
-		array<string> m_treasureDescriptions = new array<string>;
-		foreach (ZenTreasureStashType treasure : GetZenTreasureConfig().TreasureTypes)
-		{
-			m_treasureDescriptions.Insert(treasure.Description);
-		}
-
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenTreasureTextClient", new Param1<array<string>>(m_treasureDescriptions), true, player.GetIdentity());
-	}
-
 	//! MUSIC 
 	void SendZenMusicConfig(PlayerBase player, PlayerIdentity identity) 
 	{
 		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenMusicCfgClient", new Param1<bool>(GetZenMusicConfig().AllowCarInventory), true, player.GetIdentity());
+	}
+
+	//! BASEBULDING CONFIG
+	void SendZenBasebuildingConfig(PlayerBase player, PlayerIdentity identity) 
+	{
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenBasebuildingCfgClient", new Param1<ref ZenBasebuildingConfig>(GetZenBasebuildingConfig()), true, player.GetIdentity());
 	}
 
 	//! STATIC BARBED WIRE 
@@ -1443,6 +1446,31 @@ modded class MissionServer
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupStaticBarbedWireDamageZones, 5000, false);
 	}
 
+	//! NIGHT CONFIG 
+	override void SyncGlobalLighting(PlayerBase player)
+	{
+		if (!ZenModEnabled("ZenNightConfig"))
+		{
+			super.SyncGlobalLighting(player);
+			return;
+		}
+
+		if (player)
+		{
+			int id = m_ZenNightConfigID;
+
+			if (GetZenNightConfig().OvercastToTriggerDarkNights > 0)
+			{
+				ZenNightLightingPlugin nightPlugin = ZenNightLightingPlugin.Cast(GetPlugin(ZenNightLightingPlugin));
+				if (nightPlugin)
+					id = nightPlugin.GetLightingConfigID();
+			}
+
+			Param1<int> lightID = new Param1<int>(id);
+			GetGame().RPCSingleParam(player, ERPCs.RPC_SEND_LIGHTING_SETUP, lightID, true, player.GetIdentity());
+		}
+	}
+
 	//! UTILITIES 
 	private void ZenDeferredInit()
 	{
@@ -1491,104 +1519,4 @@ modded class MissionServer
 		Param1<ZenNotificationsConfig> configParams = new Param1<ZenNotificationsConfig>(GetZenNotificationsConfig());
 		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenNotificationConfigOnClient", configParams, true, player.GetIdentity());
 	}
-}
-
-//! ICE LAKES
-static ref array<string> IGNORE_ICE_PLANE_POSITIONS;
-
-static void SpawnZenIcePlanes(string pointAS, string pointBS, string pointCS, string pointDS, float height = 0.0, float gridSizeMeters = 8.0)
-{
-	if (height == 0.0)
-		return;
-
-	pointAS.Replace("/", "0");
-	pointBS.Replace("/", "0");
-	pointCS.Replace("/", "0");
-	pointDS.Replace("/", "0");
-
-	vector pointA = pointAS.ToVector();
-	vector pointB = pointBS.ToVector();
-	vector pointC = pointCS.ToVector();
-	vector pointD = pointDS.ToVector();
-
-	// Find the min/max bounds for X and Z from the 4 points
-	float minX = Math.Min(pointA[0], Math.Min(pointB[0], Math.Min(pointC[0], pointD[0])));
-	float maxX = Math.Max(pointA[0], Math.Max(pointB[0], Math.Max(pointC[0], pointD[0])));
-	float minZ = Math.Min(pointA[2], Math.Min(pointB[2], Math.Min(pointC[2], pointD[2])));
-	float maxZ = Math.Max(pointA[2], Math.Max(pointB[2], Math.Max(pointC[2], pointD[2])));
-
-	// Calculate grid counts based on the bounding box
-	int gridXCount = Math.Ceil((maxX - minX) / gridSizeMeters);
-	int gridZCount = Math.Ceil((maxZ - minZ) / gridSizeMeters);
-
-	int objectSpawnCount = 0;
-
-	float spawnX;
-	float spawnZ;
-	vector spawnPos;
-	vector checkWater;
-	bool skipThis;
-	float surfaceY;
-	float diff;
-	float waterDepth;
-
-	// Spawn the ice planes within the bounds
-	for (int x = 0; x < gridXCount; x++)
-	{
-		for (int z = 0; z < gridZCount; z++)
-		{
-			// Calculate the position for each ice plane
-			spawnX = minX + (x * gridSizeMeters);
-			spawnZ = minZ + (z * gridSizeMeters);
-			spawnPos = Vector(spawnX, height, spawnZ);
-
-			skipThis = false;
-			for (int i = 0; i < IGNORE_ICE_PLANE_POSITIONS.Count(); i++)
-			{
-				if (vector.Distance(IGNORE_ICE_PLANE_POSITIONS.Get(i).ToVector(), spawnPos) < 0.1)
-					skipThis = true;
-			}
-
-			checkWater = spawnPos;
-			checkWater[1] = surfaceY;
-			waterDepth = GetGame().GetWaterDepth(checkWater);
-			surfaceY = GetGame().SurfaceY(spawnX, spawnZ);
-			diff = spawnPos[1] - surfaceY;
-
-			if (diff < -5 && waterDepth < 0) // If we're 5+ meters underground and not in water, we probably don't need this ice plane.
-				skipThis = true;
-
-			if (skipThis)
-				continue;
-
-			// Spawn the ice plane
-			ZenIceLakes_SpawnObject("Land_ZenIceSheet_4x4", spawnPos, "0 0 0");
-			objectSpawnCount++;
-		}
-	}
-
-	Print("[ZenIceLakes] Spawned " + objectSpawnCount + " ice planes @ " + pointA);
-}
-
-static Object ZenIceLakes_SpawnObject(string type, vector position, vector orientation = "0 0 0")
-{
-	Object obj = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS);
-	if (!obj)
-	{
-		Error("Failed to create object " + type);
-		return NULL;
-	}
-
-	obj.SetPosition(position);
-	obj.SetOrientation(orientation);
-	obj.SetOrientation(obj.GetOrientation());
-	obj.Update();
-	obj.SetAffectPathgraph(true, false);
-
-	if (obj.CanAffectPathgraph())
-	{
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, obj);
-	}
-
-	return obj;
 }

@@ -31,4 +31,4 @@ class Zen_WoodReserve extends BuildingSuper
 	{
 		return true;
 	}
-};
+}

@@ -78,4 +78,4 @@ static ZenAntiCombatLogout GetZenAntiCombatLogoutConfig()
 	}
 
 	return m_ZenAntiCombatLogout;
-};
+}

@@ -250,6 +250,22 @@ modded class ItemBase
 		}	
 	}
 
+	//! NBC CASE 
+	override bool CanReceiveItemIntoCargo(EntityAI item)
+	{
+		if (!super.CanReceiveItemIntoCargo(item))
+			return false;
+
+		if (GetHierarchyParent() != NULL)
+		{
+			// Dont allow cargo if we're attached to NBC case.
+			if (GetHierarchyParent().IsInherited(Zen_NBCCase))
+				return false;
+		}
+
+		return true;
+	}
+
 	/*
 	//! UTILITIES - Loot cycling detection?
 #ifdef SERVER

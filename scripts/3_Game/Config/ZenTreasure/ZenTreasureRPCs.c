@@ -1,4 +1,0 @@
-enum ZenTreasureRPCs
-{
-	TREASURETEXT = -131202099
-}

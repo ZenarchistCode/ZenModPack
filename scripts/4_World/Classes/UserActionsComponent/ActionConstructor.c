@@ -4,9 +4,8 @@ modded class ActionConstructor
     {
         super.RegisterActions(actions);
 
-        //! SLEEPING BAGS
-        actions.Insert(ActionZenPackSleepingBag);
-        actions.Insert(ActionZenSleepOnBag);
+        //! KNIFE GARDEN PLOTS 
+        actions.Insert(ActionCreateGreenhouseGardenPlotZenKnife);
 
         //! ZIPPO 
         actions.Insert(ActionRefuelZenZippo);
@@ -53,9 +52,6 @@ modded class ActionConstructor
         actions.Insert(ActionZenReadNoteHands);
         actions.Insert(ActionZenReadNoteTarget);
 
-        //! TREASURE 
-        actions.Insert(ActionZenReadPhoto);
-
         //! MUSIC 
         actions.Insert(ActionToggleMusic);
         actions.Insert(ActionMusicVolUp);
@@ -86,10 +82,6 @@ modded class ActionConstructor
 
         //! ENGRAVE WEAPON
         actions.Insert(ActionZenEngraveWeapon);
-
-        //! ICE SHEETS
-        actions.Insert(ActionZenDigIceFishingHole);
-        actions.Insert(ActionZenFishingIceHole);
 
         //! FLINT 
         actions.Insert(ActionPrepareZenFlint);

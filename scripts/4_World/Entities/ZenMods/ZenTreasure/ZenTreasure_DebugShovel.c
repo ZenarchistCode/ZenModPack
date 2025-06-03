@@ -1,1 +1,0 @@
-class ZenTreasure_DebugShovel extends Shovel {};

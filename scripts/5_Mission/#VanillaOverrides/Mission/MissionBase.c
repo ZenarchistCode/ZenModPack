@@ -23,10 +23,6 @@ modded class MissionBase
 		//! ARTILLERY
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveAirstrikeData", this, SingeplayerExecutionType.Client);
 
-		//! TREASURE 
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenTreasureTextClient", this, SingeplayerExecutionType.Client);
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenTreasurePhotoReadClient", this, SingeplayerExecutionType.Client);
-
 		//! MUSIC
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenMusicCfgClient", this, SingeplayerExecutionType.Client);
 
@@ -39,16 +35,23 @@ modded class MissionBase
         //! RAID ALARM
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenRaidAlarmServerWebhooks", this, SingeplayerExecutionType.Client);
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminCommandMessageFailed", this, SingeplayerExecutionType.Client);
+
+        //! BASEBUILDING CONFIG 
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenBasebuildingCfgClient", this, SingeplayerExecutionType.Client);
 		#endif
 
-		//! TREASURE 
-		// Load how many photos exist for RandomPhoto spawner
-		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgVehicles"); i++)
+        int i;
+        string cfg_name = "";
+
+        //! MUSIC 
+		// Load how many cassette tapes exist for RandomCassette spawner
+		for (i = 0; i < GetGame().ConfigGetChildrenCount("CfgVehicles"); i++)
 		{
-			string cfg_name = "";
 			GetGame().ConfigGetChildName("CfgVehicles", i, cfg_name);
-			if (cfg_name.Contains("ZenTreasure_Photo") && !cfg_name.Contains("Base"))
-				ZenTreasure_RandomPhoto.PHOTO_COUNT++;
+			if (cfg_name.Contains("Zen_Cassette_") && !cfg_name.Contains("Base"))
+            {
+				Zen_Cassette_RandomTape.RANDOM_TAPES.Insert(cfg_name);
+            }
 		}
 	}
 
@@ -236,84 +239,29 @@ modded class MissionBase
 	//! GENERAL CONFIG
 	void RPC_ReceiveZenModPackConfig(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
 	{
-		Param1<map<string, bool>> data;
+		Param2<map<string, bool>, map<string, bool>> data;
 		if (!ctx.Read(data))
 		{
 			Error("[ZenModPack] RPC_ReceiveZenModPackConfig: sync data read error");
 			return;
 		}
 
+        int i;
+
 		GetZenModPackConfig().ModEnabled.Clear();
-		for (int i = 0; i < data.param1.Count(); i++)
+		for (i = 0; i < data.param1.Count(); i++)
 		{
 			GetZenModPackConfig().ModEnabled.Insert(data.param1.GetKey(i), data.param1.GetElement(i));
 		}
 
+        GetZenModPackConfig().PersistentModEnabled.Clear();
+		for (i = 0; i < data.param2.Count(); i++)
+		{
+			GetZenModPackConfig().PersistentModEnabled.Insert(data.param2.GetKey(i), data.param2.GetElement(i));
+		}
+
         GetZenModPackClientConfig().ImmersiveLogin = ZenModEnabled("ZenImmersiveLogin");
         GetZenModPackClientConfig().Save();
-	}
-
-	//! TREASURE 
-	// Server -> inform player of treasure descriptions
-	void RPC_ReceiveZenTreasureTextClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        Param1<array<string>> data;
-        if (!ctx.Read(data))
-        {
-            Error("[ZenTreasure] Error sync'ing server-side data to client - RPC_ReceiveZenTreasureTextClient");
-            return;
-        }
-
-		// Copy config over from received map
-		for (int i = 0; i < data.param1.Count(); i++)
-		{
-			ZenTreasureConfig.TreasureDescriptions.Insert(data.param1.Get(i));
-		}
-    }
-
-	// Server -> player reads photo for first time -> tells client to open inspect menu via RPC along with photo data before SynchDirty happens
-	void RPC_ReceiveZenTreasurePhotoReadClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        Param2<ItemBase, int> data;
-        if (!ctx.Read(data))
-        {
-            Error("[ZenTreasure] Error sync'ing server-side data to client - RPC_ReceiveZenTreasurePhotoReadClient");
-            return;
-        }
-
-		ZenTreasure_PhotoBase photo = ZenTreasure_PhotoBase.Cast(data.param1);
-		if (!photo)
-			return;
-
-		if (data.param2 != -1) // First time reading if this is -1
-			photo.SetStashType(data.param2);
-		
-		ZenOpenPhotoInspect(photo);
-    }
-
-	// TODO: Find a way to move this code to item OnRPC instead of MissionBase?
-	void ZenOpenPhotoInspect(notnull ZenTreasure_PhotoBase photo)
-	{
-		if (GetGame().GetUIManager().GetMenu() != NULL)
-			return;
-
-		MissionGameplay missionGP = MissionGameplay.Cast(GetGame().GetMission());
-		if (!missionGP)
-			return;
-
-		missionGP.ShowInventory();
-
-		InventoryMenu inventory_menu = InventoryMenu.Cast(GetGame().GetUIManager().FindMenu(MENU_INVENTORY));
-		if (!inventory_menu)
-			return;
-
-		InspectMenuNew inspect_menu = InspectMenuNew.Cast(inventory_menu.EnterScriptedMenu(MENU_INSPECT));
-		if (inspect_menu)
-		{
-			GetGame().GetMission().GetHud().ShowHudUI(false);
-			GetGame().GetMission().GetHud().ShowQuickbarUI(false);
-			inspect_menu.SetItem(photo);
-		}
 	}
 
 	//! MUSIC 
@@ -323,11 +271,25 @@ modded class MissionBase
         Param1<bool> data;
         if (!ctx.Read(data))
         {
-            Error("[ZenMusic] Error sync'ing server-side data to client - RPC_ReceiveZenMusicCfgClient");
+            Error("[ZenMod] Error sync'ing server-side data to client - RPC_ReceiveZenMusicCfgClient");
             return;
         }
 
 		GetZenMusicConfig().AllowCarInventory = data.param1;
+    }
+
+    //! BASEBUILDING CONFIG 
+	void RPC_ReceiveZenBasebuildingCfgClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
+    {
+        Param1<ref ZenBasebuildingConfig> data;
+        if (!ctx.Read(data))
+        {
+            Error("[ZenMod] Error sync'ing server-side data to client - RPC_ReceiveZenBasebuildingCfgClient");
+            return;
+        }
+
+        GetZenBasebuildingConfig(); // Create config class before setting its client values
+		GetZenBasebuildingConfig().SetConfig(data.param1);
     }
 
 	//! UTILITIES 

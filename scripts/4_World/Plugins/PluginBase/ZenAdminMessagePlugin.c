@@ -209,11 +209,6 @@ class ZenAdminMessagePlugin extends PluginBase
                 GetZenUtilitiesConfig().Load();
                 reload = true;
             }
-            else if (params.Get(0) == "weather")
-            {
-                GetZenWeatherConfig().Load();
-                reload = true;
-            }
 
             if (reload)
             {

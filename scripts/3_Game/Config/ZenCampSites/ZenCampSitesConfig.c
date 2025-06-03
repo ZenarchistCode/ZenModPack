@@ -19,9 +19,9 @@ class ZenCampSitesConfig
 	float MaxFireDistance = 4;
 	int MinZombies = 0;
 	int MaxZombies = 2;
-	ref array<string> ZombieTypes = new ref array<string>;
-	ref array<ref PredefinedLootSpawn> PredefinedLoot = new ref array<ref PredefinedLootSpawn>;
-	ref array<ref CampSite> CampSites = new ref array<ref CampSite>;
+	ref array<string> ZombieTypes = new array<string>;
+	ref array<ref PredefinedLootSpawn> PredefinedLoot = new array<ref PredefinedLootSpawn>;
+	ref array<ref CampSite> CampSites = new array<ref CampSite>;
 
 	// Load config file or create default file if config doesn't exsit
 	void Load()

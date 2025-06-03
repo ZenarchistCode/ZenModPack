@@ -436,27 +436,6 @@ modded class MissionGameplay
 
 		string type;
 
-		// Check NVGs/visor
-		if (player.IsNVGLowered())
-		{
-			NVGoggles nvg;
-			if (player.FindAttachmentBySlotName("Eyewear"))
-			{
-				nvg = NVGoggles.Cast(player.FindAttachmentBySlotName("Eyewear").FindAttachmentBySlotName("NVG"));
-			}
-			else 
-			if (player.FindAttachmentBySlotName("Headgear"))
-			{
-				nvg = NVGoggles.Cast(player.FindAttachmentBySlotName("Headgear").FindAttachmentBySlotName("NVG"));
-			}
-		
-			if (nvg)
-			{
-				// If NVGs are lowered and damaged return their damage level first (doesn't matter if they're not turned on)
-				damageLevel = nvg.GetHealthLevel();
-			}
-		}
-		
 		// Check visor
 		if (player.FindAttachmentBySlotName("Headgear"))
 		{

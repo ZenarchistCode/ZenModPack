@@ -11,7 +11,7 @@ modded class Weapon_Base
 	// Set default weapon combat log trigger distance
 	float GetAntiCombatLogWeaponDistance()
 	{
-		return 1000;
+		return 250;
 	}
 
 	// Detect gun fired
@@ -115,15 +115,15 @@ modded class Weapon_Base
 						continue;
 
 					ZenFunctions.DebugMessage("ENTITY=" + entity.GetType());
-					 //END DEBUG */ 
+					//END DEBUG */ 
 
 					// Skip any objects that are not human
-					if (results[i].obj && !results[i].obj.IsMan() && !res.parent.IsMan())
+					if ((results[i].obj && !results[i].obj.IsMan()) && (!res.parent || !res.parent.IsMan()))
 						continue;
 
 					PlayerBase otherPlayer = PlayerBase.Cast(results[i].obj);
 
-					if (!otherPlayer && res.parent.IsMan())
+					if (!otherPlayer && res.parent && res.parent.IsMan())
 						otherPlayer = PlayerBase.Cast(res.parent);
 
 					// Allow shooting dead players to trigger shooter's combat log timer? 
@@ -198,7 +198,7 @@ modded class Weapon_Base
 #ifndef SERVER
 		if (!m_HasReceivedName)
 		{
-			if (!ZenModEnabled("ZenEngraveWeapon"))
+			if (!ZenModEnabled("ZenWeaponEngrave"))
 				return;
 
 			// Client load - request player name
@@ -254,7 +254,7 @@ modded class Weapon_Base
 
 	override bool NameOverride(out string output)
 	{
-		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_ZenPlayerName != "")
+		if (ZenModEnabled("ZenWeaponEngrave") && m_HasReceivedName && m_ZenPlayerName != "")
 		{
 			string displayName;
 			GetGame().ConfigGetText("cfgWeapons " + GetType() + " displayName", displayName);
@@ -269,7 +269,7 @@ modded class Weapon_Base
 
 	override bool DescriptionOverride(out string output)
 	{
-		if (ZenModEnabled("ZenEngraveWeapon") && m_HasReceivedName && m_ZenPlayerName != "")
+		if (ZenModEnabled("ZenWeaponEngrave") && m_HasReceivedName && m_ZenPlayerName != "")
 		{
 			string displayName;
 			string description;
@@ -298,7 +298,7 @@ modded class Weapon_Base
 	{
 		super.OnStoreLoad(ctx, version);
 
-		if (ZenModEnabled("ZenEngraveWeapon"))
+		if (ZenModEnabled("ZenWeaponEngrave"))
 		{
 			if (!ctx.Read(m_ZenPlayerName))
 			{
@@ -326,7 +326,7 @@ modded class Weapon_Base
 	{
 		super.OnStoreSave(ctx);
 
-		if (ZenModEnabled("ZenEngraveWeapon"))
+		if (ZenModEnabled("ZenWeaponEngrave"))
 		{
 			ctx.Write(m_ZenPlayerName);
 			ctx.Write(m_ZenZombieKills);

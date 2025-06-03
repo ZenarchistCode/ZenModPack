@@ -6,8 +6,11 @@ modded class EmoteManager
 		super.KillPlayer();
 
 		//! CAUSE OF DEATH 
-		m_Player.m_CauseOfDeath = GetCauseOfDeathConfig().GetCauseOfDeath("suicide").CauseMessage;
-	};
+		if (GetGame().IsDedicatedServer())
+		{
+			m_Player.SetCauseOfDeath(GetCauseOfDeathConfig().GetCauseOfDeath("suicide").CauseMessage);
+		}
+	}
 
 	override bool InterruptGestureCheck()
 	{
@@ -16,7 +19,7 @@ modded class EmoteManager
 			return false;
 
 		return super.InterruptGestureCheck();
-	};
+	}
 
 	override void Update(float deltaT)
 	{
@@ -24,7 +27,7 @@ modded class EmoteManager
 
 		//! IMMERSIVE LOGIN 
 		UpdateImmersiveLogin();
-	};
+	}
 
 	//! IMMERSIVE LOGIN 
 	void UpdateImmersiveLogin()
@@ -46,4 +49,4 @@ modded class EmoteManager
 			m_Player.ZenImmersiveLoginFinished();
 		}
 	}
-};
+}

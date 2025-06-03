@@ -1,3 +1,4 @@
+/*
 class ActionZenPackSleepingBagCB : ActionContinuousBaseCB
 {
     override void CreateActionComponent()
@@ -64,3 +65,4 @@ class ActionZenPackSleepingBag : ActionContinuousBase
         }
     }
 }
+*/

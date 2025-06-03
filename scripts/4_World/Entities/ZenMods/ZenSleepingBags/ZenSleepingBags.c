@@ -1,3 +1,4 @@
+/*
 class ZenSleepingBag_PackedBase extends TentBase
 {
     protected bool m_WasHologrammed;
@@ -139,3 +140,4 @@ class ZenSleepingBagBlueDeployed extends ZenSleepingBag_DeployedBase {};
 class ZenSleepingBagGreyDeployed extends ZenSleepingBag_DeployedBase {};
 class ZenSleepingBagRedDeployed extends ZenSleepingBag_DeployedBase {};
 class ZenSleepingBagGreenDeployed extends ZenSleepingBag_DeployedBase {};
+*/

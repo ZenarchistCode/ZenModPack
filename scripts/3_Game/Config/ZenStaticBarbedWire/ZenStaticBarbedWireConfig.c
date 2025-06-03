@@ -126,7 +126,7 @@ class ZenStaticBarbedWireType
 	string AmmoName = "BarbedWireHit";
 	float LoopInterval = 2;
 	float DeferDuration = 0.5;
-	ref array<string> DamageZones = new ref array<string>;
+	ref array<string> DamageZones = new array<string>;
 
 	void ZenStaticBarbedWireType(string p_name = "", string p_min = "", string p_max = "", bool p_on = true)
 	{

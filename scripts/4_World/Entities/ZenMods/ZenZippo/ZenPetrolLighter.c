@@ -1,33 +1,3 @@
-/*modded class PetrolLighter
-{
-	override void EEInit()
-	{
-		super.EEInit();
-
-		if (GetGame().IsDedicatedServer())
-		{
-			// This is a standard petrol lighter and zippo is enabled, swap to my custom lighter
-			if (Type() == PetrolLighter)
-			{
-				if (ZenModEnabled("ZenZippo"))
-					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ShapeshifterMorph, 1000, false, "ZenPetrolLighter");
-			}
-			else
-			if (Type() == ZenPetrolLighter)
-			{
-				if (!ZenModEnabled("ZenZippo"))
-					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ShapeshifterMorph, 1000, false, "PetrolLighter");
-			}
-		}
-	}
-
-	// Swap between items based on config enable/disable
-	private void ShapeshifterMorph(string swapType)
-	{
-		GetInventory().ReplaceItemWithNew(InventoryMode.SERVER, new ReplaceItemWithNewLambda(this, swapType, PlayerBase.Cast(GetHierarchyRootPlayer())));
-	}
-}*/
-
 class ZenPetrolLighter extends PetrolLighter
 {
 	static const string START_SOUND = "Lighter_Soundset";

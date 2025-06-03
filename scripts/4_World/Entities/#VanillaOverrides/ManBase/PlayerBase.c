@@ -11,9 +11,6 @@ modded class PlayerBase
 		super.Init();
 
 		//! IMMERSIVE LOGIN
-		if (GetGame())
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ImmersiveLoginFailsafe, 10000);
-		
 		RegisterNetSyncVariableBool("m_ZenLoginHasFinishedServer");
 
 		//! SHARED
@@ -24,6 +21,17 @@ modded class PlayerBase
 
 		//! REPAIR PUMPS
 		RegisterNetSyncVariableBool("m_ZenPreventPumpUsage");
+	}
+
+	void ~PlayerBase()
+	{
+		if (!GetGame())
+			return;
+
+		if (!GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY))
+			return; 
+
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(ImmersiveLoginFailsafe);
 	}
 
 	override void OnVariablesSynchronized()
@@ -49,6 +57,9 @@ modded class PlayerBase
 	override void OnPlayerLoaded()
 	{
 		super.OnPlayerLoaded();
+
+		//! CAUSE OF DEATH
+		ZenCauseOfDeath_OnPlayerLoaded();
 
 		//! IMMERSIVE LOGIN
 		ZenImmersiveLogin_OnPlayerLoaded();
@@ -95,7 +106,7 @@ modded class PlayerBase
 		AddAction(ActionWashHandsRain, InputActionMap);
 
 		//! SLEEPING BAGS
-		AddAction(ActionZenPackSleepingBag, InputActionMap);
+		//AddAction(ActionZenPackSleepingBag, InputActionMap);
 
 		//! SHOVE PLAYER 
 		AddAction(ActionZenShovePlayer, InputActionMap);
@@ -181,7 +192,40 @@ modded class PlayerBase
 				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenFunctions.EnablePlayerControl, ZenConstants.SHOVE_STUN_SECONDS * 1000);
 			}
 		}
+
+		// Client-side lighting config (unused vanilla since they added JSON cfg for this - repurposed for my config)
+		if (rpc_type == ERPCs.RPC_SEND_LIGHTING_SETUP)
+		{
+			Param1<int> lighting_ClientParams;
+
+			if (!ctx.Read(lighting_ClientParams))
+				return;
+
+			m_ZenLightingConfigID = lighting_ClientParams.param1;
+			UpdateLighting();
+		}
     }
+
+	protected int m_ZenLightingConfigID = -1;
+
+	override void UpdateLighting()
+	{
+		super.UpdateLighting();
+
+		if (m_ZenLightingConfigID != -1)
+		{
+			Mission mission = GetGame().GetMission();
+			if (mission)
+			{
+				WorldLighting wLighting = mission.GetWorldLighting();
+				if (wLighting)
+				{
+					wLighting.SetGlobalLighting(m_ZenLightingConfigID);
+					ZMPrint("[ZenNightConfig] Set lighting override to " + m_ZenLightingConfigID);
+				}
+			}
+		}
+	}
 
 	override void OnUnconsciousStart()
 	{
@@ -208,6 +252,9 @@ modded class PlayerBase
 	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
 	{
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+
+		if (GetGame().IsClient())
+			return;
 
 		//! ANTI-COMBAT LOG 
 		HandleZenAntiCombatLog(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
@@ -479,7 +526,23 @@ modded class PlayerBase
     }
 
 	//! CAUSE OF DEATH
-	string m_CauseOfDeath = GetCauseOfDeathConfig().GetCauseOfDeath("unknown").CauseMessage;
+	protected string m_CauseOfDeath;
+
+	void ZenCauseOfDeath_OnPlayerLoaded()
+	{
+		if (GetGame().IsDedicatedServer() && (ZenModEnabled("ZenCauseOfDeath") || ZenModEnabled("ZenGraves")))
+			m_CauseOfDeath = GetCauseOfDeathConfig().GetCauseOfDeath("unknown").CauseMessage;
+	}
+
+	string GetCauseOfDeath()
+	{
+		return m_CauseOfDeath;
+	}
+
+	void SetCauseOfDeath(string cause)
+	{
+		m_CauseOfDeath = cause;
+	}
 
 	// Registers the check COD action
 	override void SetActionsRemoteTarget(out TInputActionMap InputActionMap)
@@ -607,6 +670,9 @@ modded class PlayerBase
 
 		if (GetGame().IsClient())
 		{
+			if (GetGame())
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ImmersiveLoginFailsafe, 10000);
+
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenLoginBegin);
 			return;
 		}
@@ -865,7 +931,7 @@ modded class PlayerBase
 	}
 
 	// Stores who shot at who first to track the aggressor in combat <SteamID, AggressorStatus>
-	ref map<string, bool> m_ShotAtUsFirst = new ref map<string, bool>;
+	ref map<string, bool> m_ShotAtUsFirst = new map<string, bool>;
 
 	// Reset combat log timer
 	void SetCombatLogTimer(PlayerBase attacker = NULL, PlayerBase victim = NULL)
@@ -1284,7 +1350,7 @@ modded class PlayerBase
 		if (killerAI.GetType().Contains("eAI") || killerAI.IsZombie())
 			return;
 
-		if (ZenModEnabled("ZenEngraveWeapon"))
+		if (ZenModEnabled("ZenWeaponEngrave"))
 		{
 			if (killer)
 			{
@@ -1564,35 +1630,41 @@ modded class PlayerBase
 		if (GetIdentity() == NULL || GetType().Contains("_Ghost"))
 			return;
 
-		string cachedID = GetCachedID();
+		string loginMsg = GetZenUpdateMessage().LOGIN_MESSAGE;
+		loginMsg.Replace("#survivorname#", GetIdentity().GetName());
+		ZenFunctions.SendPlayerMessage(this, loginMsg);
 
 		// Load last update ID 
+		string cachedID = GetCachedID();
 		int timestamp = JMDate.Now(false).GetTimestamp();
 		ZenPlayerUpdateMsg updateConfig;
-		GetZenUpdateMessage().PlayerUpdates.Find(cachedID, updateConfig);
+		GetZenUpdateMessagePersistence().PlayerUpdates.Find(cachedID, updateConfig);
 		if (!updateConfig)
 			updateConfig = new ZenPlayerUpdateMsg(cachedID, "-1", timestamp);
 
 		// Send latest update message
 		if (GetZenUpdateMessage().UPDATE_MESSAGE != "" && updateConfig.updateID != GetZenUpdateMessage().UPDATE_VERSION)
 		{
+			string updateMsg = GetZenUpdateMessage().UPDATE_MESSAGE;
+			updateMsg.Replace("#survivorname#", GetIdentity().GetName());
+
 			if (GetZenUpdateMessage().PopupInGame)
 			{
 				// Popup confirm dialog
-				GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param2<string, bool>(GetZenUpdateMessage().UPDATE_MESSAGE + GetZenUpdateMessage().UPDATE_SUFFIX, true), true, GetIdentity());
+				GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param2<string, bool>(updateMsg + GetZenUpdateMessage().UPDATE_SUFFIX, true), true, GetIdentity());
 				return;
 			}
 			else
 			{
 				// Regular in-game notification
-				Zen_SendMessageDelayed(GetZenUpdateMessage().UPDATE_PREFIX + GetZenUpdateMessage().UPDATE_MESSAGE + GetZenUpdateMessage().UPDATE_SUFFIX, 5000);
+				Zen_SendMessageDelayed(GetZenUpdateMessage().UPDATE_PREFIX + updateMsg + GetZenUpdateMessage().UPDATE_SUFFIX, 5000);
 			}
 
 			if (!GetZenUpdateMessage().PopupInGame)
 			{
 				updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
 				updateConfig.lastLoginTimestamp = timestamp;
-				GetZenUpdateMessage().PlayerUpdates.Set(cachedID, updateConfig);
+				GetZenUpdateMessagePersistence().PlayerUpdates.Set(cachedID, updateConfig);
 			}
 		}
 
@@ -1619,7 +1691,7 @@ modded class PlayerBase
 		int timestamp = JMDate.Now(false).GetTimestamp();
 
 		ZenPlayerUpdateMsg updateConfig;
-		GetZenUpdateMessage().PlayerUpdates.Find(GetCachedID(), updateConfig);
+		GetZenUpdateMessagePersistence().PlayerUpdates.Find(GetCachedID(), updateConfig);
 		if (!updateConfig)
 			updateConfig = new ZenPlayerUpdateMsg(GetCachedID(), "-1", timestamp);
 
@@ -1627,7 +1699,7 @@ modded class PlayerBase
 		{
 			updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
 			updateConfig.lastLoginTimestamp = timestamp;
-			GetZenUpdateMessage().PlayerUpdates.Set(GetCachedID(), updateConfig);
+			GetZenUpdateMessagePersistence().PlayerUpdates.Set(GetCachedID(), updateConfig);
 		}
 	}
 
@@ -1830,5 +1902,125 @@ modded class PlayerBase
 		DayZPlayerSyncJunctures.SendDamageHitEx(this, 0, hitDirection, true, null, DT_CLOSE_COMBAT, this, hitComponent, "MeleeZombie", playerDirection);
 
 		GetGame().RPCSingleParam(this, ZenRPCs.SHOVE_RPC, new Param1<bool>(true), true, GetIdentity());
+	}
+
+	//! NIGHT LIGHTING CONFIG 
+	protected int m_ZenNightLightingConfigID = -1;
+
+	void SetZenNightConfigID(int id)
+	{
+		m_ZenNightLightingConfigID = id;
+	}
+
+	int GetZenNightConfigID()
+	{
+		return m_ZenNightLightingConfigID;
+	}
+
+	//! ALCOHOL
+	protected float m_ZenAlcoholConsumed = 0;
+	protected ref Timer m_ZenAlcoholUpdateTimer;
+
+	// Reduce alcohol in system 25 per minute (750 = drank a whole bottle of whisky = 30 mins to zero, > 500 = sickness and random uncon)
+	protected void UpdateZenAlcohol()
+	{
+		m_ZenAlcoholConsumed -= 25;
+
+		if (m_ZenAlcoholConsumed <= 0)
+		{
+			m_ZenAlcoholConsumed = 0;
+			m_ZenAlcoholUpdateTimer.Stop();
+			m_ZenAlcoholUpdateTimer = NULL;
+			return;
+		}
+
+		// Painkiller effect
+		if (m_ZenAlcoholConsumed > 100)
+		{
+			if (GetModifiersManager().IsModifierActive(eModifiers.MDF_PAINKILLERS)) // effectively resets the timer
+			{
+				GetModifiersManager().DeactivateModifier(eModifiers.MDF_PAINKILLERS);
+			}
+
+			GetModifiersManager().ActivateModifier(eModifiers.MDF_PAINKILLERS);
+		}
+
+		// You took too much man, too much, too much.
+		if (m_ZenAlcoholConsumed > 500)
+		{
+			if (Math.RandomFloat01() < 0.5)
+			{
+				GiveShock(Math.RandomFloatInclusive(-50, -100));
+			}
+
+			if (m_AgentPool.GetSingleAgentCount(eAgents.FOOD_POISON) < 100)
+			{
+				InsertAgent(eAgents.FOOD_POISON, 100);
+			}
+		}
+
+		//ZenFunctions.DebugMessage("m_ZenAlcoholConsumed=" + m_ZenAlcoholConsumed + " - foodPoison=" + m_AgentPool.GetSingleAgentCount(eAgents.FOOD_POISON));
+	}
+
+	override bool Consume(PlayerConsumeData data)
+	{
+		if (data)
+		{
+			ItemBase source = ItemBase.Cast(data.m_Source);
+			if (source)
+			{
+				if (source.IsInherited(ZenFlask) || source.IsInherited(ZenJameson))
+				{
+					StartZenAlcoholTimer();
+					m_ZenAlcoholConsumed += data.m_Amount;
+					GiveShock(data.m_Amount * -0.1);
+				}
+			}
+		}
+
+		return super.Consume(data);
+	}
+
+	void StartZenAlcoholTimer()
+	{
+		if (!m_ZenAlcoholUpdateTimer)
+		{
+			m_ZenAlcoholUpdateTimer = new Timer();
+			m_ZenAlcoholUpdateTimer.Run(60, this, "UpdateZenAlcohol", NULL, true);
+		}
+	}
+
+	//! PERSISTENCE
+	override void OnStoreSave(ParamsWriteContext ctx)
+	{
+		super.OnStoreSave(ctx);
+
+		if (ZenModEnabled("ZenAlcohol"))
+		{
+			ctx.Write(m_ZenAlcoholConsumed);
+		}
+	}
+
+	override bool OnStoreLoad(ParamsReadContext ctx, int version)
+	{
+		if (!super.OnStoreLoad(ctx, version))
+		{
+			return false;
+		}
+
+		if (ZenModEnabled("ZenAlcohol"))
+		{
+			if (!ctx.Read(m_ZenAlcoholConsumed))
+			{
+				return false;
+			}
+
+			if (m_ZenAlcoholConsumed > 0)
+			{
+				StartZenAlcoholTimer();
+			}
+		}
+
+		return true;
 	}
 }

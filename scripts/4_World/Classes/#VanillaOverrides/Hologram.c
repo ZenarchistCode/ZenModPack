@@ -2,8 +2,14 @@ modded class Hologram
 {
     override void EvaluateCollision(ItemBase action_item = null)
 	{
+        if (!action_item)
+        {
+            super.EvaluateCollision(action_item);
+            return;
+        }
+
         //! NOTES
-		if (action_item && action_item.IsInherited(ZenNote))
+		if (action_item.IsInherited(ZenNote))
 		{
 			SetIsColliding(false);
 			return;
@@ -153,6 +159,104 @@ modded class Hologram
         {
             m_Parent.SetZenHologrammed(m_Projection != NULL);
         }
+    }
+
+    override bool IsBaseViable()
+    {
+        if (!ZenModEnabled("ZenBasebuildingConfig") || GetGame().IsDedicatedServer())
+            return super.IsBaseViable();
+
+        if (!super.IsBaseViable())
+            return false;
+
+        if (!CheckZenPlacementInsideSelf())
+            return false;
+
+        if (!CheckZenBuildingLimits())
+            return false;
+
+        return true;
+    }
+
+    bool CheckZenBuildingLimits()
+    { 
+        array<Object> nearest_objects = new array<Object>;
+
+        foreach (ZenBasebuildingLimits limitCfg : GetZenBasebuildingConfig().BasebuildingLimits)
+        {
+            nearest_objects.Clear();
+            GetGame().GetObjectsAtPosition3D(m_Projection.GetPosition(), limitCfg.MinSearchDistance, nearest_objects, NULL);
+
+            for (int i = 0; i < nearest_objects.Count(); i++)
+            {
+                Object object = nearest_objects.Get(i);
+
+                if (object.IsHologram())
+                    continue;
+
+                if (!object.IsKindOf(limitCfg.ClassName))
+                    continue;
+
+                // ChatGPT strikes again
+                vector diff = m_Projection.GetPosition() - object.GetPosition();
+                float heightDiff = Math.AbsFloat(diff[1]);
+
+                vector dir = m_Projection.GetDirection();
+                dir[1] = 0; // flatten to horizontal plane
+                dir.Normalize();
+
+                // Manually rotate dir 90 degrees around Y to get rightLeft vector
+                vector rightLeft;
+                rightLeft[0] = -dir[2];
+                rightLeft[1] = 0;
+                rightLeft[2] = dir[0];
+
+                // Project diff into local space
+                float forwardDist = vector.Dot(diff, dir);   // depth (front/back)
+                float rightLeftDist = vector.Dot(diff, rightLeft);   // sideways (left/right)
+
+                if (heightDiff < limitCfg.MinHeightSeparation)
+                {
+                    if (Math.AbsFloat(rightLeftDist) < limitCfg.MinRightLeftTolerance && Math.AbsFloat(forwardDist) < limitCfg.MinForwardTolerance)
+                    {
+                        if (GetZenBasebuildingConfig().DebugOn)
+                            ZenFunctions.DebugMessage("Blocked: " + object.GetType() + "/" + m_Projection.GetType() + " rightLeftDist=" + rightLeftDist + " forwardDist=" + forwardDist + " heightDiff=" + heightDiff);
+                        
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    bool CheckZenPlacementInsideSelf()
+    {
+        for (int i = 0; i < GetZenBasebuildingConfig().CantPlaceInsideOfSelf.Count(); i++)
+        {
+            string type = GetZenBasebuildingConfig().CantPlaceInsideOfSelf.GetKey(i);
+            float dist = GetZenBasebuildingConfig().CantPlaceInsideOfSelf.GetElement(i);
+
+            array<Object> nearest_objects = new array<Object>;
+            GetGame().GetObjectsAtPosition3D(m_Projection.GetPosition(), dist, nearest_objects, NULL);
+
+            foreach (Object obj : nearest_objects)
+            {
+                if (obj.IsHologram())
+                    continue;
+
+                if (obj.IsKindOf(type) && m_Projection.IsKindOf(type))
+                {
+                    if (GetZenBasebuildingConfig().DebugOn)
+                        ZenFunctions.DebugMessage("Blocked: " + obj.GetType() + "/" + m_Projection.GetType() + " dist=" + vector.Distance(obj.GetPosition(), m_Projection.GetPosition()));
+                    
+                    return false;
+                }
+            }               
+        }
+
+        return true;
     }
 
 	void ~Hologram()

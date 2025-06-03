@@ -10,6 +10,9 @@ class ZenModLogger
 
 	void ZenModLogger()
 	{
+		if (!ZenModEnabled("ZenModLogger"))
+			return;
+
 		// Create overall log folder
 		if (!FileExist(LOG_FOLDER))
 		{

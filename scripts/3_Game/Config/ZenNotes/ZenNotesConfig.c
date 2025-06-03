@@ -50,7 +50,7 @@ class ZenNotesConfig
 
 		// Set default date format
 		NoteDateFormat = new ZenNoteDateFormat;
-		NoteDateFormat.Format = 1;
+		NoteDateFormat.Format = 6;
 		NoteDateFormat.DaySuffix = new array<string>;
 		NoteDateFormat.DaySuffix.Insert("st");
 		NoteDateFormat.DaySuffix.Insert("nd");
@@ -211,30 +211,7 @@ class ZenNotesConfig
 			case 3:
 			case 23:
 				return NoteDateFormat.DaySuffix.Get(2); // 3rd
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-			case 9:
-			case 10:
-			case 11:
-			case 12:
-			case 13:
-			case 14:
-			case 15:
-			case 16:
-			case 17:
-			case 18:
-			case 19:
-			case 20:
-			case 24:
-			case 25:
-			case 26:
-			case 27:
-			case 28:
-			case 29:
-			case 30:
+			default:
 				return NoteDateFormat.DaySuffix.Get(3); // 4th
 		}
 

@@ -30,7 +30,10 @@ class Zen_ArtillerySmokeGrenade : M18SmokeGrenade_Red
 		super.OnWorkStart();
 
 		if (GetGame().IsDedicatedServer())
+		{
+			SetLifetime(0); // Force this to despawn asap when players are not around - the bombs will trigger, and then if the server restarts the smoke will not trigger another airstrike on server startup.
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StartBombs, Math.RandomInt(GetZenArtilleryConfig().MinStrikeSecs * 1000, GetZenArtilleryConfig().MaxStrikeSecs * 1000), false);
+		}
 	}
 
 	string GetBombType()

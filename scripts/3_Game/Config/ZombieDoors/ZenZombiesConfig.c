@@ -5,7 +5,7 @@ class ZenZombieDoorsConfig
 
 	// Config location
 	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZombieDoorsConfig.json";
+	private const static string zenConfigName = "ZenZombieDoorsConfig.json";
 
 	// Main config data
 	string ConfigVersion = "";

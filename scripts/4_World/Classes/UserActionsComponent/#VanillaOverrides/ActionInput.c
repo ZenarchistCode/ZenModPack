@@ -1,6 +1,7 @@
 // Allow action to set Zen_GetDisplayPriority() to force certain actions to display before other actions when needed
 // eg. On my server I can skin and search zombies for loot, skinning always showed up first - setting the search 
-// action to Zen_GetDisplayPriority() = 1 it forces the search action to display before the skinning action.
+// action to Zen_GetDisplayPriority() = 1 it forces the search action to display before the skinning action without
+// needing to screw around with adding/removing actions to ActionConstructor/Entity.c and get all janky with my shit.
 modded class StandardActionInput
 {
 	protected bool m_ZenResetOverride = false;
@@ -18,7 +19,7 @@ modded class StandardActionInput
 		// Sort by highest priority and assign selected index to highest priority action.
 		for (int i = 0; i < m_SelectActions.Count(); i++)
 		{
-			if (m_SelectActions.Get(i).Zen_GetDisplayPriority() > highestPriority)
+			if (m_SelectActions.Get(i) && m_SelectActions.Get(i).Zen_GetDisplayPriority() > highestPriority)
 			{
 				highestPriority = m_SelectActions.Get(i).Zen_GetDisplayPriority();
 				overrideIndex = i;

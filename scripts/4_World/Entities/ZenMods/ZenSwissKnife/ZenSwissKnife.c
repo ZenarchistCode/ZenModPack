@@ -24,6 +24,16 @@ class ZenSwissKnife extends ToolBase
 		RegisterSwissNetSync();
 	}
 
+	// Called when Central Economy engine spawns this item into the world as loot
+	override void EEOnCECreate()
+	{
+		super.EEOnCECreate();
+
+		// This makes it so you don't gotta set cfgspawnabletypes.xml to spawn Pristine.
+		// This item handles its damage textures internally so we need the base object to always spawn Pristine.
+		SetHealth(GetMaxHealth());
+	}
+
 	protected void RegisterSwissNetSync()
 	{
 		RegisterNetSyncVariableFloat("m_CanOpenerHealth");

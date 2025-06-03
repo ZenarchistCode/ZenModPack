@@ -23,7 +23,7 @@ class ZenContaminatedZoneLootConfig
 
 		// Save config
 		Save();
-	};
+	}
 
 	// Save config
 	void Save()

@@ -28,8 +28,8 @@ class ZenPollGUI extends UIScriptedMenu
 		m_CancelBtn = ButtonWidget.Cast(layoutRoot.FindAnyWidget("cancel_button"));
 		m_SubmitBtn = ButtonWidget.Cast(layoutRoot.FindAnyWidget("submit_button"));
 
-		m_Checkboxes = new ref array<ref CheckBoxWidget>;
-		m_PollOptions = new ref array<ref MultilineTextWidget>;
+		m_Checkboxes = new array<ref CheckBoxWidget>;
+		m_PollOptions = new array<ref MultilineTextWidget>;
 
 		for (int i = 0; i < 6; i++)
 		{

@@ -54,4 +54,4 @@ class ActionFillRainGround : ActionInteractBase
 
 		bottle.SetCatchingRain(true);
 	}
-};
+}
