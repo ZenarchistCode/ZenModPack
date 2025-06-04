@@ -2,6 +2,11 @@ modded class ActionDeployObject
 {
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
+		if (!item)
+		{
+			return super.ActionCondition(player, target, item);
+		}
+
 		//! CAMO SHELTER
 		if (item.IsKindOf("Zen_CamoShelterKit"))
 		{
@@ -46,6 +51,19 @@ modded class ActionDeployObject
 
 				if (vector.Distance(noBuildPos, ourPos) <= noBuildZone.MinimumDistance)
 				{
+					// Check whitelist
+					if (GetZenBasebuildingConfig().Whitelist)
+					{
+						foreach (string s : GetZenBasebuildingConfig().Whitelist)
+						{
+							s.ToLower();
+							if (item.IsKindOf(s))
+							{
+								return true;
+							}
+						}
+					}
+					
 					string msg = GetZenBasebuildingConfig().NoBuildZoneDefaultMessage;
 
 					if (noBuildZone.WarningMessage != "")

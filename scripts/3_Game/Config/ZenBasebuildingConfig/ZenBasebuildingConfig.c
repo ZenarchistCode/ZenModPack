@@ -9,19 +9,19 @@ class ZenBasebuildingConfig
 	ref array<ref ZenBasebuildingLimits> BasebuildingLimits;
 	string NoBuildZoneDefaultMessage;
 	ref array<ref ZenNoBuildZone> NoBuildZones;
+	ref array<string> Whitelist;
 
 	void Load()
 	{
 		if (!GetGame().IsDedicatedServer())
 			return;
 
+		SetDefaultValues();
+
 		if (FileExist(zenModFolder + zenConfigName))
 		{
 			JsonFileLoader<ZenBasebuildingConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-			return;
 		}
-		
-		SetDefaultValues();
 
 		Save();
 	}
@@ -44,6 +44,12 @@ class ZenBasebuildingConfig
 		NoBuildZoneDefaultMessage = "You can't build within %distance% of this area!";
 		NoBuildZones = new array<ref ZenNoBuildZone>;
 		NoBuildZones.Insert(new ZenNoBuildZone("Example", "0 0 0", 1, true));
+
+		Whitelist = new array<string>;
+		Whitelist.Insert("ZenNote");
+		Whitelist.Insert("ZenSleepingBag_Base");
+		Whitelist.Insert("Zen_ChessBoard");
+		Whitelist.Insert("Zen_BoomBox");
 	}
 
 	void Save()
