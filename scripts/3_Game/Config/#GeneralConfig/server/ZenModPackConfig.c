@@ -59,6 +59,7 @@ class ZenModPackConfig
 		PersistentModEnabled = new map<string, bool>;
 
 		// Client sync mods
+		ModEnabled.Insert("ZenBasebuildingConfig", false);
 		ModEnabled.Insert("ZenInventoryAnimation", true);
 		ModEnabled.Insert("ZenBasebuldingConfig", true);
 		ModEnabled.Insert("ZenAntiCombatLogout", true);
