@@ -234,7 +234,7 @@ class CfgPatches
 		requiredVersion = 0.1;
 		requiredAddons[] =
 		{
-			"0_ZenModPackDefine",
+			//"DZ_ZenModPack_Preload",
 			"DZ_Data",
 			"DZ_Scripts",
 			"DZ_Radio",
@@ -3793,49 +3793,6 @@ class CfgVehicles
 	};
 
 	class ZenGraves_UndergroundStash : UndergroundStash {};
-
-	//! ANTI-COMBAT LOG 
-	// Define combat log flare
-	class Zen_CombatLogFlare : Roadflare
-	{
-		scope = 2;
-		varQuantityDestroyOnMin = 1;
-		class EnergyManager
-		{
-			energyAtSpawn = 200;
-			energyUsagePerSecond = 1;
-			updateInterval = 10;
-			convertEnergyToQuantity = 1;
-		};
-		class NoiseRoadFlare
-		{
-			strength = 0;
-			type = "";
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 9999;
-				};
-			};
-		};
-	};
-
-	// Define ammo scanner
-	class Zen_CombatLogTrigger : Inventory_Base
-	{
-		scope = 1;
-		model = "\dz\gear\consumables\Stone.p3d";
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "#(argb,8,8,3)color(1,1,1,0,CA)" };
-	};
-	class Zen_CombatLogExplosiveTrigger : Zen_CombatLogTrigger
-	{
-		scope = 1;
-	};
 
 	//! CAMONET SHELTER
 	class Zen_CamoShelterKit : Inventory_Base
