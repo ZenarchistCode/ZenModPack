@@ -7,10 +7,4 @@ modded class SawWoodenLog extends RecipeBase
 
 		InsertIngredient(1,"ZenSwissKnife_SmallSaw");
 	}
-
-	//! CRAFTING SOUNDS
-	override string GetSoundCategory(int ingredientIndex, ItemBase item)
-	{
-		return "Zen_SawWood";
-	}
-};
+}

@@ -8,6 +8,7 @@ Change Notes:
 - Fixed potential nullpointer on ZenMap when used with Expansion Quests
 - Added #define ZENANTICOMBATLOGOUT
 - Moved ZenShove to its own .pbo
+- Moved ZenCraftingSounds to its own .pbo
 - Fixed ZenServerGUI spawning rule book even when disabled in ZenModPackConfig.json
 
 4th June 2025 - Hotfix:

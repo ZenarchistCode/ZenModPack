@@ -9,10 +9,4 @@ modded class CraftWoodenPlank
 
 		return super.CanDo(ingredients, player);
 	}
-
-	//! CRAFTING SOUNDS
-	override string GetSoundCategory(int ingredientIndex, ItemBase item)
-	{
-		return "Zen_SawWood";
-	}
-};
+}

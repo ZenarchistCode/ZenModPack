@@ -112,4 +112,4 @@ modded class FireplaceBase
 	{
 		return GetFuelCount();
 	}
-};
+}
