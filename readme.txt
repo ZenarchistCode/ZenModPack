@@ -5,6 +5,7 @@ Check the Wiki guide for details & instructions: https://github.com/ZenarchistCo
 Change Notes:
 
 5th June 2025 - Minor changes/fixes:
+- Fixed debug message spam when cooking on a stick
 - Fixed potential nullpointer on ZenMap when used with Expansion Quests
 - Added #define ZENANTICOMBATLOGOUT
 - Moved ZenShove to its own .pbo
