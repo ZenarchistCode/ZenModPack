@@ -4,6 +4,12 @@ Check the Wiki guide for details & instructions: https://github.com/ZenarchistCo
 
 Change Notes:
 
+5th June 2025 - Minor changes/fixes:
+- Fixed potential nullpointer on ZenMap when used with Expansion Quests
+- Added #define ZENANTICOMBATLOGOUT
+- Moved ZenShove to its own .pbo
+- Fixed ZenServerGUI spawning rule book even when disabled in ZenModPackConfig.json
+
 4th June 2025 - Hotfix:
 - Fixed ZenBasebuildingConfig missing from ZenModPackConfig.JSON
 - Added Whitelist string array to ZenBasebuildingConfig's no build zones

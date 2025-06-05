@@ -107,9 +107,6 @@ modded class PlayerBase
 
 		//! SLEEPING BAGS
 		//AddAction(ActionZenPackSleepingBag, InputActionMap);
-
-		//! SHOVE PLAYER 
-		AddAction(ActionZenShovePlayer, InputActionMap);
 	}
 
 	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
@@ -131,28 +128,6 @@ modded class PlayerBase
             GetInputController().OverrideMovementSpeed(isRunning, movementIdx);
             GetInputController().OverrideMovementAngle(isRunning, angle);
         }
-
-		// Client-side (tells client to temporarily restrict movement after being shoved)
-		if (rpc_type == ZenRPCs.SHOVE_RPC)
-		{
-			if (!IsRestrained())
-				return;
-
-			Param1<int> shove_ClientParams;
-
-			if (!ctx.Read(shove_ClientParams))
-				return;
-
-			if (shove_ClientParams.param1)
-			{
-				// Disable player controls after shove
-				ZenFunctions.DisablePlayerControl();
-
-				// Reset & schedule enabling player controls after shove
-				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(ZenFunctions.EnablePlayerControl);
-				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenFunctions.EnablePlayerControl, ZenConstants.SHOVE_STUN_SECONDS * 1000);
-			}
-		}
 
 		// Client-side lighting config (unused vanilla since they added JSON cfg for this - repurposed for my config)
 		if (rpc_type == ERPCs.RPC_SEND_LIGHTING_SETUP)
@@ -1725,22 +1700,6 @@ modded class PlayerBase
 		}
 
 		return super.HandleRemoteItemManipulation(userDataType, ctx);
-	}
-
-	//! SHOVE 
-	void Zen_StunFromAngle(vector stunPos)
-	{
-		if (!stunPos || IsUnconscious() || !IsAlive())
-			return;
-
-		vector playerAttackerDirection = vector.Direction(GetPosition(), stunPos);
-		vector playerDirection = GetDirection();
-		float hitDirection = Math.DiffAngle(playerAttackerDirection.VectorToAngles()[0], playerDirection.VectorToAngles()[0]);
-
-		string hitComponent = GetHitComponentForAI();
-		DayZPlayerSyncJunctures.SendDamageHitEx(this, 0, hitDirection, true, null, DT_CLOSE_COMBAT, this, hitComponent, "MeleeZombie", playerDirection);
-
-		GetGame().RPCSingleParam(this, ZenRPCs.SHOVE_RPC, new Param1<bool>(true), true, GetIdentity());
 	}
 
 	//! NIGHT LIGHTING CONFIG 

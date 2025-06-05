@@ -9,8 +9,7 @@ enum ZenRPCs
 	ANTI_COMBAT_LOG_MSG_RPC,
 	AUTORUN,
 	PLAY_SOUND,
-	ZEN_SPLIT_ITEM,
-	SHOVE_RPC
+	ZEN_SPLIT_ITEM
 }
 
 enum ZenMenus
@@ -22,7 +21,6 @@ enum ZenMenus
 	RAID_ALARM_GUI
 }
 
-class ZenConstants
+class ZenModConstants
 {
-	static const int SHOVE_STUN_SECONDS = 5; // How many seconds to stunlock the player when shoved
 }
