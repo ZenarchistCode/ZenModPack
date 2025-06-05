@@ -13,6 +13,8 @@ class ZenServerDiversionConfig
 		if (!GetGame().IsDedicatedServer())
 			return;
 
+		ZMPrint("[ZenServerDiversionConfig] Init");
+
 		if (FileExist(zenModFolder + zenConfigName))
 		{
 			JsonFileLoader<ZenServerDiversionConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
@@ -48,7 +50,6 @@ static ZenServerDiversionConfig GetZenServerDiversionConfig()
 {
 	if (!m_ZenServerDiversionConfig)
 	{
-		ZMPrint("[ZenServerDiversionConfig] Init");
 		m_ZenServerDiversionConfig = new ZenServerDiversionConfig;
 		m_ZenServerDiversionConfig.Load();
 	}
