@@ -542,9 +542,9 @@ modded class MissionServer
 				if (Math.RandomFloat01() > GetZenFirewoodConfig().ChanceOfSpawn)
 					continue;
 
-				// Get objects within 1 meter of the config'd wood pile vector
+				// Get objects within 3 meter of the config'd wood pile vector
 				array<Object> objectsNearWoodpile = new array<Object>;
-				GetGame().GetObjectsAtPosition3D(loc, 1, objectsNearWoodpile, null);
+				GetGame().GetObjectsAtPosition3D(loc, 3, objectsNearWoodpile, null);
 
 				// Prepare reused variables
 				string debugName = "";
@@ -560,7 +560,7 @@ modded class MissionServer
 					debugName.ToLower();
 					className.ToLower();
 
-					// Skip any existing zen wood piles
+					// Skip any existing zen wood piles within 3 meters
 					if (className.Contains("zen_wood"))
 					{
 						continue;

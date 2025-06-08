@@ -2,14 +2,6 @@ class Zen_EternalFireplace extends Fireplace
 {
 	protected ref Timer m_ZenBurningCheckTimer;
 
-	override void EEInit()
-	{
-		super.EEInit();
-
-		SetLifetimeMax(999999);
-		SetLifetime(999999);
-	}
-
 	override void DeferredInit()
 	{
 		super.DeferredInit();

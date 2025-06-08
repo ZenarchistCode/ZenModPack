@@ -12,6 +12,7 @@ class ZenModPackClientConfig
 	int CassetteMusicSetting = 1;
 	bool ShowRadioBadge = true;
 	bool ImmersiveLogin = true;
+	bool BetterChatFont = false;
 
 	void Load()
 	{

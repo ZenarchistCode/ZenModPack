@@ -66,8 +66,10 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenImmersiveChatHUD", false); // Disabled by default to avoid confusion
 		ModEnabled.Insert("ZenImmersiveLogin", true);
 		ModEnabled.Insert("ZenCraftingSounds", true);
+		ModEnabled.Insert("ZenBetterChatFont", false);
 		ModEnabled.Insert("ZenCanteenTablets", true);
 		ModEnabled.Insert("ZenDoubleArmbands", true);
+		ModEnabled.Insert("ZenCarBatteryIcon", true);
 		ModEnabled.Insert("ZenBrokenGlasses", true);
 		ModEnabled.Insert("ZenCauseOfDeath", true);
 		ModEnabled.Insert("ZenOpenCansRock", true);
@@ -99,6 +101,7 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenMap", false); // Disabled by default in case other map mods are preferred
 
 		// No client sync required
+		ServerSideModEnabled.Insert("ZenDropRuinedClothing", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenPersistentTrees", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenStaticBarbedWire", false); // Disabled by default as not all servers may want this impact on server performance
 		ServerSideModEnabled.Insert("ZenDynamicZoneLoot", false); // Disabled by default to avoid confusion

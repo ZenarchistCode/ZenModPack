@@ -8,12 +8,14 @@ class Zen_CommunityBarrel extends Barrel_ColorBase
 		}
 	}
 
-	override void EEInit()
+	override void DeferredInit()
 	{
-		super.EEInit();
+		super.DeferredInit();
 
-		SetLifetimeMax(999999);
-		SetLifetime(999999);
+		if (GetOrientation() == "0 0 0")
+		{
+			ZenFunctions.AlignToTerrain(this);
+		}
 	}
 
 	override bool CanPutInCargo(EntityAI parent)
@@ -50,12 +52,14 @@ class Zen_CommunityBarrel_Holes extends BarrelHoles_ColorBase
 		}
 	}
 
-	override void EEInit()
+	override void DeferredInit()
 	{
-		super.EEInit();
+		super.DeferredInit();
 
-		SetLifetimeMax(999999);
-		SetLifetime(999999);
+		if (GetOrientation() == "0 0 0")
+		{
+			ZenFunctions.AlignToTerrain(this);
+		}
 	}
 
 	override bool CanPutInCargo(EntityAI parent)
@@ -82,6 +86,7 @@ class Zen_CommunityBarrel_Holes extends BarrelHoles_ColorBase
 	}
 }
 
+// For placement with admin tools, on the next server restart the spawn code will be printed to logs to make it easier to spawn all these barrels.
 class Zen_CommunityBarrel_DebugPrinter extends Barrel_ColorBase
 {
 	override void DeferredInit()
@@ -90,7 +95,7 @@ class Zen_CommunityBarrel_DebugPrinter extends Barrel_ColorBase
 
 		if (GetGame().IsDedicatedServer())
 		{
-			SetLifetime(3600);
+			SetLifetime(3600); // to avoid them despawning when player leaves area
 			SetLifetimeMax(3600);
 			Print("SpawnObject(\"Zen_CommunityBarrel_Holes\", \"" + GetPosition().ToString(false) + "\", \"" + GetOrientation().ToString(false) + "\", 1);");
 		}

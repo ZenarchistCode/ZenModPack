@@ -4,14 +4,24 @@ Check the Wiki guide for details & instructions: https://github.com/ZenarchistCo
 
 Change Notes:
 
-5th June 2025 - Minor changes/fixes:
+8th June 2025:
+- Fixed Winchester rifles despawning (my bad, sorry)
+- Fixed nullpointer in ZenSleep mod when sleeping in tents/modded objects
+- Added GameLabs compatibility with ZenTerritories mod
+- Added ZenCarBatteryIcon based on https://steamcommunity.com/sharedfiles/filedetails/?id=2812312144
+- Added ZenDropRuinedClothing to ZenModPackConfig.json - drops clothing items to ground when ruined
+- Added ZenBetterChatFont - adds a shadow underneath the vanilla chat font to make it easier to read
+- Added persistent static objects types to XML file (eg. Zen_EternalFireplace, Zen_CommunityBarrel etc)
+
+5th June 2025:
+- Fixed debug message spam when cooking on a stick
 - Fixed potential nullpointer on ZenMap when used with Expansion Quests
 - Added #define ZENANTICOMBATLOGOUT
 - Moved ZenShove to its own .pbo
 - Moved ZenCraftingSounds to its own .pbo
 - Fixed ZenServerGUI spawning rule book even when disabled in ZenModPackConfig.json
 
-4th June 2025 - Hotfix:
+4th June 2025:
 - Fixed ZenBasebuildingConfig missing from ZenModPackConfig.JSON
 - Added Whitelist string array to ZenBasebuildingConfig's no build zones
 - Fixed incorrect typename for ZenJournal in types folder

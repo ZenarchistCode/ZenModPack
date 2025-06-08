@@ -1,5 +1,8 @@
 modded class CarScript
 {
+	//! CAR BATTERY ICON 
+	protected int m_ZenBatteryEnergy;
+
 	//! PIMP
 	Chemlight_ColorBase		m_ZenChemlightAttached;
 	ChemlightLight			m_ZenPimpLight;
@@ -22,6 +25,7 @@ modded class CarScript
 	{
 		RegisterNetSyncVariableFloat("m_MusicVolume");
 		RegisterNetSyncVariableInt("m_MusicPlaySecs");
+		RegisterNetSyncVariableInt("m_ZenBatteryEnergy");
 	}
 
 	void ~CarScript()
@@ -37,13 +41,58 @@ modded class CarScript
 		delete m_Song;
 	}
 
+	//! CAR BATTERY ICON 
+	override void OnUpdate(float dt)
+    {
+        super.OnUpdate(dt);
+
+		#ifdef SERVER 
+		if (ZenModEnabled("ZenCarBatteryIcon"))
+		{
+			ItemBase battery;
+
+			if (EngineIsOn() || IsScriptedLightsOn())
+			{
+				battery = GetBattery();
+
+				if (battery)
+				{
+					UpdateZenBatteryEnergy(battery.GetCompEM().GetEnergy0To100());
+				}
+			}
+		}
+		#endif
+    }
+
+	int GetZenBatteryEnergy0To100()
+	{
+		return m_ZenBatteryEnergy;
+	}
+
+	void UpdateZenBatteryEnergy(int percent)
+	{
+        if (!GetGame().IsDedicatedServer())
+			return;
+
+		if (!ZenModEnabled("ZenCarBatteryIcon"))
+			return;
+
+		if (m_ZenBatteryEnergy == percent)
+		    return;
+
+		m_ZenBatteryEnergy = percent;
+		SetSynchDirty();
+	}
+
 	//! GLOVEBOX 
 	override void EEInit()
 	{
 		super.EEInit();
 
 		if (ZenModEnabled("ZenGlovebox"))
+		{
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SpawnZenGlovebox, 2500, false);
+		}
 	}
 
 	private void SpawnZenGlovebox()
@@ -266,6 +315,14 @@ modded class CarScript
 
 			return;
 		}
+
+		if (slot_name == "CarBattery" || slot_name == "TruckBattery")
+		{
+			if (item.GetCompEM())
+			{
+				UpdateZenBatteryEnergy(item.GetCompEM().GetEnergy0To100());
+			}
+		}
 	}
 
 	override void EEItemDetached(EntityAI item, string slot_name)
@@ -280,9 +337,15 @@ modded class CarScript
 			return;
 		}
 
-		if (slot_name == "CarBattery" || slot_name == "TruckBattery" || slot_name == "ZenCassette")
+		if (slot_name == "ZenCassette")
 		{
 			StopSongServer();
+		}
+		else
+		if (slot_name == "CarBattery" || slot_name == "TruckBattery")
+		{
+			StopSongServer();
+			UpdateZenBatteryEnergy(0);
 		}
 	}
 
@@ -369,10 +432,6 @@ modded class CarScript
 				if (crewIdx >= 0 && crewIdx <= 1)
 				{
 					return true;
-				}
-				else
-				{
-					return false;
 				}
 			}
 		}
