@@ -15,10 +15,6 @@ class Zen_BaseballCap_Camo : BaseballCap_ColorBase {};
 class Zen_BaseballCap_DarkCamo : BaseballCap_ColorBase {};
 class Zen_BaseballCap_Zenarchist : BaseballCap_ColorBase {};
 
-class Zen_BaseballCap_BackCamo: BaseballCap_BackColorBase {};
-class Zen_BaseballCap_BackDarkCamo: BaseballCap_BackColorBase {};
-class Zen_BaseballCap_BackZenarchist: BaseballCap_BackColorBase {};
-
 class MilitaryBoots_BlackPunk: MilitaryBoots_ColorBase {};
 
 class Zen_Shirt_HunterCat: Shirt_ColorBase {};
@@ -26,3 +22,15 @@ class Zen_Shirt_PharaohCat: Shirt_ColorBase {};
 class Zen_Shirt_BothCat: Shirt_ColorBase {};
 
 class Zen_Canteen_Black: Canteen {};
+
+class Zen_M4_Suppressor_Green: M4_Suppressor {};
+class Zen_AK_Suppressor_Green : AK_Suppressor {};
+class Zen_PistolSuppressor_Green : PistolSuppressor {};
+class Zen_ImprovisedSuppressor_Green : ImprovisedSuppressor {};
+class Zen_ImprovisedSuppressor_Black : ImprovisedSuppressor {};
+
+class Zen_AK74_WoodBttstck_Green: AK74_WoodBttstck {};
+class Zen_AK74_Hndgrd_Green: AK74_Hndgrd {};
+
+class Zen_Mag_AK74_45Rnd_Green : Mag_AK74_45Rnd {};
+class Zen_Mag_AK74_45Rnd_Black : Mag_AK74_45Rnd {};

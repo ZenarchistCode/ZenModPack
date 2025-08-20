@@ -1,12 +1,14 @@
-modded class CraftWoodenPlank
-{
-	//! SWISS KNIFE
-	// Don't allow swiss saw to make planks, just firewood etc
-	override bool CanDo(ItemBase ingredients[], PlayerBase player)
+modded class CraftWoodenPlank extends RecipeBase
+{	
+	override void Init()
 	{
-		if (ingredients[1] != NULL && ingredients[1].IsInherited(ZenSwissKnife_SmallSaw))
-			return false;
+		super.Init();
 
-		return super.CanDo(ingredients, player);
+		#ifdef SERVER
+		if (ZenModEnabled("ZenWoodHealth"))
+		{
+			m_ResultInheritsHealth[0] = -2; // -2 means this result will inherit health from all ingredients averaged(result_health = combined_health_of_ingredients / number_of_ingredients)
+		}
+		#endif
 	}
 }

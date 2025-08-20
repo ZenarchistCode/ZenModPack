@@ -1,3 +1,4 @@
+/*
 class ZenPerformanceMonitorPlugin extends PluginBase
 {
     // General vars
@@ -216,3 +217,4 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         }
     }
 }
+*/

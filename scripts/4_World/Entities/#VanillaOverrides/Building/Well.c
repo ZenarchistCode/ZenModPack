@@ -1,36 +1,36 @@
 modded class Well
 {
 	//! REPAIR WELLS
-	protected bool m_IsRepaired = false;
+	protected bool m_ZenIsRepaired = false;
 
 	// This is called whenever a new well is created (ie. loaded in on server startup)
 	void Well()
 	{
 		if (!ZenModEnabled("ZenRepairPumps"))
 		{
-			m_IsRepaired = true;
+			m_ZenIsRepaired = true;
 			return;
 		}
 
 		#ifdef SERVER
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(SetupRepairableWell, 2500, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(SetupZenRepairableWell, 2500, false);
 		#endif
 	}
 
 	// Returns this well's repaired state
-	bool IsRepaired()
+	bool IsZenRepaired()
 	{
-		return m_IsRepaired;
+		return m_ZenIsRepaired;
 	}
 
 	// Sets this well's repaired state
-	void SetRepaired(bool repaired)
+	void SetZenRepaired(bool repaired)
 	{
-		m_IsRepaired = repaired;
+		m_ZenIsRepaired = repaired;
 	}
 
 	// Sets this well's repaired state.
-	void SetupRepairableWell()
+	void SetupZenRepairableWell()
 	{
 		int ts = JMDate.Now(false).GetTimestamp();
 		int idx = GetZenWellsConfig().GetRepairableWellIndex(GetPosition());
@@ -56,11 +56,35 @@ modded class Well
 
 		if (well)
 		{
-			m_IsRepaired = well.Repaired;
+			m_ZenIsRepaired = well.Repaired;
 		}
 		else
 		{
-			m_IsRepaired = !GetZenWellsConfig().DisableWellsByDefault;
+			m_ZenIsRepaired = !GetZenWellsConfig().DisableWellsByDefault;
 		}
+	}
+
+	// Checks if this can be used, and if not, informs player
+	bool Zen_CanBeUsed(notnull PlayerBase player)
+	{
+		if (!ZenModEnabled("ZenRepairWells"))
+		{
+			return true;
+		}
+
+		#ifdef EXPANSIONMODCORE
+		if (player.Expansion_IsInSafeZone())
+		{
+			return true;
+		}
+		#endif
+
+		if (GetGame().IsDedicatedServer() && !IsZenRepaired())
+		{
+			player.Zen_SendMessage(GetZenWellsConfig().MessageNotDrink);
+			return false;
+		}
+
+		return true;
 	}
 }

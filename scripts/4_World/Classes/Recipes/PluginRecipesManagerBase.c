@@ -36,8 +36,5 @@ modded class PluginRecipesManagerBase
 		RegisterRecipe(new Zen_CraftBishop);
 		RegisterRecipe(new Zen_CraftKing);
 		RegisterRecipe(new Zen_CraftQueen);
-
-        //! RAID ALARM
-        RegisterRecipe(new Zen_CraftZenRaidAlarmStationKit);
     }
 }

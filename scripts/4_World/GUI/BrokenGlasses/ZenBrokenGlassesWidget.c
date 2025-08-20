@@ -42,7 +42,8 @@ class ZenBrokenGlassesWidget extends Managed
 
 	void ~ZenBrokenGlassesWidget()
 	{
-		HideFX();
+		if (GetGame())
+			HideFX();
 	}
 
 	void ShowFX(float dmg)

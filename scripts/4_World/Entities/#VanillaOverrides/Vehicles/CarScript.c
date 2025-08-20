@@ -7,38 +7,13 @@ modded class CarScript
 	Chemlight_ColorBase		m_ZenChemlightAttached;
 	ChemlightLight			m_ZenPimpLight;
 
-	//! MUSIC
-	const static float SONG_UPDATE_TIMER_SECS = 1.0;
-
-	// Server & client
-	protected float m_MusicVolumeClient = 1.0;
-	protected float m_MusicVolume = 1.0;
-
-	// Client
-	protected ref EffectSound m_Song;
-	protected bool m_IsPlayingSong = false;
-
-	// Server
-	int m_MusicPlaySecs = -1;
-
 	void CarScript()
 	{
-		RegisterNetSyncVariableFloat("m_MusicVolume");
-		RegisterNetSyncVariableInt("m_MusicPlaySecs");
 		RegisterNetSyncVariableInt("m_ZenBatteryEnergy");
 	}
 
 	void ~CarScript()
 	{
-		if (!GetGame())
-			return;
-
-		if (GetGame().IsDedicatedServer())
-			StopSongServer();
-		else
-			StopSongClient();
-
-		delete m_Song;
 	}
 
 	//! CAR BATTERY ICON 
@@ -129,198 +104,31 @@ modded class CarScript
 		}
 	}
 
-
-	//! MUSIC
-	ItemBase GetCassette()
-    {
-        return ItemBase.Cast(FindAttachmentBySlotName("ZenCassette"));
-    }
-
-	int GetSongDuration()
-	{
-		if (GetCassette() && !GetCassette().IsRuined())
-			return Zen_Cassette_Base.GetSongDuration(GetCassette().GetType());
-
-		return -1;
-	}
-
-	void ToggleMusic()
-	{
-		if (m_MusicPlaySecs == -1)
-			PlaySongServer();
-		else
-			StopSongServer();
-	}
-
-	bool HasValidCassette()
-	{
-		if (!GetCassette())
-			return false;
-
-		return GetCassette() && !GetCassette().IsRuined() && Zen_Cassette_Base.GetSongSoundSet(GetCassette().GetType()) != "" && Zen_Cassette_Base.GetSongDuration(GetCassette().GetType()) > 0;
-	}
-
-	void PlaySongServer()
-	{
-		if (!HasValidCassette())
-			return;
-
-		m_MusicPlaySecs = 0;
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateSongDuration, 1000, false);
-		SetSynchDirty();
-	}
-
-	void StopSongServer()
-	{
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateSongDuration);
-		m_MusicPlaySecs = -1;
-		SetSynchDirty();
-	}
-
-	// Called every X seconds. No need for SynchDirty because that will be called when car is loaded on client anyway and this just tracks current song time
-	void UpdateSongDuration()
-	{
-		// If song has been stopped, don't update music play secs and stop here
-		if (m_MusicPlaySecs < 0 || m_MusicPlaySecs > GetSongDuration() + 10)
-		{
-			StopSongServer();
-			return;
-		}
-
-		// If battery is dead, stop music
-		if (IsVitalCarBattery())
-		{
-			CarBattery carBattery = CarBattery.Cast(FindAttachmentBySlotName("CarBattery"));
-			if (!carBattery || !carBattery.GetCompEM() || !carBattery.GetCompEM().GetEnergy() > 0 || carBattery.IsRuined())
-			{
-				StopSongServer();
-				return;
-			}
-		}
-		else
-		if (IsVitalTruckBattery())
-		{
-			TruckBattery truckBattery = TruckBattery.Cast(FindAttachmentBySlotName("TruckBattery"));
-			if (!truckBattery || !truckBattery.GetCompEM() || !truckBattery.GetCompEM().GetEnergy() > 0 || truckBattery.IsRuined())
-			{
-				StopSongServer();
-				return;
-			}
-		}
-
-		// All is well - continue to rock out with your small stones out.
-		m_MusicPlaySecs += SONG_UPDATE_TIMER_SECS;
-		SetSynchDirty();
-
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateSongDuration, SONG_UPDATE_TIMER_SECS * 1000, false);
-	}
-
-	void TurnVolumeUp()
-	{
-		m_MusicVolume = m_MusicVolume + 0.25;
-		if (m_MusicVolume > 4.0)
-			m_MusicVolume = 4.0;
-
-		SetSynchDirty();
-	}
-
-	void TurnVolumeDown()
-	{
-		m_MusicVolume = m_MusicVolume - 0.25;
-		if (m_MusicVolume < 0)
-			m_MusicVolume = 0;
-
-		SetSynchDirty();
-	}
-
-	override void OnVariablesSynchronized()
-	{
-		super.OnVariablesSynchronized();
-
-		CheckMusicSync();
-	}
-
-	protected void CheckMusicSync()
-	{
-		if (m_MusicPlaySecs >= 0)
-		{
-			if (m_MusicPlaySecs < GetSongDuration() && (!m_Song || !m_Song.IsSoundPlaying()))
-			{
-				PlaySongClient();
-			}
-		}
-		else
-		{
-			StopSongClient();
-		}
-
-		if (m_MusicVolumeClient != m_MusicVolume)
-		{
-			m_MusicVolumeClient = m_MusicVolume;
-			if (m_Song)
-			{
-				if (m_Song.Zen_GetAbstractWave().IsHeaderLoaded())
-				{
-					m_Song.Zen_SetMaxVolume(m_MusicVolumeClient);
-					m_Song.SetSoundVolume(m_MusicVolumeClient);
-				}
-			}
-		}
-	}
-
-	void PlaySongClient()
-	{
-		if (!HasValidCassette() || m_IsPlayingSong)
-			return;
-
-		m_Song = SEffectManager.CreateSound(Zen_Cassette_Base.GetSongSoundSet(GetCassette().GetType()), GetPosition(), 0, 0, false);
-		int playSecs = Zen_Cassette_Base.GetSongDuration(GetCassette().GetType());
-
-		if (!m_Song || !playSecs || playSecs <= 0)
-			return;
-
-		m_Song.SetParent(this);
-		m_Song.SetLocalPosition(vector.Zero);
-		m_Song.SetSoundAutodestroy(true);
-		m_Song.Zen_SetMaxVolume(m_MusicVolumeClient);
-		m_Song.SoundPlay();
-		m_IsPlayingSong = true;
-
-		// If song has already been playing a while, skip ahead
-		if (m_MusicPlaySecs > 0 && m_Song.Zen_GetAbstractWave())
-		{
-			float skip = (m_MusicPlaySecs / playSecs);
-			m_Song.Zen_GetAbstractWave().SetStartOffset(skip);
-		}
-	}
-
-	void StopSongClient()
-	{
-		if (m_Song)
-		{
-			m_Song.SoundStop();
-			m_IsPlayingSong = false;
-		}
-	}
-
-	//! PIMP
 	override void EEItemAttached(EntityAI item, string slot_name)
 	{
 		super.EEItemAttached(item, slot_name);
 
 		if (GetGame().IsClient())
 		{
-			if (slot_name == "Chemlight")
+			//! PIMP MY RIDE
+			if (slot_name == "ZenChemlight")
+			{
 				CreateZenPimpLight(item);
-
-			return;
+			}
 		}
 
-		if (slot_name == "CarBattery" || slot_name == "TruckBattery")
+		if (GetGame().IsDedicatedServer())
 		{
-			if (item.GetCompEM())
+			if (slot_name == "ZenJournal_Compass")
 			{
-				UpdateZenBatteryEnergy(item.GetCompEM().GetEnergy0To100());
+				CreateZenCompass(Compass.Cast(item));
+			} else
+			if (slot_name == "CarBattery" || slot_name == "TruckBattery")
+			{
+				if (item.GetCompEM())
+				{
+					UpdateZenBatteryEnergy(item.GetCompEM().GetEnergy0To100());
+				}
 			}
 		}
 	}
@@ -331,92 +139,98 @@ modded class CarScript
 
 		if (GetGame().IsClient())
 		{
-			if (slot_name == "Chemlight")
+			if (slot_name == "ZenChemlight")
+			{
 				DestroyZenPimpLight();
-
-			return;
+			}
 		}
 
-		if (slot_name == "ZenCassette")
+		if (GetGame().IsDedicatedServer())
 		{
-			StopSongServer();
-		}
-		else
-		if (slot_name == "CarBattery" || slot_name == "TruckBattery")
-		{
-			StopSongServer();
-			UpdateZenBatteryEnergy(0);
-		}
-	}
-
-	override void SetActions()
-	{
-		super.SetActions();
-
-		AddAction(ActionToggleMusic);
-		AddAction(ActionMusicVolUp);
-		AddAction(ActionMusicVolDn);
-	}
-
-	override bool CanDisplayAttachmentSlot(string slot_name)
-	{
-		//! MUSIC
-		if (slot_name == "ZenCassette")
-			return ZenModEnabled("ZenMusic");
-
-		//! PIMP
-		if (slot_name == "Chemlight")
-			return ZenModEnabled("ZenPimpMyRide");
-
-		return super.CanDisplayAttachmentSlot(slot_name);
+			if (slot_name == "ZenJournal_Compass")
+			{
+				if (m_ZenCompassDashboard)
+				{
+					DeleteZenCompass(item);
+				}
+			} else 
+			if (slot_name == "CarBattery" || slot_name == "TruckBattery")
+			{
+				UpdateZenBatteryEnergy(0);
+			}
+		}		
 	}
 
 	override bool CanDisplayCargo()
 	{
-		if (ZenModEnabled("ZenMusic") && GetZenMusicConfig().AllowCarInventory)
-		{
-			if (GetGame().GetPlayer()) // Override since I've enabled the player inventory to be seen in cars
-			{
-				PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-				if (player && player.IsInVehicle())
-				{
-					return false;
-				}
-			}
-		}
-
-		return super.CanDisplayCargo();
+		// If player inventory in cars is enabled, don't allow cargo displayed while inside car
+		return super.CanDisplayCargo() && !Zen_PlayerInCar();
 	}
 
 	override bool CanDisplayAttachmentCategory(string category_name)
 	{
-		category_name.ToLower();
-
-		if (category_name == "zencarglovebox")
-			return ZenModEnabled("ZenGlovebox") && Zen_PlayerInFrontSeat();
-
-		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-		if (!player)
-			return false;
-
-		bool inCar = player.IsInVehicle();
-
-		if (category_name == "zenpimpmyride" && !ZenModEnabled("ZenPimpMyRide"))
-			return false;
-
-		if (ZenModEnabled("ZenMusic") && GetZenMusicConfig().AllowCarInventory && inCar)
+		if (category_name == "ZenMusic")
 		{
-			if (category_name == "zenmusiccarradio")
-				return true;
+			return false; // Moved ZenCassette slot to ZenInterior category for modpack.
+		}
+		else
+		if (category_name == "ZenInterior")
+		{
+			return Zen_PlayerInCar();
+		}
+		else 
+		if (category_name == "ZenCarAttachments")
+		{
+			if (ZenModEnabled("ZenCarAttachments"))
+				return !Zen_PlayerInCar();
+
+			if (ZenModEnabled("ZenPimpMyRide"))
+				return !Zen_PlayerInCar();
 		}
 
-		return super.CanDisplayAttachmentCategory(category_name) && !inCar;
+		return super.CanDisplayAttachmentCategory(category_name) && !Zen_PlayerInCar();
+	}
+
+	static const ref array<string> ZEN_CAR_ATTACHMENTS =
+	{
+		"Shoulder",
+		"Back",
+		"ZenTireGasoline",
+		"ZenTireIron",
+		"ZenTireRepair",
+		"ZenBlowtorch"
+	};
+
+	override bool CanDisplayAttachmentSlot(int slot_id)
+	{
+		string slot_name = InventorySlots.GetSlotName(slot_id);
+		if (super.CanDisplayAttachmentSlot(slot_id))
+		{
+			if (slot_name == "ZenCassette")
+				return ZenModEnabled("ZenMusic");
+
+			if (slot_name == "ZenJournal_Compass")
+				return ZenModEnabled("ZenCarCompass");
+
+			if (slot_name == "ZenCarGlovebox")
+				return ZenModEnabled("ZenCarGlovebox");
+
+			if (slot_name == "ZenChemlight")
+				return ZenModEnabled("ZenPimpMyRide");	
+
+			if (ZEN_CAR_ATTACHMENTS.Find(slot_name) != -1)
+				return ZenModEnabled("ZenCarAttachments");
+
+			return true;
+		}
+		
+		return false;
 	}
 
 	//! GLOVEBOX / CLIENT-ONLY
 	static bool Zen_PlayerInFrontSeat()
 	{
-		if (!GetGame().IsClient())
+		if (!GetGame() || !GetGame().IsClient())
 			return false;
 
 		PlayerBase clientPlayer = PlayerBase.Cast(GetGame().GetPlayer());
@@ -439,13 +253,129 @@ modded class CarScript
 		return false;
 	}
 
+	static bool Zen_PlayerInCar()
+	{
+		if (!GetGame() || !GetGame().IsClient())
+			return false;
+
+		PlayerBase clientPlayer = PlayerBase.Cast(GetGame().GetPlayer());
+		if (clientPlayer)
+		{
+			return clientPlayer.IsInVehicle();
+		}
+
+		return false;
+	}
+
+	//! COMPASS 
+	protected ZenCarCompass m_ZenCompassDashboard;
+
+	ZenCarCompass GetZenCarCompass()
+	{
+		return m_ZenCompassDashboard;
+	}
+
+	void CreateZenCompass(Compass item)
+	{
+		if (!GetGame().IsDedicatedServer())
+			return;
+
+		if (!item || !item.IsInherited(ItemCompass))
+			return;
+
+		int i;
+		bool cfgFound = false;
+		vector offsetPos;
+		vector offsetOri;
+
+		// Look for EXACT classname match first (as some modded cars inherit from vanilla scripts, but have different models)
+		for (i = 0; i < GetZenCarCompassConfig().CarConfig.Count(); i++)
+		{
+			if (this.GetType() == GetZenCarCompassConfig().CarConfig.Get(i).CarType)
+			{
+				cfgFound = true;
+				offsetPos = GetZenCarCompassConfig().CarConfig.Get(i).Position;
+				offsetOri = GetZenCarCompassConfig().CarConfig.Get(i).Orientation;
+				break;
+			}
+		}
+
+		// If not found, look for inherited child classnames
+		if (!cfgFound)
+		{
+			for (i = 0; i < GetZenCarCompassConfig().CarConfig.Count(); i++)
+			{
+				if (this.IsKindOf(GetZenCarCompassConfig().CarConfig.Get(i).CarType))
+				{
+					cfgFound = true;
+					offsetPos = GetZenCarCompassConfig().CarConfig.Get(i).Position;
+					offsetOri = GetZenCarCompassConfig().CarConfig.Get(i).Orientation;
+					break;
+				}
+			}
+		}
+
+		if (!cfgFound)
+		{
+			Print("[ZenModPack] Compass attached to car: " + GetType() + " - but this modded car has no offset position config.");
+			return;
+		}
+
+		if (!m_ZenCompassDashboard)
+		{
+			m_ZenCompassDashboard = ZenCarCompass.Cast(GetGame().CreateObject("ZenCarCompass", vector.Zero));
+
+			if (!m_ZenCompassDashboard)
+			{
+				Error("[ZenModPack] Couldn't create duplicate proxy of ZenCarCompass for some reason?");
+				return;
+			}
+		}
+
+		if (!AddChild(m_ZenCompassDashboard, -1, false))
+		{
+			Error("[ZenModPack] Failed to attach " + m_ZenCompassDashboard.GetType() + " as child to " + GetType() + " for some reason?");
+			m_ZenCompassDashboard.DeleteSafe();
+			return;
+		}
+
+		m_ZenCompassDashboard.SetPosition(offsetPos);
+		m_ZenCompassDashboard.SetOrientation(offsetOri);
+		m_ZenCompassDashboard.Open();
+		m_ZenCompassDashboard.Update();
+		m_ZenCompassDashboard.SetHealth(item.GetHealth());
+		m_ZenCompassDashboard.SetSynchDirty();
+
+		item.Open();
+		item.SetZenCarCompass(m_ZenCompassDashboard);
+	}
+
+	void DeleteZenCompass(EntityAI item)
+	{
+		if (!m_ZenCompassDashboard)
+			return;
+
+		this.RemoveChild(m_ZenCompassDashboard);
+		m_ZenCompassDashboard.DeleteSafe();
+		m_ZenCompassDashboard = NULL;
+
+		Compass compassItem = Compass.Cast(item);
+		if (compassItem)
+		{
+			compassItem.SetZenCarCompass(NULL);
+		}
+	}
+
 	//! PIMP / CLIENT-ONLY
-	vector GetZenChemlightHeightOffset() { return "0 -0.01 0"; }
+	vector GetZenChemlightHeightOffset() 
+	{ 
+		return "0 -0.01 0"; 
+	}
 
 	void CreateZenPimpLight(EntityAI item)
 	{
 		m_ZenChemlightAttached = Chemlight_ColorBase.Cast(item);
-		if (m_ZenChemlightAttached == NULL)
+		if (!m_ZenChemlightAttached)
 			return;
 
 		if (!m_ZenChemlightAttached.GetCompEM() || !m_ZenChemlightAttached.GetCompEM().IsWorking())
@@ -459,7 +389,7 @@ modded class CarScript
 			m_ZenPimpLight = ChemlightLight.Cast(ScriptedLightBase.CreateLight(ChemlightLight, "0 -1 0"));
 			m_ZenPimpLight.AttachOnObject(this, GetZenChemlightHeightOffset());
 
-			switch(item.GetType())
+			switch(m_ZenChemlightAttached.GetType())
 			{
 				case "Chemlight_White": 
 					m_ZenPimpLight.SetColorToWhite();
@@ -517,4 +447,54 @@ modded class CarScript
 
 		UpdateZenPimpLight();
 	}
+
+	override void OnContact(string zoneName, vector localPos, IEntity other, Contact data)
+    {
+        super.OnContact(zoneName, localPos, other, data);
+
+		if (!ZenModEnabled("ZenCarsCutDownTrees"))
+		{
+			return;
+		}
+
+        if (!data || data.Impulse < 7500)
+        {
+            return;
+        }
+
+        Object tree = Object.Cast(other);
+        if (!tree || tree.IsDamageDestroyed())
+		{
+            return;
+        }
+
+        if (!tree.GetType().Contains("TreeHard") && !tree.GetType().Contains("TreeSoft") && !tree.IsTree() && !tree.IsBush())
+		{
+            return;
+        }
+
+        PlayerBase driver;
+        if (!Class.CastTo(driver, CrewDriver()))
+        {
+            return;
+        }
+
+        if (GetGame().IsDedicatedServer())
+		{
+            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(ZenCutTreeProcess, tree, driver); // actually knock the tree over (runs on script main thread, *not* the physics thread)
+        }
+
+        if (GetGame().IsClient() || !GetGame().IsMultiplayer())
+        {
+            SoundHardTreeFallingPlay();
+        }
+    }
+
+    static void ZenCutTreeProcess(Object tree, PlayerBase driver)
+    {
+        if (!tree || tree.IsDamageDestroyed())
+            return;
+
+        tree.DecreaseHealth("", "", 100, tree.CanBeAutoDeleted());
+    }
 }

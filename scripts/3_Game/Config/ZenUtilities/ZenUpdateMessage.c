@@ -10,6 +10,8 @@ class ZenUpdateMessage
 	string UPDATE_MESSAGE = "";
 	string LOGIN_MESSAGE = "";
 	bool PopupInGame = false;
+	bool NotifySurvivorOfNameChange = true;
+	string SurvivorNotification = "Please change your name to a custom name in the DayZ Launcher (tick Parameters -> Profile name)";
 
 	// Load config file or create default file if config doesn't exist
 	void Load()

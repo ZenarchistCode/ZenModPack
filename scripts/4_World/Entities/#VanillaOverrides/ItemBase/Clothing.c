@@ -4,16 +4,17 @@ modded class Clothing
 	{
 		super.EEHealthLevelChanged(oldLevel, newLevel, zone);
 
-		#ifdef SERVER
-		if (!ZenModEnabled("ZenDropRuinedClothing"))
-			return;
-
-		// If ruined, drop item on ground
-		if (newLevel == GameConstants.STATE_RUINED && GetHierarchyRootPlayer())
+		if (GetGame().IsDedicatedServer())
 		{
-			DropRuinedItem();
+			if (ZenModEnabled("ZenDropRuinedClothing"))
+			{
+				// If ruined, drop item on ground
+				if (newLevel == GameConstants.STATE_RUINED && GetHierarchyRootPlayer())
+				{
+					DropRuinedItem();
+				}
+			}			
 		}
-		#endif
 	}
 
 	void DropRuinedItem()
@@ -29,5 +30,19 @@ modded class Clothing
 			
 			GetInventory().DropEntity(InventoryMode.SERVER, pb, this);
 		}
+	}
+
+	override bool CanDisplayCargo()
+	{
+		if (GetHierarchyParent() != NULL)
+		{
+			CarScript car = CarScript.Cast(GetHierarchyParent());
+			if (car)
+			{
+				return false;
+			}
+		}
+
+		return super.CanDisplayCargo();
 	}
 }

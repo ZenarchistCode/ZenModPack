@@ -1,0 +1,20 @@
+ImageSetClass {
+ Name "zenblowtorch"
+ RefSize 256 256
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{8B58879F281B6683}ZenModPack/data/GUI/MiscAttachmentIcons/blowtorch.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass zenblowtorch {
+   Name "zenblowtorch"
+   Pos 0 0
+   Size 256 256
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

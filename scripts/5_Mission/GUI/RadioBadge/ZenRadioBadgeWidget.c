@@ -21,6 +21,9 @@ class ZenRadioBadgeWidget extends Managed
 
 	void ~ZenRadioBadgeWidget()
 	{
+		if (!GetGame())
+			return;
+		
 		if (m_fadeTimer && m_fadeTimer.IsRunning())
 			m_fadeTimer.Stop();
 

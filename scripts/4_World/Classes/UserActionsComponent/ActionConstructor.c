@@ -7,9 +7,6 @@ modded class ActionConstructor
         //! KNIFE GARDEN PLOTS 
         actions.Insert(ActionCreateGreenhouseGardenPlotZenKnife);
 
-        //! ZIPPO 
-        actions.Insert(ActionRefuelZenZippo);
-
         //! CAMO SHELTER
         actions.Insert(ActionPackZenCamoShelter);
 
@@ -47,43 +44,13 @@ modded class ActionConstructor
         //! IMMERSIVE SODAS 
         actions.Insert(ActionEmptySodaCan);
 
-        //! NOTES 
-        actions.Insert(ActionZenWritePaper);
-        actions.Insert(ActionZenReadNoteHands);
-        actions.Insert(ActionZenReadNoteTarget);
-
-        //! MUSIC 
-        actions.Insert(ActionToggleMusic);
-        actions.Insert(ActionMusicVolUp);
-        actions.Insert(ActionMusicVolDn);
-        actions.Insert(ActionBoomboxVolUp);
-        actions.Insert(ActionBoomboxVolDown);
-        actions.Insert(ActionStaticBoomboxTurnOn);
-        actions.Insert(ActionStaticBoomboxTurnOff);
-        actions.Insert(ActionStaticBoomboxNextSong);
-
-        //! SWISS KNIFE
-        actions.Insert(ActionZenSwissKnifeConvert_BaseTool);
-        actions.Insert(ActionZenSwissKnifeConvert_Knife);
-        actions.Insert(ActionZenSwissKnifeConvert_CanOpener);
-        actions.Insert(ActionZenSwissKnifeConvert_Screwdriver);
-        actions.Insert(ActionZenSwissKnifeConvert_SmallSaw);
-        actions.Insert(ActionZenSwissKnifeConvert_Lockpick);
-        actions.Insert(ActionZenSwissKnifeConvert_Scissors);
-
-        //! RAID ALARM
-        actions.Insert(ActionTurnOffZenRaidAlarm);
-        actions.Insert(ActionTurnOnZenRaidAlarm);
-        actions.Insert(ActionViewRaidAlarmGUI);
-        actions.Insert(ActionBuildZenRaidAlarmStation);
-        actions.Insert(ActionDismantleZenRaidAlarmStation);
-        actions.Insert(ActionDismantleZenRaidAlarmRadar);
-        actions.Insert(ActionFoldZenRaidAlarmKit);
-
         //! ENGRAVE WEAPON
         actions.Insert(ActionZenEngraveWeapon);
 
         //! FLINT 
         actions.Insert(ActionPrepareZenFlint);
+
+        //! UTILS 
+        actions.Insert(ActionZenDumpNearbyObjects);
     }
 }

@@ -12,6 +12,8 @@ modded class MissionServer
 	{
 		super.OnInit();
 
+		ZMPrint("[ZenModPack] MissionServer :: OnInit()");
+
 		//! UTILITIES 
 		ZEN_UNIQUE_PLAYER_ID_TRACKER = 0;
 		m_ZenPlayerUIDs = new map<string, int>;
@@ -19,7 +21,6 @@ modded class MissionServer
 		GetZenPlayerMessageConfig();
 		GetZenUpdateMessage();
 		GetZenUpdateMessagePersistence();
-		GetZenPollConfig();
 		GetZenServerDiversionConfig();
 		m_ModLogger = new ZenModLogger;
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenDeferredInit, 30000, false);
@@ -51,17 +52,12 @@ modded class MissionServer
 		//! ARTILLERY 
 		GetZenArtilleryConfig();
 
+		//! CAR COMPASS 
+		GetZenCarCompassConfig();
+
 		//! TREESPLOSIONS 
 		if (ZenModEnabled("ZenTreesplosions"))
 			GetTreesplosionsConfig();
-
-		//! NOTES 
-		if (ZenModEnabled("ZenNotes"))
-			GetZenNotesConfig();
-
-		//! MUSIC 
-		if (ZenModEnabled("ZenMusic"))
-			GetZenMusicConfig();
 
 		//! BASEBUILDING CONFIG 
 		if (ZenModEnabled("ZenBasebuildingConfig"))
@@ -112,17 +108,6 @@ modded class MissionServer
 				}
 			}
 		}
-
-		//! DISCORD API
-		GetZenDiscordConfig();
-	}
-
-	void ~MissionServer()
-	{
-		if (GetGame() && GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM))
-		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenDeferredInit);
-		}
 	}
 
 	override void OnMissionStart()
@@ -146,7 +131,9 @@ modded class MissionServer
 	override void OnMissionFinish()
 	{
 		super.OnMissionFinish();
-		
+
+		ZMPrint("[ZenModPack] OnMissionFinish");
+
 		//! REPAIR WELLS 
 		if (ZenModEnabled("ZenRepairWells"))
 			GetZenWellsConfig().Save();
@@ -165,9 +152,25 @@ modded class MissionServer
 
 		//! UTILITIES
 		GetZenUpdateMessagePersistence().Save();
-		GetZenPollConfig().UpdateResults();
 
 		//PrintZenPlayerDropCounts();
+
+		if (GetGame() && GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM))
+		{
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenDeferredInit);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Zen_Deforestation);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ExtinguishFire);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(StopFire);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DumpFirewoodObjects);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SetupWoodPiles);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DumpChickenCoopObjects);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SetupChickenCoops);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DumpStaticBarbedWireObjects);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SetupStaticBarbedWireDamageZones);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SendZenServerDiversionConfig);
+		}
+
+		ZMPrint("[ZenModPack] OnMissionFinish - saved all config successfully.");
 	}
 
 	//! TODO: Prints any players who dropped more than X items during the session
@@ -249,23 +252,6 @@ modded class MissionServer
 		{
 			ZenModLogger.Log("Player logged in: " + player.GetCachedName() + " (" + player.GetCachedID() + ") (pos=" + player.GetPosition() + ")", "login");
 
-			//! DISCORD WATCHLIST
-			string reason;
-			if (GetZenDiscordConfig().PlayerWatchlist.Find(identity.GetId(), reason))
-			{
-				ZenDiscordMessage playerWatchlistMsg = new ZenDiscordMessage("Watchlist");
-				playerWatchlistMsg.SetTitle(identity.GetName() + " " + GetZenDiscordConfig().JustLoggedIn + " " + GetZenDiscordConfig().ServerName);
-				playerWatchlistMsg.SetMessage(GetZenDiscordConfig().Explanation + "\n\n" + reason + "\n\n" + GetZenDiscordConfig().GetMapLinkPosition(player.GetPosition()) + "\n\n" + identity.GetId() + "\n\n[" + identity.GetPlainId() + "](http://steamcommunity.com/profiles/" + identity.GetPlainId() + ")");
-				playerWatchlistMsg.SetColor(255, 255, 0);
-
-				foreach(string s : GetZenDiscordConfig().AdminWebhooks)
-				{
-					playerWatchlistMsg.AddWebhook(s);
-				}
-
-				GetZenDiscordAPI().SendMessage(playerWatchlistMsg);
-			}
-
 			//! SERVER DIVERSION
 			if (GetZenServerDiversionConfig().ServerIP != "")
 			{
@@ -286,9 +272,6 @@ modded class MissionServer
 
 		// Delay sending of client config to avoid spamming new client login along with data from other mods
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendNotificationConfig, 500 + Math.RandomInt(0, 500), false, player);
-
-		if (ZenModEnabled("ZenMusic"))
-			SendZenMusicConfig(player, identity);
 
 		if (ZenModEnabled("ZenBasebuildingConfig"))
 			SendZenBasebuildingConfig(player, identity);
@@ -386,6 +369,7 @@ modded class MissionServer
 		{
 			// Ignite fire
 			fire.StartFire(true);
+			fire.SetTemperatureDirect(FireplaceBase.PARAM_MIN_FIRE_TEMPERATURE);
 			// Put fire out after 12 seconds
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ExtinguishFire, 12000, false, fire);
 			GetGame().CreateObjectEx("ClutterCutterFireplace", fire.GetPosition(), ECE_PLACE_ON_SURFACE|ECE_NOLIFETIME);
@@ -409,7 +393,8 @@ modded class MissionServer
 		if (fire)
 		{
 			// Stop fire burning
-			fire.StopFire();
+			fire.StopFire(FireplaceFireState.EXTINGUISHED_FIRE);
+			fire.SetLifetimeMax(60);
 			fire.SetLifetime(60);
 			int attachments_count = fire.GetInventory().AttachmentCount();
 
@@ -419,8 +404,12 @@ modded class MissionServer
 				ItemBase item = ItemBase.Cast(fire.GetInventory().GetAttachmentFromIndex(i));
 
 				if (item)
-					item.DeleteSafe();
+				{
+					item.SetHealth(0); //DeleteSafe();
+				}
 			}
+
+			fire.SetHealth(0);
 		}
 	}
 
@@ -1100,13 +1089,7 @@ modded class MissionServer
 		return spawnedItem;
 	}
 
-	//! MUSIC 
-	void SendZenMusicConfig(PlayerBase player, PlayerIdentity identity) 
-	{
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenMusicCfgClient", new Param1<bool>(GetZenMusicConfig().AllowCarInventory), true, player.GetIdentity());
-	}
-
-	//! BASEBULDING CONFIG
+	//! BASEBUILDING CONFIG
 	void SendZenBasebuildingConfig(PlayerBase player, PlayerIdentity identity) 
 	{
 		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenBasebuildingCfgClient", new Param1<ref ZenBasebuildingConfig>(GetZenBasebuildingConfig()), true, player.GetIdentity());

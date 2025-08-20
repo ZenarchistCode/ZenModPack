@@ -4,6 +4,38 @@ Check the Wiki guide for details & instructions: https://github.com/ZenarchistCo
 
 Change Notes:
 
+20th August 2025:
+ZenDiscordAPI:
+- Moved into its own .pbo file
+- Fixed JSON config file not auto-generating if Utilities folder doesn't exist in Zenarchist folder
+- To generate a new config with the latest default parameters, simply delete your old file + run server
+- Updated GitHub JSON config template file and descriptions
+- Changed default config to have all the optional immersion settings turned off - with new default settings:
+  - All you need is a raid station, a Field Transceiver, and a car battery attached
+  - You no longer need any tools or a territory to build/dismantle a raid alarm
+  - You no longer need to connect a raid dish before you can connect to Discord
+  - You no longer need to have a clear view of sky above raid dish for Discord alerts to work
+  - Turn these settings on for added immersion, but this will improve ease of setting up the mod for newbies
+- Added #define ZENDISCORDAPI to modpack (this is inconsistent and usually only works if you repack the mod)
+- Added compatibility with my ZenTerritories mod contained in my ZenModPack Enormous Package mod
+- Added how long the battery of the raid station will last to the in-game item tooltip/description (days/hours/etc)
+- Added ability to set energy usage per second (604800 max energy means 1.0 = ~1 week of power from full battery)
+- Added ability to configure the tools used for building/dismantling raid station, including bare hands
+- Added ability to type anything into webhook slots, but text will be validated when OK is clicked
+  - Should be able to CTRL + V paste text now without using the button, or type the link manually
+  - But any link which does not start with "https://discord.com/api/webhooks/" will be ignored as it's invalid API
+
+ZenAntiCombatLogout:
+- Fixed unpinning smoke grenades triggering combat log timer
+
+ZenModPack:
+- Fixed several defines not working properly when individual .pbos were removed from modpack and some residual repeat code from mods I've moved into their own pbos.
+
+9th June 2025:
+- ZenSleep changes:
+- Fixed some more nullpointer errors under certain circumstances
+- Set MaximumSecsBuzzedByCombat to zero by default as it can be confusing for players not understanding why they can't sleep after getting attacked by zeds
+
 8th June 2025:
 - Fixed Winchester rifles despawning (my bad, sorry)
 - Fixed nullpointer in ZenSleep mod when sleeping in tents/modded objects
@@ -80,3 +112,5 @@ Change Notes:
 
 *** IMPORTANT NOTES: ***
 - I recommend only turning any of the mods in the Persistent mod list such as ZenSleep, ZenEngrave & ZenComboLock mods on/off AFTER you have freshly wiped your server to avoid potential persistence corruption issues as these 3 mods save server-side data directly onto items/players in the game's database files. If you turn any of these 3 mods on/off in-between server wipes on an active server then you may encounter potential server instability requiring a server wipe to fix it. These 3 mods are disabled by default to avoid any issues when someone who hasn't read this readme file adds my modpack to a new server. If you wish to run these mods on your server then I recommend only turning them on BEFORE any players load in to your freshly wiped server.
+
+PBO Compiler Files To Include: *.emat;*.edds;*.ptc;*.c;*.imageset;*.layout;*.ogg;*.paa;*.fnt;*.tga;*.xml;*.csv;*.rvmat;*.map;*.html

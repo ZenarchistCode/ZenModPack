@@ -1,36 +1,36 @@
 modded class Land_FuelStation_Feed
 {
 	//! REPAIR PUMPS
-	protected bool m_IsRepaired = false;
+	protected bool m_ZenIsRepaired = false;
 
 	// This is called whenever a new Pump is created (ie. loaded in on server startup)
 	void Land_FuelStation_Feed()
 	{
 		if (!ZenModEnabled("ZenRepairPumps"))
 		{
-			m_IsRepaired = true;
+			m_ZenIsRepaired = true;
 			return;
 		}
 
 		#ifdef SERVER
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(SetupRepairablePump, 2500, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(SetupZenRepairablePump, 2500, false);
 		#endif
 	}
 
 	// Returns this Pump's repaired state
-	bool IsRepaired()
+	bool IsZenRepaired()
 	{
-		return m_IsRepaired;
+		return m_ZenIsRepaired;
 	}
 
 	// Sets this Pump's repaired state
-	void SetRepaired(bool repaired)
+	void SetZenRepaired(bool repaired)
 	{
-		m_IsRepaired = repaired;
+		m_ZenIsRepaired = repaired;
 	}
 
 	// Sets this Pump's repaired state.
-	void SetupRepairablePump()
+	void SetupZenRepairablePump()
 	{
 		int ts = JMDate.Now(false).GetTimestamp();
 		int idx = GetZenPumpsConfig().GetRepairablePumpIndex(GetPosition());
@@ -56,11 +56,35 @@ modded class Land_FuelStation_Feed
 
 		if (Pump)
 		{
-			m_IsRepaired = Pump.Repaired;
+			m_ZenIsRepaired = Pump.Repaired;
 		}
 		else
 		{
-			m_IsRepaired = !GetZenPumpsConfig().DisablePumpsByDefault;
+			m_ZenIsRepaired = !GetZenPumpsConfig().DisablePumpsByDefault;
 		}
+	}
+
+	// Checks if this can be used, and if not, informs player
+	bool Zen_CanBeUsed(notnull PlayerBase player)
+	{
+		if (!ZenModEnabled("ZenRepairPumps"))
+		{
+			return true;
+		}
+
+		#ifdef EXPANSIONMODCORE
+		if (player.Expansion_IsInSafeZone())
+		{
+			return true;
+		}
+		#endif
+
+		if (GetGame().IsDedicatedServer() && !IsZenRepaired())
+		{
+			player.Zen_SendMessage(GetZenPumpsConfig().MessagePumpNotWork);
+			return false;
+		}
+
+		return true;
 	}
 }

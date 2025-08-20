@@ -21,4 +21,4 @@ class ZenNotifications
 			NotificationSystem.AddNotificationExtended(time, title, message, icon);
 		}
 	}
-};
+}

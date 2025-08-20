@@ -1,6 +1,8 @@
 modded class NotificationUI
 {
-	protected static ref EffectSound m_StaticLoop;
+	static ref array<ref ZenNotification> ZenKeywords;
+
+	protected static ref EffectSound m_ZenStaticLoop;
 	protected static ref map<string, string> ZEN_NOTIFICATION_SOUNDSETS;
 
 	// Pre-load any notification soundsets
@@ -26,7 +28,7 @@ modded class NotificationUI
 				continue;
 
 			string keywords = "";
-			GetGame().ConfigGetText("CfgSoundSets " + soundset_name + " soundKeywords", keywords);
+			GetGame().ConfigGetText("CfgSoundSets " + soundset_name + " soundZenKeywords", keywords);
 			if (keywords == "")
 				continue;
 
@@ -38,6 +40,9 @@ modded class NotificationUI
 	override void AddNotification(NotificationRuntimeData data)
 	{
 		super.AddNotification(data);
+
+		if (!GetGame().IsClient())
+			return;
 
 		// Hide icon image background if there is no image
 		Widget notification = m_Notifications.Get(data);
@@ -55,20 +60,86 @@ modded class NotificationUI
 
 		if (!CheckPlayZenNotificationSoundset(data.GetDetailText()))
 		{
-			// Play notification sound
-			if (!GetGame().IsDedicatedServer())
+			// Play notification sound on local player (not synced; other players cannot hear this)
+			if (CheckPlayZenNotificationNormal(data.GetDetailText()) && GetGame().GetPlayer())
 			{
-				if (GetGame().GetPlayer())
-				{
-					SEffectManager.PlaySoundOnObject("Zen_NotifySoundset", GetGame().GetPlayer());
-				}
+				SEffectManager.PlaySoundOnObject("Zen_NotifySoundset", GetGame().GetPlayer());
 			}
 		}
 	}
 
+	static bool CheckPlayZenNotificationNormal(string keywords)
+	{
+		keywords = Widget.TranslateString(keywords);
+
+		if (!ZenKeywords)
+		{
+			return true;
+		}
+
+		string loweredMsg = keywords;
+		loweredMsg.ToLower();
+
+		foreach (ZenNotification n : ZenKeywords)
+		{
+			string loweredKeyword = n.Keyword;
+			loweredKeyword.ToLower();
+
+			if (loweredMsg.Contains(loweredKeyword))
+			{
+				return n.PlaySound; // Only true if PlaySound was set to true in config
+			}
+		}
+
+		return true; // No keyword match or none with PlaySound = true
+	}
+
 	static bool CheckPlayZenNotificationSoundset(string keywords)
 	{
+		keywords = Widget.TranslateString(keywords);
 		//keywords = "Can anybody hear me? Over!"; // For testing.
+
+		string soundset_name = GetZenSoundSetForZenKeywords(keywords);
+		if (soundset_name == "")
+			return false;
+
+		int playOnRadio = GetGame().ConfigGetInt("CfgSoundSets " + soundset_name + " playOnRadio");
+		if (playOnRadio == 1)
+			return true; // Don't play soundset OR notification osund here - use ZenRadioPlugin to play it on the radios.
+
+		// Play voice effect
+		EffectSound voiceEffect = SEffectManager.PlaySoundOnObject(soundset_name, GetGame().GetPlayer(), 0, 0.15, false);
+					
+		// Check if we should play static effect for radio messages etc
+		int playStatic = GetGame().ConfigGetInt("CfgSoundSets " + soundset_name + " playStatic");
+					
+		if (playStatic == 1 && voiceEffect && voiceEffect.Zen_GetAbstractWave())
+		{
+			//voiceEffect.SetSoundWaveKind(WaveKind.WAVESPEECH); // TODO: Find out how to auto-apply a "radio" tinny high-pass filter sound 
+	
+			// Get voice effect duration
+			int voiceAudioDuration = voiceEffect.Zen_GetAbstractWave().GetLength() + 2;
+
+			// Play static loop
+			GetGame().GetPlayer().PlaySoundSetLoop(m_ZenStaticLoop, "personalradio_staticnoise_SoundSet", 0, 0);
+			EffectSound staticEffect = SEffectManager.PlaySoundOnObject("tuneRadio_SoundSet", GetGame().GetPlayer(), 0, 0.15, false);
+			if (staticEffect)
+				staticEffect.SetAutodestroy(true);
+
+			// Schedule end of static loop
+			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StopStaticSoundLoop, voiceAudioDuration * 1000, false);
+		}
+
+		if (voiceEffect)
+			voiceEffect.SetAutodestroy(true);
+
+		return true;
+	}
+
+	static string GetZenSoundSetForZenKeywords(string keywords)
+	{
+		if (!ZEN_NOTIFICATION_SOUNDSETS)
+			return "";
 
 		for (int i = 0; i < ZEN_NOTIFICATION_SOUNDSETS.Count(); i++)
 		{
@@ -78,38 +149,24 @@ modded class NotificationUI
 				string soundset_name = ZEN_NOTIFICATION_SOUNDSETS.GetElement(i);
 				if (GetGame().ConfigIsExisting("CfgSoundSets " + soundset_name))
 				{
-					// Play voice effect
-					EffectSound voiceEffect = SEffectManager.PlaySoundOnObject(soundset_name, GetGame().GetPlayer(), 0, 0.15, false);
-					
-					// Check if we should play static effect for radio messages etc
-					int playStatic = GetGame().ConfigGetInt("CfgSoundSets " + soundset_name + " playStatic");
-					
-					if (playStatic == 1 && voiceEffect && voiceEffect.Zen_GetAbstractWave())
-					{
-						//voiceEffect.SetSoundWaveKind(WaveKind.WAVESPEECH); // TODO: Find out how to auto-apply a "radio" tinny high-pass filter sound 
-	
-						// Get voice effect duration
-						int voiceAudioDuration = voiceEffect.Zen_GetAbstractWave().GetLength() + 2;
-
-						// Play static loop
-						GetGame().GetPlayer().PlaySoundSetLoop(m_StaticLoop, "personalradio_staticnoise_SoundSet", 0, 0);
-
-						// Schedule end of static loop
-						GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StopStaticSoundLoop, voiceAudioDuration * 1000, false);
-						return true;
-					}
+					return soundset_name;
 				}
 			}
 		}
 
-		return false;
+		return "";
 	}
 
 	static void StopStaticSoundLoop()
 	{
-		if (m_StaticLoop)
+		if (m_ZenStaticLoop)
 		{
-			m_StaticLoop.Stop();
+			EffectSound staticEffect = SEffectManager.PlaySoundOnObject("tuneRadio_SoundSet", GetGame().GetPlayer(), 0, 0.15, false);
+			if (staticEffect)
+				staticEffect.SetAutodestroy(true);
+
+			m_ZenStaticLoop.SetAutodestroy(true);
+			m_ZenStaticLoop.Stop();
 		}
 	}
-};
+}

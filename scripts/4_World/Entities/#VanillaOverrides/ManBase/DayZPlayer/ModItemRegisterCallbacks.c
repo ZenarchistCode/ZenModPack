@@ -6,17 +6,14 @@ modded class ModItemRegisterCallbacks
 
 		//! CHESS
 		pType.AddItemInHandsProfileIK("Zen_ChessBoard", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/BatteryCar.anm");
-	
-		//! MUSIC 
-		pType.AddItemInHandsProfileIK("Zen_BoomBox", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/vehicles/BatteryTruck.anm");
-	
-		//! RAID ALARM
-		pType.AddItemInHandsProfileIK("Zen_RaidAlarmStationKit", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/vehicles/BatteryTruck.anm");
 	}
 
 	override void RegisterOneHanded(DayZPlayerType pType, DayzPlayerItemBehaviorCfg pBehavior)
 	{
 		super.RegisterOneHanded(pType, pBehavior);
+
+		//! DEXIES 
+		pType.AddItemInHandsProfileIK("Zen_DexBottle", "dz/anims/workspaces/player/player_main/props/player_main_1h_pills.asi", pBehavior, "dz/anims/anm/player/ik/gear/VitaminBottle.anm");
 
 		//! NBC CASE
 		pType.AddItemInHandsProfileIK("Zen_NBCCase",  "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/protector_case.anm");	
@@ -28,30 +25,11 @@ modded class ModItemRegisterCallbacks
 		pType.AddItemInHandsProfileIK("ZenFlask", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
 		pType.AddItemInHandsProfileIK("Empty_ZenFlask", "dz/anims/workspaces/player/player_main/weapons/player_main_1h_pipe.asi", pBehavior, "dz/anims/anm/player/ik/gear/carp_live.anm");
 
-		//! SLEEPING BAGS
-		pType.AddItemInHandsProfileIK("ZenSleepingBagPackedBase", "dz/anims/workspaces/player/player_main/player_main_2h.asi", pBehavior, "dz/anims/anm/player/ik/two_handed/BatteryCar.anm");
-
-		//! SWISS KNIFE
-		pType.AddItemInHandsProfileIK("ZenSwissKnife", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/screwdriver.anm");
-		pType.AddItemInHandsProfileIK("ZenSwissKnife_Lockpick", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/screwdriver.anm");
-		pType.AddItemInHandsProfileIK("ZenSwissKnife_CanOpener", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/screwdriver.anm");
-	
 		//! RUNES 
 		pType.AddItemInHandsProfileIK("ZenRune_Base", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/SmallStone.anm");
 
 		//! RAYBANS
 		pType.AddItemInHandsProfileIK("ZenRaybans_ColorBase", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/aviators_glasses.anm");
-
-		//! MUSIC 
-		pType.AddItemInHandsProfileIK("Zen_Cassette_Base", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/paper.anm");
-		pType.AddItemInHandsProfileIK("Zen_CassetteCase", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/cleaning_kit_wood.anm");
-		pType.AddItemInHandsProfileIK("Zen_Walkman", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/cleaning_kit_wood.anm");
-
-		//! ZIPPO
-		pType.AddItemInHandsProfileIK("ZenZippoLighter", "dz/anims/workspaces/player/player_main/props/player_main_1h_lighter.asi", pBehavior,	"dz/anims/anm/player/ik/gear/petrol_lighter.anm");
-
-		//! NOTES
-		pType.AddItemInHandsProfileIK("ZenNote", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/paper.anm");
 
 		//! CHESS 
 		pType.AddItemInHandsProfileIK("Zen_ChessPieceBase", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/9v_battery.anm");
@@ -66,9 +44,6 @@ modded class ModItemRegisterCallbacks
         pType.AddItemInHandsProfileIK("Zen_CamoNet_Top", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/GhillieBushrag.anm");
         pType.AddItemInHandsProfileIK("Zen_CamoNet_Hood", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/dirtbike_visor.anm");
         pType.AddItemInHandsProfileIK("Zen_CamoNet_Strip", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/burlap_strips.anm");
-	
-		//! RAID ALARM
-		pType.AddItemInHandsProfileIK("Zen_RaidAlarmRadarKit", "dz/anims/workspaces/player/player_main/player_main_heavy.asi",	pBehavior, "dz/anims/anm/player/ik/heavy/wooden_crate.anm");
 
 		//! FLINT 
 		pType.AddItemInHandsProfileIK("ZenFlint", "dz/anims/workspaces/player/player_main/player_main_1h.asi", pBehavior, "dz/anims/anm/player/ik/gear/WoodenStick.anm");
@@ -116,7 +91,7 @@ modded class ModItemRegisterCallbacks
 		//! TIRE RACK
 		pType.AddItemInHandsProfileIK("Zen_TireRack", "dz/anims/workspaces/player/player_main/player_main_heavy.asi", pBehavior, "dz/anims/anm/player/ik/heavy/car_tent_packed.anm");
 	
-		//! WORKBENCH 
-		pType.AddItemInHandsProfileIK("Zen_CarWorkbenchKit", "dz/anims/workspaces/player/player_main/player_main_heavy.asi", pBehavior, "dz/anims/anm/player/ik/heavy/wooden_crate.anm");
+		//! MY GENERIC KITS (eg. car workbench)
+		pType.AddItemInHandsProfileIK("ZenKitBoxBase", "dz/anims/workspaces/player/player_main/player_main_heavy.asi", pBehavior, "dz/anims/anm/player/ik/heavy/wooden_crate.anm");
 	}
 }

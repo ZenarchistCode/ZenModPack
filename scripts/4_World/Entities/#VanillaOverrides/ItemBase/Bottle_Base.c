@@ -19,9 +19,6 @@ modded class Bottle_Base
 		//! CATCH RAIN 
 		AddAction(ActionFillBottleRainBase);
 		AddAction(ActionFillRainGround);
-
-		//! ZIPPO
-		AddAction(ActionRefuelZenZippo);
 	}
 
 	//! CATCH RAIN

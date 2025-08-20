@@ -302,26 +302,19 @@ class ZenFunctions
 	//! Orientates given object to vector pos. Thanks ChatGPT ;) I might have failed math, but I still know how to write a good prompt
 	static void OrientObjectToPosition(Object object, vector targetPos, vector oriOffset = "0 0 0")
 	{
-		// Calculate direction vector from object to target
 		vector startPos = object.GetPosition();
 		vector direction = targetPos - startPos;
 
-		// Calculate yaw angle in radians. Note that in Enfusion's coordinate system,
-		// Z is typically the forward axis and X is the side axis.
-		float yawRadians = Math.Atan2(direction[0], direction[2]); // [0] is X, [2] is Z
-
-		// Convert radians to degrees
+		float yawRadians = Math.Atan2(direction[0], direction[2]);
 		float yawDegrees = yawRadians * Math.RAD2DEG;
 
-		// Adjust the angle to be between 0 and 360 degrees if necessary
 		if (yawDegrees < 0)
 			yawDegrees += 360;
 
-		// Set object orientation's yaw angle
-		vector objectOri = object.GetOrientation();
-		objectOri[0] = yawDegrees;
+		// Build orientation vector directly
+		vector newOri = Vector(yawDegrees + oriOffset[0], oriOffset[1], oriOffset[2]);
 
-		object.SetOrientation(objectOri + oriOffset);
+		object.SetOrientation(newOri);
 	}
 
 	//! Generate a random point inside a circle. minDistance = minimum distance in meters from center (again thanks ChatGPT)

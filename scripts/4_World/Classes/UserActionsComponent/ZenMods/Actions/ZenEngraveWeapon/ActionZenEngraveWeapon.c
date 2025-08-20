@@ -4,7 +4,7 @@ class ActionZenEngraveWeaponCB : ActionContinuousBaseCB
 	{
 		m_ActionData.m_ActionComponent = new CAContinuousTime(15);
 	}
-};
+}
 
 class ActionZenEngraveWeapon : ActionContinuousBase
 {
@@ -59,10 +59,13 @@ class ActionZenEngraveWeapon : ActionContinuousBase
 		if (!rifle)
 			return;
 
-		if (rifle.SetZenEngravedName(player.GetCachedName()))
+		if (rifle.SetZenEngravedName(player.GetCachedName(), player.GetIdentity()))
+		{
 			action_data.m_MainItem.SetHealth(0);
-		else
+		} else
+		{
 			player.Zen_SendMessage("You need to change your name from the default 'Survivor' to engrave your name!");
+		}
 	}
 
 	override string GetSoundCategory(ActionData action_data)

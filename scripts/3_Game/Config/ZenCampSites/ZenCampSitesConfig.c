@@ -123,6 +123,7 @@ class ZenCampSitesConfig
 		// Insert default camps based on map
 		if (mapName == "chernarusplus")
 		{
+
 		} else
 		if (mapName == "enoch")
 		{

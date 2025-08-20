@@ -5,13 +5,7 @@ modded class FireplaceBase
 	{
 		//! FIRE FUEL
 		m_FireConsumableTypes.Insert(ATTACHMENT_ZENFUEL, new FireConsumableType(ATTACHMENT_ZENFUEL, 500, true, ATT_FIREFUEL));
-
-		//! NOTES
-		m_FireConsumableTypes.Insert(ATTACHMENT_ZENNOTE, new FireConsumableType(ATTACHMENT_ZENNOTE, 10, true, "ZenNote"));
 	}
-
-	//! NOTES
-	typename ATTACHMENT_ZENNOTE = ZenNote;
 
 	//! FIRE FUEL
 	const static string ATT_FIREFUEL = "ZenFuel";

@@ -2,7 +2,7 @@ class ZenNotificationsConfig
 {
 	// Config location
 	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
-	private const static string zenConfigName = "NotificationsConfig.json";
+	private const static string zenConfigName = "ZenNotificationsConfig.json";
 
 	// Define notification keywords
 	static bool HasReceivedServerConfig = false;
@@ -67,15 +67,17 @@ class ZenNotification
 	string Title;
 	string Icon;
 	bool HideKeyword;
+	bool PlaySound;
 
-	void ZenNotification(string k, string t = "#servermessage", string i = "#servericon", bool hide = false)
+	void ZenNotification(string k, string t = "#servermessage", string i = "#servericon", bool hide = false, bool playSound = true)
 	{
 		Keyword = k;
 		Title = t;
 		Icon = i;
 		HideKeyword = hide;
+		PlaySound = playSound;
 	}
-};
+}
 
 // Save config data
 static ref ZenNotificationsConfig m_ZenNotificationsConfig;
@@ -90,4 +92,4 @@ static ZenNotificationsConfig GetZenNotificationsConfig()
 	}
 
 	return m_ZenNotificationsConfig;
-};
+}

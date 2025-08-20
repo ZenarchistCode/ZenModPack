@@ -14,18 +14,12 @@ modded class ActionDeployObject
 			return shelter && shelter.HasAllMaterials();
 		}
 
-		//! NOTES 
-		#ifndef SERVER
-		if (player.IsPlacingLocal() && item.IsKindOf("Paper"))
-			return true;
-		#endif
-
 		if (!super.ActionCondition(player, target, item))
 		{
 			return false;
 		}
 
-		if (!ZenModEnabled("ZenBasebuldingConfig"))
+		if (!ZenModEnabled("ZenBasebuildingConfig"))
 		{
 			return true;
 		}
@@ -82,16 +76,4 @@ modded class ActionDeployObject
 
 		return true;
 	}
-
-	override void SetupAnimation(ItemBase item)
-    {
-		//! NOTES
-        if (item.IsKindOf("Paper"))
-        {
-            m_CommandUID = DayZPlayerConstants.CMD_ACTIONFB_INTERACT;
-            return;
-        }
-
-        super.SetupAnimation(item);
-    }
 }

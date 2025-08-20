@@ -162,3 +162,14 @@ modded class SKS_Bayonet
 		AddAction(ActionZenEngraveWeapon);
 	}
 }
+
+modded class BoneKnife
+{
+	override void SetActions()
+	{
+		super.SetActions();
+
+		AddAction(ActionCreateGreenhouseGardenPlotZenKnife);
+		AddAction(ActionZenEngraveWeapon);
+	}
+}

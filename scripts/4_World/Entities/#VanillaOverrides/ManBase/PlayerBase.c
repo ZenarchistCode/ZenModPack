@@ -15,12 +15,6 @@ modded class PlayerBase
 
 		//! SHARED
 		RegisterNetSyncVariableInt("m_ZenPlayerUID");
-
-		//! REPAIR WELLS
-		RegisterNetSyncVariableBool("m_ZenPreventWellUsage");
-
-		//! REPAIR PUMPS
-		RegisterNetSyncVariableBool("m_ZenPreventPumpUsage");
 	}
 
 	void ~PlayerBase()
@@ -28,10 +22,15 @@ modded class PlayerBase
 		if (!GetGame())
 			return;
 
-		if (!GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY))
+		if (!GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM))
 			return; 
 
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(ImmersiveLoginFailsafe);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ImmersiveLoginFailsafe);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenConcussionGrenadeManager);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenLoginOpenEyesClient);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Zen_SendMessage);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(CheckZenPlayerMsgConfig);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SendZenPlayerMessageReply);
 	}
 
 	override void OnVariablesSynchronized()
@@ -119,7 +118,10 @@ modded class PlayerBase
             Param3<bool, int, int> autoRunParams;
 
             if(!ctx.Read(autoRunParams)) 
+			{
+				Error("Failed to read AUTORUN param data.");
                 return;
+			}
 
             bool isRunning  = autoRunParams.param1;
             int movementIdx = autoRunParams.param2;
@@ -127,6 +129,7 @@ modded class PlayerBase
 
             GetInputController().OverrideMovementSpeed(isRunning, movementIdx);
             GetInputController().OverrideMovementAngle(isRunning, angle);
+			return;
         }
 
 		// Client-side lighting config (unused vanilla since they added JSON cfg for this - repurposed for my config)
@@ -135,10 +138,14 @@ modded class PlayerBase
 			Param1<int> lighting_ClientParams;
 
 			if (!ctx.Read(lighting_ClientParams))
-				return;
+			{
+				Error("Failed to read LIGHTING param data.");
+                return;
+			}
 
 			m_ZenLightingConfigID = lighting_ClientParams.param1;
 			UpdateLighting();
+			return;
 		}
     }
 
@@ -166,19 +173,6 @@ modded class PlayerBase
 	override void OnUnconsciousStart()
 	{
 		super.OnUnconsciousStart();
-
-        #ifndef SERVER
-		//! NOTES
-        UIScriptedMenu menu = GetGame().GetUIManager().GetMenu();
-        if (!menu)
-			return;
-
-        ZenNoteGUI noteMenu = ZenNoteGUI.Cast(menu);
-        if (noteMenu)
-        {
-            noteMenu.OnExitBtnClick();
-        }
-        #endif
 
 		//! IMMERSIVE LOGIN 
 		if (!ZenLoginHasFinished())
@@ -301,7 +295,7 @@ modded class PlayerBase
 		m_ZenConcussionGrenadeUnconTime = 0;
 
 		// Schedule uncon manager
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenConcussionGrenadeManager, 1000, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenConcussionGrenadeManager, 1000, false);
 	}
 
 	// This 'keeps' the player uncon until the duration expires, then wakes them up.
@@ -319,7 +313,7 @@ modded class PlayerBase
 			SetHealth("", "Shock", 0);
 
 			// Player needs to remain uncon - re-schedule check every 1 secs
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenConcussionGrenadeManager, 1000, false);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenConcussionGrenadeManager, 1000, false);
 		}
 	}
 
@@ -384,36 +378,36 @@ modded class PlayerBase
         return m_AutoRunning;
     }
 
-	//! REPAIR WELLS 
-	protected bool m_ZenPreventWellUsage = false; // If true, then the player is stopped from using wells client-side.
-
-	// Set whether or not the player is to be prevented from using the well.
-	void SetPreventWellUsage(bool stop)
+	//! REPAIR WELLS & PUMPS HELPER FUNCTION (ZenModEnabled check is in the well/pump object itself)
+	bool IsAllowedZenWellOrPumpUsage(ActionData action_data)
 	{
-		m_ZenPreventWellUsage = stop;
-		SetSynchDirty();
-	}
+		if (!action_data || !action_data.m_Target || !action_data.m_Target.GetObject() || !GetGame().IsDedicatedServer())
+			return true;
+		
+		Well wellObj = NULL;
+		Land_FuelStation_Feed pumpObj = NULL;
 
-	// Returns whether or not the player is currently prevented from using the well.
-	bool IsPreventedWellUsage()
-	{
-		return m_ZenPreventWellUsage;
-	}
+		if (action_data.m_Target.GetObject().IsInherited(Well))
+		{
+			wellObj = Well.Cast(action_data.m_Target.GetObject());
+		}
+		else 
+		if (action_data.m_Target.GetObject().IsInherited(Land_FuelStation_Feed))
+		{
+			pumpObj = Land_FuelStation_Feed.Cast(action_data.m_Target.GetObject());
+		}
 
-	//! REPAIR PUMPS 
-	protected bool m_ZenPreventPumpUsage = false; // If true, then the player is stopped from using pumps client-side.
-
-	// Set whether or not the player is to be prevented from using the fuel pump.
-	void SetPreventPumpUsage(bool stop)
-	{
-		m_ZenPreventPumpUsage = stop;
-		SetSynchDirty();
-	}
-
-	// Returns whether or not the player is currently prevented from using the fuel pump.
-	bool IsPreventedPumpUsage()
-	{
-		return m_ZenPreventPumpUsage;
+		if (wellObj)
+		{
+			return wellObj.Zen_CanBeUsed(this);
+		}
+		else 
+		if (pumpObj)
+		{
+			return pumpObj.Zen_CanBeUsed(this);
+		}
+		
+		return true;
 	}
 
 	//! INVENTORY ANIMATION
@@ -464,7 +458,9 @@ modded class PlayerBase
 	void ZenCauseOfDeath_OnPlayerLoaded()
 	{
 		if (GetGame().IsDedicatedServer() && (ZenModEnabled("ZenCauseOfDeath") || ZenModEnabled("ZenGraves")))
+		{
 			m_CauseOfDeath = GetCauseOfDeathConfig().GetCauseOfDeath("unknown").CauseMessage;
+		}
 	}
 
 	string GetCauseOfDeath()
@@ -604,9 +600,9 @@ modded class PlayerBase
 		if (GetGame().IsClient())
 		{
 			if (GetGame())
-				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ImmersiveLoginFailsafe, 10000);
+				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ImmersiveLoginFailsafe, 10000);
 
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenLoginBegin);
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenLoginBegin);
 			return;
 		}
 
@@ -731,17 +727,19 @@ modded class PlayerBase
 
 		m_ZenLoginPPEEffect.SetEffectValues(200);
 		GetGame().GetSoundScene().SetSoundVolume(0, 0);
+		//ZenFunctions.SetPlayerControl(false);
 
 		// Schedule "wake up" 6 seconds after player loads
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenLoginOpenEyesClient, 6000, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenLoginOpenEyesClient, 6000, false);
 	}
 
 	// Trigger eye-open fx and enable sound
 	protected void ZenLoginOpenEyesClient()
 	{
 		// Start opening eyes fx, and slowly fade-in volume over 5 secs
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenLoginUpdateSpawnDarknessLevel, 1, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenLoginUpdateSpawnDarknessLevel, 1, false);
 		GetGame().GetSoundScene().SetSoundVolume(g_Game.m_volume_sound, 5);
+		//ZenFunctions.SetPlayerControl(true);
 		HAS_LOGGED_IN_THIS_SESSION = true;
 	}
 
@@ -775,7 +773,7 @@ modded class PlayerBase
 		}
 
 		// Re-schedule update loop
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenLoginUpdateSpawnDarknessLevel, 1, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenLoginUpdateSpawnDarknessLevel, 1, false);
 	}
 
 	void ZenImmersiveLoginFinished()
@@ -903,7 +901,16 @@ modded class PlayerBase
 	void SaveZenSkeletonItems()
 	{
 		if (!ZenModEnabled("ZenGraves"))
+		{
 			return;
+		}
+
+		#ifdef EXPANSIONMODCORE
+		if (Expansion_IsInSafeZone())
+		{
+			return;
+		}
+		#endif
 
 		// Check that we have an identity
 		if (!HasGraveIdentity())
@@ -1134,7 +1141,7 @@ modded class PlayerBase
 	// Sends a text message with X miliseconds delay
 	void Zen_SendMessageDelayed(string message, float timeDelay)
 	{
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(Zen_SendMessage, timeDelay, false, message);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zen_SendMessage, timeDelay, false, message);
 	}
 
 	// Print a client-side white text message
@@ -1143,6 +1150,22 @@ modded class PlayerBase
 		if (GetGame().GetPlayer())
 		{
 			GetGame().GetMission().OnEvent(ChatMessageEventTypeID, new ChatMessageEventParams(CCDirect, "", message, ""));
+		}
+	}
+
+	void Zen_PutItemInHandsAway()
+	{
+		//if (GetGame().IsDedicatedServer())
+		//	return;
+
+		EntityAI itemInHands = GetHumanInventory().GetEntityInHands();
+		
+		if (!itemInHands.GetInventory().CanRemoveEntity())
+			return;
+
+		if (GetInventory().CanAddEntityToInventory(itemInHands) && GetHumanInventory().CanRemoveEntityInHands())
+		{
+			PredictiveTakeEntityToInventory(FindInventoryLocationType.ANY, itemInHands);
 		}
 	}
 
@@ -1218,70 +1241,6 @@ modded class PlayerBase
 
 		ZenKillFeed(playerKiller, killer);
 		ZenLogger(killer);
-	}
-
-	// Override this for things like Syberia mod to add character name
-	string GetZenKillFeedName()
-	{
-		return GetCachedName();
-	}
-
-	// Send kill feed info
-	void ZenKillFeed(notnull PlayerBase playerKiller, Object object)
-	{
-		if (!GetZenDiscordConfig().EnableDiscordKillFeed || !object)
-			return;
-
-		vector myPos = GetPosition();
-		string killerText = playerKiller.GetZenKillFeedName();
-		string victimText = GetZenKillFeedName();
-		string location = GetZenDiscordConfig().GetMapLinkPosition(myPos);
-		string distance = MiscGameplayFunctions.TruncateToS(vector.Distance(myPos, playerKiller.GetPosition()));
-
-		if (GetZenDiscordConfig().DisplayPlayerSteamID)
-		{
-			killerText = "[" + playerKiller.GetZenKillFeedName() + "](http://steamcommunity.com/profiles/" + playerKiller.GetIdentity().GetPlainId() + ")";
-			victimText = "[" + GetZenKillFeedName() + "](http://steamcommunity.com/profiles/" + GetIdentity().GetPlainId() + ")";
-		}
-
-		string weaponText = "";
-		if (object.GetType() == playerKiller.GetType())
-			weaponText = GetZenDiscordConfig().Melee;
-		weaponText = object.GetDisplayName();
-
-		int victimPlayMinutes = StatGet(AnalyticsManagerServer.STAT_PLAYTIME) / 60;
-		int killerPlayerMinutes = playerKiller.StatGet(AnalyticsManagerServer.STAT_PLAYTIME) / 60;
-		string victimAge = GetZenDiscordConfig().VictimAge + ": ";
-		string killerAge = GetZenDiscordConfig().KillerAge + ": ";
-		if (victimPlayMinutes > 60)
-			victimAge = victimAge + (victimPlayMinutes / 60) + " " + GetZenDiscordConfig().Hours;
-		else
-			victimAge = victimAge + (victimPlayMinutes)+" " + GetZenDiscordConfig().Minutes;
-
-		if (killerPlayerMinutes > 60)
-			killerAge = killerAge + (killerPlayerMinutes / 60) + " " + GetZenDiscordConfig().Hours;
-		else
-			killerAge = killerAge + (killerPlayerMinutes)+" " + GetZenDiscordConfig().Minutes;
-
-		string discordMsg = killerText + " " + GetZenDiscordConfig().Killed + " ";
-		discordMsg = discordMsg + victimText + " " + GetZenDiscordConfig().With + " " + weaponText + " " + distance + "m ";
-		if (GetZenDiscordConfig().DisplayKillLocation)
-			discordMsg = discordMsg + location + " ";
-		discordMsg = discordMsg + "\n\n" + victimAge + "\n" + killerAge;
-
-		if (GetZenDiscordConfig().DisplayPlayerSteamID)
-		{
-			discordMsg = discordMsg + "\n\nVictim: " + GetCachedID();
-			discordMsg = discordMsg + "\nKiller: " + playerKiller.GetCachedID();
-		}
-
-		// Send discord webhook message
-		ZenDiscordMessage msg = new ZenDiscordMessage(GetZenDiscordConfig().KillFeed);
-		msg.SetTitle(GetZenDiscordConfig().KillFeed);
-		msg.SetMessage(discordMsg);
-		msg.SetColor(255, 255, 255);
-		msg.AddWebhooks(GetZenDiscordConfig().KillFeedWebhooks);
-		GetZenDiscordAPI().SendMessage(msg);
 	}
 
 	// Log player's items on death
@@ -1441,8 +1400,13 @@ modded class PlayerBase
 	// Check player message cfg
 	protected void CheckZenPlayerMsgConfig()
 	{
-		if (GetIdentity() == NULL || GetType().Contains("_Ghost"))
+		if (!GetIdentity() || GetType().Contains("_Ghost"))
 			return;
+
+		if (GetIdentity().GetName() == "Survivor")
+		{
+			Zen_SendMessageDelayed(GetZenUpdateMessage().SurvivorNotification, 10000);
+		}
 
 		string loginMsg = GetZenUpdateMessage().LOGIN_MESSAGE;
 		loginMsg.Replace("#survivorname#", GetIdentity().GetName());
@@ -1487,13 +1451,6 @@ modded class PlayerBase
 		if (playerMsg && playerMsg.Message != "")
 		{
 			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPlayerMessageReply, 1000, false, playerMsg);
-			return;
-		}
-
-		// Check for Poll on login only if there was no admin message
-		if (GetZenPollConfig().PollID != -1 && !GetZenPollConfig().PlayerChoices.Contains(cachedID))
-		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPollData, 1000, false);
 			return;
 		}
 	}
@@ -1629,22 +1586,6 @@ modded class PlayerBase
 		m_CachedZenPlayerMessage = NULL;
 	}
 
-	// Send poll data to player and open screen 
-	protected void SendZenPollData()
-	{
-		if (GetIdentity() != NULL)
-		{
-			array<string> options = new array<string>;
-			options.Insert(GetZenPollConfig().Option1);
-			options.Insert(GetZenPollConfig().Option2);
-			options.Insert(GetZenPollConfig().Option3);
-			options.Insert(GetZenPollConfig().Option4);
-			options.Insert(GetZenPollConfig().Option5);
-			options.Insert(GetZenPollConfig().Option6);
-			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenPollOptions", new Param4<string, string, bool, array<string>>(GetZenPollConfig().PollTitle, GetZenPollConfig().PollSubtitle, GetZenPollConfig().OnlyOneOption, options), true, GetIdentity());
-		}
-	}
-
 	override void OnVehicleSeatDriverEnter()
 	{
 		super.OnVehicleSeatDriverEnter();
@@ -1659,7 +1600,7 @@ modded class PlayerBase
 		ZENMOD_DRIVER_COUNT--;
 	}
 
-	//! MUSIC 
+	//! GLOVEBOX 
 	// Allows viewing inventory while inside cars - VicinityItemManager.c handles not being able to pick up items outside of the car
 	override void OnCommandVehicleStart()
 	{
@@ -1668,17 +1609,81 @@ modded class PlayerBase
 		if (!GetInventory())
 			return;
 
-		if ((ZenModEnabled("ZenMusic") && GetZenMusicConfig().AllowCarInventory) || ZenModEnabled("ZenGlovebox"))
+		if (ZenModEnabled("ZenGlovebox") || ZenModEnabled("ZenCarCompass"))
 		{
 			GetInventory().UnlockInventory(LOCK_FROM_SCRIPT);
 		}
+
+		if (ZenModEnabled("ZenHideGearInCars"))
+		{
+			Zen_HideBackItems(true);
+		}
+	}
+
+	override void OnCommandVehicleFinish()
+	{
+		super.OnCommandVehicleFinish();
+
+		if (ZenModEnabled("ZenHideGearInCars"))
+		{
+			Zen_HideBackItems(false);
+		}
+	}
+
+	void Zen_HideBackItems(bool hideGear)
+	{
+		EntityAI shoulderItem	= GetItemOnSlot("Shoulder");
+		EntityAI meleeItem		= GetItemOnSlot("Melee");
+		
+		if (meleeItem)
+		{
+			if (hideGear)
+			{
+				SetSimpleHiddenSelectionState(SIMPLE_SELECTION_MELEE_RIFLE, false);
+				SetSimpleHiddenSelectionState(SIMPLE_SELECTION_MELEE_MELEE, false);
+			}
+			else
+			{
+				UpdateShoulderProxyVisibility(meleeItem, "Melee");
+			}
+		}
+		
+		if (shoulderItem)
+		{
+			if (hideGear)
+			{
+				SetSimpleHiddenSelectionState(SIMPLE_SELECTION_SHOULDER_RIFLE, false);
+				SetSimpleHiddenSelectionState(SIMPLE_SELECTION_SHOULDER_MELEE, false);
+			}
+			else
+			{
+				UpdateShoulderProxyVisibility(shoulderItem, "Shoulder");
+			}
+		}
+		
+		/*
+		// Doesn't work - guessing because the item on player is a proxy, not a regular item in this context?
+
+		ItemBase backItem = ItemBase.Cast(GetItemOnSlot("Back"));
+		if (backItem)
+		{
+			if (hideGear)
+			{
+				backItem.SetZenHologrammed(true, "#(argb,8,8,3)color(1,1,1,0,ca)");
+			}
+			else
+			{
+				backItem.SetZenHologrammed(false);
+			}
+		}
+		*/
 	}
 
 	//! SPLIT ITEM UI 
 	override bool HandleRemoteItemManipulation(int userDataType, ParamsReadContext ctx)
 	{
 		// Custom item manipulation type: split a stackable item based on client-requested quantity instead of 50% stack.
-		if (userDataType == ZenRPCs.ZEN_SPLIT_ITEM)
+		if (userDataType == ZenRPCs.SPLIT_ITEM)
 		{
 			ItemBase item1	= null;
 			int quantity	= 1;

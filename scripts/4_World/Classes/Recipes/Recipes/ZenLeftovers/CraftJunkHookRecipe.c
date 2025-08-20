@@ -25,6 +25,7 @@ class CraftJunkHookRecipe extends RecipeBase
 		//ingredient 1 (junk)
 		InsertIngredientEx(0, "Empty_SodaCan_ColorBase", "openBeanCan");
 		InsertIngredientEx(0, "Empty_Can_Opened", "openBeanCan");
+		InsertIngredientEx(0, "Empty_TunaCan_Opened", "openBeanCan");
 		InsertIngredientEx(0, "Empty_FoodCan_250g_Opened_ColorBase", "openBeanCan");
 		InsertIngredientEx(0, "Empty_FoodCan_100g_Opened_ColorBase", "openBeanCan");
 

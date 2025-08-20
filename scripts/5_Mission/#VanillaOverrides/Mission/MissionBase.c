@@ -9,11 +9,6 @@ modded class MissionBase
 		//! UTILITIES
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingeplayerExecutionType.Server);
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", this, SingeplayerExecutionType.Server);
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPollChoice", this, SingeplayerExecutionType.Server);
-
-        //! RAID ALARM
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenRaidAlarmClientWebhooks", this, SingeplayerExecutionType.Server);
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminCommandMessage", this, SingeplayerExecutionType.Server);
 		#else
 		// CLIENT RECEIVE RPC
 
@@ -23,36 +18,14 @@ modded class MissionBase
 		//! ARTILLERY
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveAirstrikeData", this, SingeplayerExecutionType.Client);
 
-		//! MUSIC
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenMusicCfgClient", this, SingeplayerExecutionType.Client);
-
 		//! UTILITIES 
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", this, SingeplayerExecutionType.Client);
 		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenNotificationConfigOnClient", this, SingeplayerExecutionType.Client);
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenPollOptions", this, SingeplayerExecutionType.Client);
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenServerDiversionConfigOnClient", this, SingeplayerExecutionType.Client);
-
-        //! RAID ALARM
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenRaidAlarmServerWebhooks", this, SingeplayerExecutionType.Client);
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminCommandMessageFailed", this, SingeplayerExecutionType.Client);
 
         //! BASEBUILDING CONFIG 
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenBasebuildingCfgClient", this, SingeplayerExecutionType.Client);
 		#endif
-
-        int i;
-        string cfg_name = "";
-
-        //! MUSIC 
-		// Load how many cassette tapes exist for RandomCassette spawner
-		for (i = 0; i < GetGame().ConfigGetChildrenCount("CfgVehicles"); i++)
-		{
-			GetGame().ConfigGetChildName("CfgVehicles", i, cfg_name);
-			if (cfg_name.Contains("Zen_Cassette_") && !cfg_name.Contains("Base"))
-            {
-				Zen_Cassette_RandomTape.RANDOM_TAPES.Insert(cfg_name);
-            }
-		}
 	}
 
 	override UIScriptedMenu CreateScriptedMenu(int id)
@@ -63,23 +36,10 @@ modded class MissionBase
         {
             switch (id)
             {
-				//! NOTES
-                case ZenMenus.NOTE_GUI:
-                {
-                    menu = new ZenNoteGUI;
-                    break;
-                }
-
 				//! UTILITIES 
 				case ZenMenus.PLAYER_MESSAGE:
                 {
                     menu = new ZenAdminMessageGUI;
-                    break;
-                }
-
-                case ZenMenus.POLL_GUI:
-                {
-                    menu = new ZenPollGUI;
                     break;
                 }
 
@@ -89,129 +49,10 @@ modded class MissionBase
                     menu = new ZenSplitItemUI;
                     break;
                 }
-
-                //! RAID ALARM
-                case ZenMenus.RAID_ALARM_GUI:
-                {
-                    menu = new ZenRaidAlarmGUI;
-                    break;
-                }
             }
         }
 
         return menu;
-    }
-
-    //! RAID ALARM
-    // Client -> server :: receive potential admin command
-    void RPC_ReceiveZenAdminCommandMessage(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Server && GetGame().IsDedicatedServer())
-        {
-            Param1<string> data;
-            if (!ctx.Read(data))
-            {
-                Error("Error receiving data - RPC_ReceiveZenAdminCommandMessage");
-                return;
-            }
-
-            if (sender && data.param1)
-            {
-                ZenAdminMessagePlugin plugin = ZenAdminMessagePlugin.Cast(GetPlugin(ZenAdminMessagePlugin));
-                if (plugin)
-                {
-                    if (plugin.HandleAdminCommand(sender, data.param1))
-                        return;
-                }
-
-                // If we failed to stop @ plugin.HandleAdminCommand, relay this message back to client
-                GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminCommandMessageFailed", new Param1<string>(data.param1), true, sender);
-            }
-        }
-    }
-
-    // Client -> server :: receive webhooks on server
-    void RPC_ReceiveZenRaidAlarmClientWebhooks(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Server && GetGame().IsDedicatedServer())
-        {
-            Param3<array<string>, Zen_RaidAlarmStation, string> data;
-            if (!ctx.Read(data))
-            {
-                Error("Error receiving data - RPC_ReceiveZenRaidAlarmClientWebhooks");
-                return;
-            }
-
-            if (data.param1.Count() != 3)
-            {
-                Error("Error sync'ing client-side RaidStation data to server - RPC_ReceiveZenRaidAlarmClientWebhooks - count=" + data.param1.Count());
-                return;
-            }
-
-            if (!data.param2)
-            {
-                Error("Error sync'ing client-side RaidStation data to server - RPC_ReceiveZenRaidAlarmClientWebhooks");
-                return;
-            }
-
-            if (sender && data.param1 && data.param2)
-            {
-                data.param2.SetWebhooks(data.param1, sender.GetName());
-                data.param2.SetBaseName(data.param3);
-            }
-        }
-    }
-
-    // Server -> client :: receive failed admin command and relay it back to chat
-    void RPC_ReceiveZenAdminCommandMessageFailed(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Client && GetGame().IsClient())
-        {
-            Param1<string> data;
-            if (!ctx.Read(data))
-            {
-                Error("Error receiving data - RPC_ReceiveZenAdminCommandMessageFailed");
-                return;
-            }
-
-            if (data.param1)
-            {
-                GetGame().ChatPlayer(data.param1);
-            }
-        }
-    }
-
-    // Server -> client :: receive webhooks on client
-    void RPC_ReceiveZenRaidAlarmServerWebhooks(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Client && GetGame().IsClient())
-        {
-            Param3<array<string>, Zen_RaidAlarmStation, string> data;
-            if (!ctx.Read(data))
-            {
-                Error("Error sync'ing server-side data to client - RPC_ReceiveZenRaidAlarmServerWebhooks");
-                return;
-            }
-
-            if (data.param1.Count() != 3)
-            {
-                Error("Error sync'ing server-side webhook data to client - RPC_ReceiveZenRaidAlarmServerWebhooks - count=" + data.param1.Count());
-                return;
-            }
-
-            if (!data.param2)
-            {
-                Error("Error sync'ing server-side Raid Station data to client - RPC_ReceiveZenRaidAlarmServerWebhooks");
-                return;
-            }
-
-            if (GetGame().GetUIManager() != NULL)
-            {
-                ZenRaidAlarmGUI gui = ZenRaidAlarmGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.RAID_ALARM_GUI, NULL));
-                if (gui)
-                    gui.OnReceivedServerData(data.param1.Get(0), data.param1.Get(1), data.param1.Get(2), data.param2, data.param3);
-            }
-        }
     }
 
 	//! ARTILLERY
@@ -265,20 +106,6 @@ modded class MissionBase
         GetZenModPackClientConfig().Save();
 	}
 
-	//! MUSIC 
-	// Server -> tell player if they can access inventory while in car
-	void RPC_ReceiveZenMusicCfgClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        Param1<bool> data;
-        if (!ctx.Read(data))
-        {
-            Error("[ZenMod] Error sync'ing server-side data to client - RPC_ReceiveZenMusicCfgClient");
-            return;
-        }
-
-		GetZenMusicConfig().AllowCarInventory = data.param1;
-    }
-
     //! BASEBUILDING CONFIG 
 	void RPC_ReceiveZenBasebuildingCfgClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
@@ -313,8 +140,21 @@ modded class MissionBase
             Chat.EnableServerNotifications = data.param1.EnableServerNotifications;
             Chat.ServerMessage = data.param1.ServerMessage;
             Chat.ServerIcon = data.param1.ServerIcon;
+			
+			if (!NotificationUI.ZenKeywords)
+			{
+				NotificationUI.ZenKeywords = new array<ref ZenNotification>;
+			}
+            else 
+            {
+                NotificationUI.ZenKeywords.Clear();
+            }
+			
             foreach (ZenNotification n : data.param1.Keywords)
-                Chat.Keywords.Insert(n);
+			{
+                NotificationUI.ZenKeywords.Insert(n);
+			}
+			
             Chat.HasReceivedServerConfig = true;
         }
     }
@@ -378,33 +218,6 @@ modded class MissionBase
             }
         }
     }
-	
-	// Client -> server :: receive poll vote
-	void RPC_SendZenPollChoice(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Server && GetGame().IsDedicatedServer())
-        {
-            Param1<array<bool>> data;
-            if (!ctx.Read(data))
-            {
-                Error("Error receiving data - RPC_SendZenPollChoice");
-                return;
-            }
-
-            if (sender && data.param1)
-            {
-				GetZenPollConfig().RegisterVote(sender.GetId(), data.param1);
-
-                int highBits, lowBits;
-				GetGame().GetPlayerNetworkIDByIdentityID(sender.GetPlayerId(), lowBits, highBits);
-				PlayerBase player = PlayerBase.Cast(GetGame().GetObjectByNetworkId(lowBits, highBits));
-				if (player)
-                {
-                    player.Zen_SendMessage("[SERVER] Vote received!");
-                }
-            }
-        }
-    }
 
 	// Server -> client :: receive admin text message and dialogue
     void RPC_ReceiveZenAdminMessage(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
@@ -423,27 +236,6 @@ modded class MissionBase
                 ZenAdminMessageGUI gui = ZenAdminMessageGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL));
                 if (gui)
                     gui.SetAdminMessage(data.param1, data.param2);
-            }
-        }
-    }
-
-	// Server -> client :: receive poll data
-    void RPC_ReceiveZenPollOptions(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Client && GetGame().IsClient())
-        {
-            Param4<string, string, bool, array<string>> data;
-            if (!ctx.Read(data))
-            {
-                Error("Error sync'ing server-side data to client - RPC_ReceiveZenPollOptions");
-                return;
-            }
-
-            if (GetGame().GetUIManager() != NULL)
-            {
-                ZenPollGUI gui = ZenPollGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.POLL_GUI, NULL));
-                if (gui)
-                    gui.SetPollSettings(data.param1, data.param2, data.param3, data.param4);
             }
         }
     }

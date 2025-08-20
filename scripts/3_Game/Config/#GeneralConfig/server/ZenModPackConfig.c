@@ -59,15 +59,20 @@ class ZenModPackConfig
 		PersistentModEnabled = new map<string, bool>;
 
 		// Client sync mods
+		ModEnabled.Insert("ZenFixCarAttachmentGUI", true);
 		ModEnabled.Insert("ZenBasebuildingConfig", false);
 		ModEnabled.Insert("ZenInventoryAnimation", true);
-		ModEnabled.Insert("ZenBasebuldingConfig", true);
 		ModEnabled.Insert("ZenAntiCombatLogout", true);
 		ModEnabled.Insert("ZenImmersiveChatHUD", false); // Disabled by default to avoid confusion
+		ModEnabled.Insert("ZenCarsCutDownTrees", true);
+		ModEnabled.Insert("ZenMagObfuscation", false); // Disabled by default to avoid confusion
 		ModEnabled.Insert("ZenImmersiveLogin", true);
+		ModEnabled.Insert("ZenCarAttachments", false); // Disabled by default to avoid confusion
+		ModEnabled.Insert("ZenHideGearInCars", true);
 		ModEnabled.Insert("ZenCraftingSounds", true);
 		ModEnabled.Insert("ZenBetterChatFont", false);
 		ModEnabled.Insert("ZenCanteenTablets", true);
+		ModEnabled.Insert("ZenFireplaceStick", true);
 		ModEnabled.Insert("ZenDoubleArmbands", true);
 		ModEnabled.Insert("ZenCarBatteryIcon", true);
 		ModEnabled.Insert("ZenBrokenGlasses", true);
@@ -79,6 +84,9 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenRepairPumps", true);
 		ModEnabled.Insert("ZenRepairWells", true);
 		ModEnabled.Insert("ZenTerritories", false); // Disabled by default in case people are using a different territory mod
+		ModEnabled.Insert("ZenLazyActions", true);
+		ModEnabled.Insert("ZenCarGlovebox", true);
+		ModEnabled.Insert("ZenCarCompass", true);
 		ModEnabled.Insert("ZenPimpMyRide", true);
 		ModEnabled.Insert("ZenServerGUI", false); // Disabled by default to avoid confusion
 		ModEnabled.Insert("ZenRaidAlarm", true);
@@ -101,17 +109,22 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenMap", false); // Disabled by default in case other map mods are preferred
 
 		// No client sync required
+		ServerSideModEnabled.Insert("ZenEfficientVehiclePhysics", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenDropRuinedClothing", false); // Disabled by default to avoid confusion
+		ServerSideModEnabled.Insert("ZenRebuildableWells", true);
 		ServerSideModEnabled.Insert("ZenPersistentTrees", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenStaticBarbedWire", false); // Disabled by default as not all servers may want this impact on server performance
+		ServerSideModEnabled.Insert("ZenZombieController", true);
 		ServerSideModEnabled.Insert("ZenDynamicZoneLoot", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenTreesplosions", true);
 		ServerSideModEnabled.Insert("ZenZombieConfig", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenChickenCoops", true);
 		ServerSideModEnabled.Insert("ZenShelterCargo", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenZombieDoors", true);
+		ServerSideModEnabled.Insert("ZenRadioPlugin", true);
 		ServerSideModEnabled.Insert("ZenNightConfig", false); // Disabled by default as might be confusing for some server admins if they're not aware of it
 		ServerSideModEnabled.Insert("ZenBloodDrips", false); // Disabled by default because this may negatively affect server performance on high pop servers without config adjustments
+		ServerSideModEnabled.Insert("ZenWoodHealth", true);
 		ServerSideModEnabled.Insert("ZenModLogger", true);
 		ServerSideModEnabled.Insert("ZenLeftovers", true);
 		ServerSideModEnabled.Insert("ZenCampSites", false); // Disabled because not all playable maps are accounted for in default config

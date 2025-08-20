@@ -3,13 +3,13 @@ class ActionRepairWellCB : ActionContinuousBaseCB
 	override void CreateActionComponent()
 	{
 		// Make it take longer to repair with a small wrench
-		float time_spent = 18;
-		if (m_ActionData.m_MainItem.GetType() == "PipeWrench")
+		float time_spent = 20;
+		if (m_ActionData.m_MainItem.IsInherited(PipeWrench))
 			time_spent = 10;
 
 		m_ActionData.m_ActionComponent = new CAContinuousTime(time_spent);
 	}
-};
+}
 
 class ActionRepairWell : ActionContinuousBase
 {
@@ -39,35 +39,36 @@ class ActionRepairWell : ActionContinuousBase
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
-		Well well = Well.Cast(target.GetObject());
-		if (!well)
+		Well wellObj = Well.Cast(target.GetObject());
+		if (!wellObj)
 			return false;
 
 		// Server checks
-#ifdef SERVER
-		if (well.IsRepaired())
+		if (GetGame().IsDedicatedServer())
 		{
-			// Send a message to the client that the well is already repaired
-			player.Zen_SendMessage(GetZenWellsConfig().MessageRepaired);
-			return false;
+			if (wellObj.IsZenRepaired())
+			{
+				// Send a message to the client that the well is already repaired
+				player.Zen_SendMessage(GetZenWellsConfig().MessageRepaired);
+				return false;
+			}
 		}
-#endif
 
-		return !well.IsRepaired();
+		return !wellObj.IsZenRepaired();
 	}
 
 	override void OnFinishProgressServer(ActionData action_data)
 	{
 		PlayerBase player = action_data.m_Player;
 
-		Well well = Well.Cast(action_data.m_Target.GetObject());
-		if (!well)
+		Well wellObj = Well.Cast(action_data.m_Target.GetObject());
+		if (!wellObj)
 			return;
 
-		well.SetRepaired(true);
+		wellObj.SetZenRepaired(true);
 
-		int wellIndex = GetZenWellsConfig().GetRepairableWellIndex(well.GetPosition());
-		GetZenWellsConfig().SetWellRepaired(wellIndex, well.GetPosition(), true, true); // If index == -1 then a new well will be saved.
+		int wellIndex = GetZenWellsConfig().GetRepairableWellIndex(wellObj.GetPosition());
+		GetZenWellsConfig().SetWellRepaired(wellIndex, wellObj.GetPosition(), true, true); // If index == -1 then a new well will be saved.
 		action_data.m_MainItem.DecreaseHealth("", "", GetZenWellsConfig().DamageTool);
 	}
 

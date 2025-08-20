@@ -3,8 +3,8 @@ class ActionRepairPumpCB : ActionContinuousBaseCB
 	override void CreateActionComponent()
 	{
 		// Make it take longer to repair with a small wrench
-		float time_spent = 18;
-		if (m_ActionData.m_MainItem.GetType() == "PipeWrench")
+		float time_spent = 20;
+		if (m_ActionData.m_MainItem.IsInherited(PipeWrench))
 			time_spent = 10;
 
 		m_ActionData.m_ActionComponent = new CAContinuousTime(time_spent);
@@ -42,35 +42,36 @@ class ActionRepairPump : ActionContinuousBase
 		if (!ZenModEnabled("ZenRepairPumps"))
 			return false;
 
-		Land_FuelStation_Feed Pump = Land_FuelStation_Feed.Cast(target.GetObject());
-		if (!Pump)
+		Land_FuelStation_Feed pumpObj = Land_FuelStation_Feed.Cast(target.GetObject());
+		if (!pumpObj)
 			return false;
 
 		// Server checks
-		#ifdef SERVER
-		if (Pump.IsRepaired())
+		if (GetGame().IsDedicatedServer())
 		{
-			// Send a message to the client that the Pump is already repaired
-			player.Zen_SendMessage(GetZenPumpsConfig().MessageRepaired);
-			return false;
+			if (pumpObj.IsZenRepaired())
+			{
+				// Send a message to the client that the Pump is already repaired
+				player.Zen_SendMessage(GetZenPumpsConfig().MessageRepaired);
+				return false;
+			}
 		}
-		#endif
 
-		return !Pump.IsRepaired();
+		return !pumpObj.IsZenRepaired();
 	}
 
 	override void OnFinishProgressServer(ActionData action_data)
 	{
 		PlayerBase player = action_data.m_Player;
 
-		Land_FuelStation_Feed Pump = Land_FuelStation_Feed.Cast(action_data.m_Target.GetObject());
-		if (!Pump)
+		Land_FuelStation_Feed pumpObj = Land_FuelStation_Feed.Cast(action_data.m_Target.GetObject());
+		if (!pumpObj)
 			return;
 
-		Pump.SetRepaired(true);
+		pumpObj.SetZenRepaired(true);
 
-		int PumpIndex = GetZenPumpsConfig().GetRepairablePumpIndex(Pump.GetPosition());
-		GetZenPumpsConfig().SetPumpRepaired(PumpIndex, Pump.GetPosition(), true, true); // If index == -1 then a new Pump will be saved.
+		int PumpIndex = GetZenPumpsConfig().GetRepairablePumpIndex(pumpObj.GetPosition());
+		GetZenPumpsConfig().SetPumpRepaired(PumpIndex, pumpObj.GetPosition(), true, true); // If index == -1 then a new Pump will be saved.
 		action_data.m_MainItem.DecreaseHealth("", "", GetZenPumpsConfig().DamageTool);
 	}
 

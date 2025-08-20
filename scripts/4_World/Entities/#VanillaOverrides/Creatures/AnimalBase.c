@@ -27,5 +27,22 @@ modded class AnimalBase
 			SetHealth(0);
 		}
 	}
+
+	override void EEKilled(Object killer)
+	{
+		super.EEKilled(killer);
+
+		if (ZenModEnabled("ZenWeaponEngrave"))
+		{
+			if (killer)
+			{
+				Weapon_Base gun = Weapon_Base.Cast(killer);
+				if (gun && gun.GetZenEngravedPlayerName() != "")
+				{
+					gun.IncreaseZenAnimalKills();
+				}
+			}
+		}		
+	}
 #endif
 }

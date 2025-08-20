@@ -6,18 +6,12 @@
 			<input name="UAZenEarPlugsIncreaseVol" loc="STR_ZenEarPlugsIncreaseTxt"/>
 			<input name="UAZenEarPlugsDecreaseVol" loc="STR_ZenEarPlugsDecreaseTxt"/>
 			<input name="UAZenAutorunToggle" loc="STR_ZenAutoRunTxt" />
-			<input name="UAZenMusic" loc="STR_ZenCarMusicToggleTxt" />
-			<input name="UAZenMusicUp" loc="STR_ZenCarMusicVolumeUpTxt" />
-			<input name="UAZenMusicDn" loc="STR_ZenCarMusicVolumeDownTxt" />
 		</actions>
 		<sorting name="ZEN" loc="ZEN">
 			<input name="UAZenEarPlugsToggle"/>
 			<input name="UAZenEarPlugsIncreaseVol"/>
 			<input name="UAZenEarPlugsDecreaseVol"/>
 			<input name="UAZenAutorunToggle"/>
-			<input name="UAZenMusic"/>
-			<input name="UAZenMusicUp"/>
-			<input name="UAZenMusicDn"/>
 		</sorting>
 	</inputs>
 	<preset>
@@ -32,15 +26,6 @@
 		</input>
 		<input name="UAZenAutorunToggle">
 			<btn name="kNumpadEnter" />
-		</input>
-		<input name="UAZenMusic">
-			<btn name="kK"/>
-		</input>
-		<input name="UAZenMusicUp">
-			<btn name="kAdd"/>
-		</input>
-		<input name="UAZenMusicDn">
-			<btn name="kSubstract"/>
 		</input>
 	</preset>
 </modded_inputs>

@@ -6,6 +6,7 @@ modded class ActionBase
 		return 0;
 	}
 
+/*
 	//! UTILITIES
 	protected static ref ZenPerformanceMonitorPlugin m_PerformancePlugin;
 
@@ -49,4 +50,5 @@ modded class ActionBase
 		m_PerformancePlugin.ActionBase_End(action_data);
 	}
 #endif
+	*/
 }

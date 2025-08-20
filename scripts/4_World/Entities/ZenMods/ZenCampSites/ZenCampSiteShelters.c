@@ -37,6 +37,14 @@ class ZenCamps_ShelterStick extends ShelterStick
 		}
 	}
 #endif
+
+	override void AfterStoreLoad()
+	{
+		super.AfterStoreLoad();
+
+		// Don't allow these items to respawn after server restarts
+		DeleteSafe();
+	}
 }
 
 class ZenCamps_ShelterFabric extends ShelterStick
@@ -78,6 +86,14 @@ class ZenCamps_ShelterFabric extends ShelterStick
 		}
 	}
 #endif
+
+	override void AfterStoreLoad()
+	{
+		super.AfterStoreLoad();
+
+		// Don't allow these items to respawn after server restarts
+		DeleteSafe();
+	}
 }
 
 class ZenCamps_ShelterLeather extends ShelterStick
@@ -119,4 +135,12 @@ class ZenCamps_ShelterLeather extends ShelterStick
 		}
 	}
 #endif
+
+	override void AfterStoreLoad()
+	{
+		super.AfterStoreLoad();
+
+		// Don't allow these items to respawn after server restarts
+		DeleteSafe();
+	}
 }

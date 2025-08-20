@@ -4,7 +4,7 @@ modded class ItemBase
 	static int ZENMOD_ITEM_COUNT = 0;
 	protected bool m_WasZenHologrammed;
 
-	void SetZenHologrammed(bool hologram)
+	void SetZenHologrammed(bool hologram, string textureOverride = "")
 	{
 		m_WasZenHologrammed = hologram;
 
@@ -15,6 +15,9 @@ modded class ItemBase
 		if (m_WasZenHologrammed)
 		{
 			string textureAlpha = "#(argb,8,8,3)color(1,1,1,0.1,ca)";
+			if (textureOverride != "")
+				textureAlpha = textureOverride;
+
 			SetObjectTexture(0, textureAlpha);
 		}
 		else
@@ -136,7 +139,9 @@ modded class ItemBase
 			{
 				ZenSplitItemUIBase gui = ZenSplitItemUIBase.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.SPLIT_GUI, GetGame().GetUIManager().GetMenu()));
 				if (gui)
+				{
 					gui.SetItem(this);
+				}
 			}
 		}
 		else 
@@ -188,7 +193,7 @@ modded class ItemBase
 			}
 
 			ScriptInputUserData ctx = new ScriptInputUserData;
-			ctx.Write(ZenRPCs.ZEN_SPLIT_ITEM);
+			ctx.Write(ZenRPCs.SPLIT_ITEM);
 			ctx.Write(quantity);
 			ItemBase thiz = this;
 			ctx.Write(thiz);
@@ -267,7 +272,7 @@ modded class ItemBase
 	}
 
 	/*
-	//! UTILITIES - Loot cycling detection?
+	//! TODO UTILITIES - Loot cycling detection?
 #ifdef SERVER
 	bool m_ZenIsVirgin = false;
 

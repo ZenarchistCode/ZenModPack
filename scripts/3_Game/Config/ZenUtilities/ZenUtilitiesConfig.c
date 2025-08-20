@@ -3,15 +3,15 @@ class ZenUtilitiesConfig
 	// Config location
 	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
 	private const static string zenConfigName = "ZenUtilitiesConfig.json";
-	private const static string CURRENT_VERSION = "2";
+	private const static string CURRENT_VERSION = "3";
 	string CONFIG_VERSION = "";
 
 	// Settings data
-	bool CountServerFPS = false;
-	string FpsChatCommand = "fps";
-	string ServerFPSWarningMsg = "PERFORMANCE WARNING: Server FPS is currently %1. This is low and very bad for vehicle desync. Be careful if driving!";
-	int ServerFPSWarning = 50; // Raw fps
-	int ServerActionFPSDropWarningPct = 0; // %
+	//bool CountServerFPS = false;
+	//string FpsChatCommand = "fps";
+	//string ServerFPSWarningMsg = "PERFORMANCE WARNING: Server FPS is currently %1. This is low and very bad for vehicle desync. Be careful if driving!";
+	//int ServerFPSWarning = 50; // Raw fps
+	//int ServerActionFPSDropWarningPct = 0; // %
 	//bool ShouldLogLootCyclers;
 	bool ShouldLogPVP;
 	bool ShouldLogDeathGear;

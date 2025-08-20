@@ -1,9 +1,8 @@
 //! Handles all "!chatmsg" text input from client.
-class ZenAdminMessagePlugin extends PluginBase
+#ifdef ZENDISCORDAPI
+modded class ZenAdminMessagePlugin extends PluginBase
 {
-    protected float m_DeltaTime = 0;
-
-    bool HandleAdminCommand(notnull PlayerIdentity identity, string text)
+    override bool HandleAdminCommand(notnull PlayerIdentity identity, string text)
     {
         Print("[ZenAdminMessagePlugin] Received admin command: " + text + " from: " + identity.GetId());
 
@@ -56,7 +55,7 @@ class ZenAdminMessagePlugin extends PluginBase
     }
 
     // Process regular civilian commands
-    bool ProcessCommand(notnull PlayerBase player, string command, string text, array<string> params)
+    override bool ProcessCommand(notnull PlayerBase player, string command, string text, array<string> params)
     {
         if (command == "")
             return false;
@@ -94,20 +93,23 @@ class ZenAdminMessagePlugin extends PluginBase
         }
 
         // Server FPS check (!TODO: Add setting to restrict this to admins only)
+        /*
         if (command == GetZenUtilitiesConfig().FpsChatCommand)
         {
             string uptime = "Uptime: " + Math.Round(GetGame().GetTickTime() / 60);
             MsgPlayer(player, "Current Server FPS: " + GetZenServerFPS() + " | Session Average FPS: " + GetZenAvgServerFPS() + " | " + uptime + " minutes");
             return true;
         }
+        */
 
         return false;
     }
 
     // Process admin commands
-    bool ProcessAdminCommand(notnull PlayerBase player, string command, string text, array<string> params)
+    override bool ProcessAdminCommand(notnull PlayerBase player, string command, string text, array<string> params)
     {
         // Server FPS check (ADMINS)
+		/*
         if (command == GetZenUtilitiesConfig().FpsChatCommand)
         {
             string uptime = "Uptime: " + Math.Round(GetGame().GetTickTime() / 60);
@@ -121,11 +123,11 @@ class ZenAdminMessagePlugin extends PluginBase
             NotificationSystem.SendNotificationToPlayerIdentityExtended(player.GetIdentity(), 15.0, "SERVER PERFORMANCE", msg, "");
             return true;
         }
-
+		*/
+		
         // Safespot (teleports admin to testing bunker on Livonia - replace with your own safespot coords if you have one)
         if (command == "safespot")
         {
-            // Rewrite command to teleport to safespot
             MsgPlayer(player, "Teleporting to safespot");
             player.SetPosition("580.643005 592.011536 1153.810913");
             return true;
@@ -204,9 +206,16 @@ class ZenAdminMessagePlugin extends PluginBase
                 GetZenDiscordConfig().Load();
                 reload = true;
             }
-            else if (params.Get(0) == "utilities")
+            
+            if (params.Get(0) == "utilities")
             {
                 GetZenUtilitiesConfig().Load();
+                reload = true;
+            }
+
+            if (params.Get(0) == "compass" || params.Get(0) == "c")
+            {
+                GetZenCarCompassConfig().Load();
                 reload = true;
             }
 
@@ -236,27 +245,6 @@ class ZenAdminMessagePlugin extends PluginBase
         m_DeltaTime = 0;
         ProcessUpdate();
     }
-    
-    // Override this to do anything with this plugin, unless you need milisecond precision then override above
-    void ProcessUpdate() {};
-
-    // Sends a text message to the given player
-    protected void MsgPlayer(notnull PlayerBase player, string msg)
-    {
-        GetGame().RPCSingleParam(player, ERPCs.RPC_USER_ACTION_MESSAGE, new Param1<string>(msg), true, player.GetIdentity()); 
-    }
-
-    // Check if given player id is an admin
-    bool IsAdmin(string uid)
-    {
-        for (int i = 0; i < GetZenDiscordConfig().AdminUIDs.Count(); i++)
-        {
-            if (GetZenDiscordConfig().AdminUIDs.Get(i) == uid)
-                return true;
-        }
-
-        return true;
-    }
 
     // Re-sync ZenModPack config to all online players
     void ResyncConfig()
@@ -275,3 +263,4 @@ class ZenAdminMessagePlugin extends PluginBase
         }
     }
 }
+#endif

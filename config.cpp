@@ -1,4 +1,4 @@
-﻿/*
+/*
 	© 2025 | Zenarchist.com | Zen's Enormous Package™️
 
 	This mod consolidates all of my custom mods that are finished 
@@ -209,12 +209,6 @@
 		ZenRune_Nature
 		ZenRune_Water
 		ZenSwissKnife
-		ZenSwissKnife_CanOpener
-		ZenSwissKnife_Knife
-		ZenSwissKnife_Lockpick
-		ZenSwissKnife_Scissors
-		ZenSwissKnife_Screwdriver
-		ZenSwissKnife_SmallSaw
 		ZenTreasure_DebugShovel // Admin tool
 		ZenTreasure_RandomPhoto // Don't spawn in types.xml: for JSON spawn config only, as the classname will shift into a different item causing types.xml to spawn infinitely
 		ZenTreasure_SeaChest // Don't add to types.xml: lifetime is governed by ZenTreasureConfig.json
@@ -253,7 +247,8 @@ class CfgPatches
 			"DZ_Characters_Pants",
 			"DZ_Characters_Shoes",
 			"DZ_Characters_Gloves",
-			"DZ_Characters_Masks"
+			"DZ_Characters_Masks",
+			"DZ_Weapons_Muzzles"
 		};
 	};
 };
@@ -285,9 +280,9 @@ class CfgMods
 					"ZenModPack/data/gui/workbench/zencarworkbenchslots.imageset",
 					"ZenModPack/data/gui/chess/zenchess_whiteslot.imageset",
 					"ZenModPack/data/gui/chess/zenchess_blackslot.imageset",
-					"ZenModPack/data/gui/music/zen_music.imageset",
 					"ZenModPack/data/gui/sleepingbags/sleepingbag_icon.imageset",
-					"ZenModPack/data/gui/journal/zenjournal.imageset"
+					"ZenModPack/data/gui/journal/zenjournal.imageset",
+					"ZenModPack/data/gui/miscattachmenticons/blowtorch.imageset"
 				};
 			};
 			class engineScriptModule
@@ -295,7 +290,6 @@ class CfgMods
 				files[]=
 				{
 					"ZenModPack/scripts/1_Core"
-					
 				};
 			};
 			class gameLibScriptModule
@@ -340,6 +334,7 @@ class CfgVehicles
 	};
 
 	//! VANILLA CLASS CONFIG REQUIREMENTS
+	class GUIInventoryAttachmentsProps;
 	class M18SmokeGrenade_Green;
 	class GhillieAtt_ColorBase;
 	class M18SmokeGrenade_Red;
@@ -375,8 +370,101 @@ class CfgVehicles
 	class Shovel;
 	class Man;
 
+	class Blowtorch: Inventory_Base
+	{
+		inventorySlot[] +=
+		{
+			"ZenBlowtorch"
+		};
+	};
+
+	// M4 Suppressor 
+	class M4_Suppressor;
+	class Zen_M4_Suppressor_Green: M4_Suppressor
+	{
+		scope=2;
+		hiddenSelections[]=
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+	class AK_Suppressor;
+	class Zen_AK_Suppressor_Green: AK_Suppressor
+	{
+		scope=2;
+		hiddenSelections[]=
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+	class PistolSuppressor;
+	class Zen_PistolSuppressor_Green: PistolSuppressor
+	{
+		scope=2;
+		hiddenSelections[]=
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+	class ImprovisedSuppressor;
+	class Zen_ImprovisedSuppressor_Green: ImprovisedSuppressor
+	{
+		scope=2;
+		hiddenSelections[]=
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+	class Zen_ImprovisedSuppressor_Black: ImprovisedSuppressor
+	{
+		scope=2;
+		hiddenSelections[]=
+		{
+			"zbytek"
+		};
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.15,0.15,0.15,1.0,CO)"
+		};
+	};
+
+	class AK74_WoodBttstck;
+	class Zen_AK74_WoodBttstck_Green: AK74_WoodBttstck
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+	class AK74_Hndgrd;
+	class Zen_AK74_Hndgrd_Green: AK74_Hndgrd
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+
 	//! JOURNAL 
-	class ZenBook_Base: Inventory_Base
+	class ZenBook_Base: Container_Base
 	{
 		simulation="ItemBook";
 		model="\DZ\gear\books\Book_kniga.p3d";
@@ -385,6 +473,7 @@ class CfgVehicles
 			"Book"
 		};
 		itemSize[]={2,2};
+		itemsCargoSize[]={0,0};
 		absorbency=0.89999998;
 		hiddenSelections[]=
 		{
@@ -394,10 +483,11 @@ class CfgVehicles
 		{
 			"dz\gear\books\data\book_bible_co.paa"
 		};
-		repairableWithKits[] = { 5 }; // duct tape
-		repairCosts[] = { 20 };
+		repairableWithKits[]={5};
+		repairCosts[]={20};
 		rotationFlags=16;
 		quantityShow=0;
+		allowOwnedCargoManipulation=1;
 		class DamageSystem
 		{
 			class GlobalHealth
@@ -599,10 +689,11 @@ class CfgVehicles
 	{
 		inventorySlot[] += { "ZenCWB_Screwdriver" };
 	};
-	//! MEGAPHONE PRE-DEFINE - add megaphone attachment for raid station
-	class Megaphone : Inventory_Base
+
+	class Zen_DebugProxyItemsTool: Screwdriver
 	{
-		inventorySlot[] += { "ZenMegaphone" };
+		displayName = "DEBUG TOOL";
+		descriptionShort = "Use this to print nearby objects to logs.";
 	};
 
 	//! FLINT
@@ -691,325 +782,6 @@ class CfgVehicles
 				};
 			};
 		};
-	};
-
-	//! RAID ALARM
-	class Zen_RaidAlarmStationKit : Inventory_Base
-	{
-		scope = 2;
-		displayName = "$STR_CfgVehicles_ZenRaidAlarmStation0";
-		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmStation1";
-		model = "ZenModPack\data\models\RaidAlarm\rack_packed.p3d";
-		hiddenSelections[] = { "texture" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raidalarm\rack_co.paa" };
-		weight = 10000;
-		itemSize[] = { 5,5 };
-		physLayer = "item_small";
-		rotationFlags = 17;
-		itemBehaviour = 0;
-		repairableWithKits[] = { 10 };
-		repairCosts[] = { 30 };
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 5000;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType = "wood";
-	};
-	class Zen_RaidAlarmStation : Inventory_Base
-	{
-		scope = 2;
-		displayName = "$STR_CfgVehicles_ZenRaidAlarmStation0";
-		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmStation1";
-		model = "ZenModPack\data\models\RaidAlarm\rack.p3d";
-		hiddenSelections[] = { "texture" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raidalarm\rack_co.paa" };
-		forceFarBubble = "true";
-		physLayer = "item_large";
-		weight = 10000;
-		itemSize[] = { 10,10 };
-		repairableWithKits[] = { 10 };
-		repairCosts[] = { 30 };
-		attachments[] = { "Back", "ZenMegaphone" };
-		quantityBar = 1;
-		varQuantityInit = 0;
-		varQuantityMin = 0;
-		varQuantityMax = 604800; // 1 week of energy from full battery
-		varQuantityDestroyOnMin = 0;
-		stackedUnit = "time";
-		class EnergyManager
-		{
-			hasIcon = 1;
-			autoSwitchOff = 0;
-			convertEnergyToQuantity = 1;
-			energyStorageMax = 604800; // 1 week of energy from full battery
-			energyUsagePerSecond = 1;
-			reduceMaxEnergyByDamageCoef = 0.01;
-			energyAtSpawn = 0;
-			powerSocketsCount = 1;
-			compatiblePlugTypes[] = { 2 };
-			updateInterval = 15;
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 5000;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\RaidAlarm\rack_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType = "wood";
-	};
-	class Zen_RaidAlarmRadarKit : Inventory_Base
-	{
-		scope = 2;
-		displayName = "$STR_CfgVehicles_ZenRaidAlarmRadar0";
-		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmRadar1";
-		model = "ZenModPack\data\models\zenkitbox\zenkitbox.p3d";
-		hiddenSelections[] = { "texture" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\kit_radar_co.paa" };
-		weight = 10000;
-		itemSize[] = { 9,5 };
-		physLayer = "item_small";
-		itemBehaviour = 0;
-		soundImpactType = "cloth";
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 5000;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\zenkitbox\kit.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\zenkitbox\kit.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\zenkitbox\kit_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\zenkitbox\kit_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\zenkitbox\kit_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-	};
-	class Zen_RaidAlarmRadar : Inventory_Base
-	{
-		scope = 2;
-		displayName = "$STR_CfgVehicles_ZenRaidAlarmRadar0";
-		descriptionShort = "$STR_CfgVehicles_ZenRaidAlarmRadar1";
-		model = "ZenModPack\data\models\RaidDish\radar.p3d";
-		hiddenSelections[] = { "texture" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\radar_co.paa" };
-		weight = 10000;
-		itemSize[] = { 10,10 };
-		forceFarBubble = "true";
-		physLayer = "item_large";
-		class EnergyManager
-		{
-			hasIcon = 1;
-			energyUsagePerSecond = 0.01;
-			cordLength = 15;
-			plugType = 2;
-			updateInterval = 60;
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 5000;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\raiddish\radar.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\raiddish\radar.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\raiddish\radar_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\raiddish\radar_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\raiddish\radar_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType = "wood";
-	};
-
-	// Static radar dish for aesthetic purposes
-	class Zen_RaidAlarmRadar_Static : HouseNoDestruct
-	{
-		scope = 1;
-		model = "ZenModPack\data\models\RaidDish\radar.p3d";
-		hiddenSelections[] = { "texture" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\raiddish\radar_co.paa" };
-	};
-
-	// Dummy invisible raid object purely for GameLabs integration
-	class Zen_RaidAlarm_GameLabsDummy : HouseNoDestruct
-	{
-		scope = 1;
-		model = "ZenModPack\data\models\woodreserves\zen_woodreserve.p3d";
 	};
 
 	//! GENERIC KIT BOX 
@@ -1143,823 +915,6 @@ class CfgVehicles
 					hitpoints = 999999;
 				}
 			}
-		};
-	}
-
-	//! SWISS KNIFE 
-	// Swiss knife base
-	class ZenSwissKnife: Inventory_Base
-	{
-		scope=2;
-
-		//! TOOL ENABLE/DISABLE CONFIG OVERRIDE - if you don't want one of these available for use on your server, set to 0.
-		ZenSwissKnife_CanOpener		= 1;
-		ZenSwissKnife_Lockpick		= 1;
-		ZenSwissKnife_Screwdriver	= 1;
-		ZenSwissKnife_Knife			= 1;
-		ZenSwissKnife_Scissors		= 1;
-		ZenSwissKnife_SmallSaw		= 1;
-
-		//! SHARED CONFIG
-		displayName="$STR_CfgVehicles_ZenSwissKnife0";
-		descriptionShort="$STR_CfgVehicles_ZenSwissKnife1";
-		model="ZenModPack\data\models\swissknife\swissknife.p3d";
-		inventorySlot[]={ "Knife" };
-		animClass="Knife";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		itemSize[]={1,2};
-		weight=300;
-		fragility=0.0099999998;
-		simpleHiddenSelections[]= 
-		{
-			"can_opener",
-			"packed",
-			"large_knife",
-			"peg",
-			"saw",
-			"scissors",
-			"small_knife"
-	    };
-		hiddenSelections[] = 
-		{
-			"texture"
-		};
-		hiddenSelectionsTextures[] = 
-		{ 
-			"ZenModPack\data\textures\swissknife\swissknife_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=100;
-					healthLevels[]=
-					{
-						// RVMAT damage texture handled in item script
-						{
-							1,
-							
-							{
-								""
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								""
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								""
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								""
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								""
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType="metal";
-	};
-
-	//! CAN OPENER 
-	class ZenSwissKnife_CanOpener: CanOpener
-	{
-		scope=2;
-		//! SHARED
-		displayName="$STR_CfgVehicles_ZenSwissKnife0";
-		descriptionShort="$STR_CfgVehicles_ZenSwissKnife1";
-		model="ZenModPack\data\models\swissknife\swissknife.p3d";
-		inventorySlot[]={ "Knife" };
-		animClass="Knife";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		itemSize[]={1,2};
-		weight=300;
-		fragility=0.0099999998;
-		simpleHiddenSelections[]= 
-		{
-			"can_opener",
-			"packed",
-			"large_knife",
-			"peg",
-			"saw",
-			"scissors",
-			"small_knife"
-	    };
-		hiddenSelections[] = 
-		{
-			"texture"
-		};
-		hiddenSelectionsTextures[] = 
-		{ 
-			"ZenModPack\data\textures\swissknife\swissknife_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=40; // Vanilla 20
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType="metal";
-		//! CAN OPENER
-		openItemSpillRange[]={0,0};
-	};
-
-	//! LOCKPICK
-	class ZenSwissKnife_Lockpick: Lockpick
-	{
-		scope=2;
-		//! SHARED
-		displayName="$STR_CfgVehicles_ZenSwissKnife0";
-		descriptionShort="$STR_CfgVehicles_ZenSwissKnife1";
-		model="ZenModPack\data\models\swissknife\swissknife.p3d";
-		inventorySlot[]={ "Knife" };
-		animClass="Knife";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		itemSize[]={1,2};
-		weight=300;
-		fragility=0.0099999998;
-		simpleHiddenSelections[]= 
-		{
-			"can_opener",
-			"packed",
-			"large_knife",
-			"peg",
-			"saw",
-			"scissors",
-			"small_knife"
-	    };
-		hiddenSelections[] = 
-		{
-			"texture"
-		};
-		hiddenSelectionsTextures[] = 
-		{ 
-			"ZenModPack\data\textures\swissknife\swissknife_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=250; // Vanilla 125
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType="metal";
-		//! LOCKPICK STUFF
-		RestrainUnlockType=0;
-		isLockpick=1;
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo="MeleeFistLight";
-				range=1;
-			};
-			class Heavy
-			{
-				ammo="MeleeFistHeavy";
-				range=1;
-			};
-			class Sprint
-			{
-				ammo="MeleeFistHeavy";
-				range=2.8;
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class lockpicker_move_in
-				{
-					soundSet="lockpicker_move_in_SoundSet";
-					id=110202;
-				};
-				class lockpicker_move_out
-				{
-					soundSet="lockpicker_move_out_SoundSet";
-					id=110203;
-				};
-				class lockpicker_loop
-				{
-					soundSet="lockpicker_loop_SoundSet";
-					id=203;
-				};
-				class lockpicker_end
-				{
-					soundSet="lockpicker_end_SoundSet";
-					id=110204;
-				};
-			};
-		};
-	};
-
-	//! SCREWDRIVER 
-	class ZenSwissKnife_Screwdriver: Screwdriver
-	{
-		scope=2;
-		//! SHARED
-		displayName="$STR_CfgVehicles_ZenSwissKnife0";
-		descriptionShort="$STR_CfgVehicles_ZenSwissKnife1";
-		model="ZenModPack\data\models\swissknife\swissknife.p3d";
-		inventorySlot[]={ "Knife" };
-		animClass="Knife";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		itemSize[]={1,2};
-		weight=300;
-		fragility=0.0099999998;
-		simpleHiddenSelections[]= 
-		{
-			"can_opener",
-			"packed",
-			"large_knife",
-			"peg",
-			"saw",
-			"scissors",
-			"small_knife"
-	    };
-		hiddenSelections[] = 
-		{
-			"texture"
-		};
-		hiddenSelectionsTextures[] = 
-		{ 
-			"ZenModPack\data\textures\swissknife\swissknife_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=100; // Vanilla 100
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType="metal";
-		//! SCREWDRIVER
-		repairableWithKits[]={4};
-		repairCosts[]={5};
-		suicideAnim="onehanded";
-		RestrainUnlockType=1;
-		openItemSpillRange[]={20,40};
-		action="GestureMeleeBayonetStab";
-		lockSoundSet="wrench_loop_SoundSet";
-		compatibleLocks[]={1};
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo="MeleeSharpLight_1";
-				range=1.1;
-			};
-			class Heavy
-			{
-				ammo="MeleeSharpHeavy_1";
-				range=1.1;
-			};
-			class Sprint
-			{
-				ammo="MeleeSharpHeavy_1";
-				range=3.3;
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class animalSkinning_in
-				{
-					soundSet="animalSkinning_in_SoundSet";
-					id=516;
-				};
-				class animalSkinning
-				{
-					soundSet="animalSkinning_SoundSet";
-					id=517;
-				};
-				class animalSkinning_out
-				{
-					soundSet="animalSkinning_out_SoundSet";
-					id=518;
-				};
-				class mineScrewdriver_SoundSet
-				{
-					soundSet="mineScrewdriver_SoundSet";
-					id=11161;
-				};
-			};
-		};
-	};
-
-	//! KNIFE
-	class ZenSwissKnife_Knife: KitchenKnife
-	{
-		scope=2;
-		//! SHARED
-		displayName="$STR_CfgVehicles_ZenSwissKnife0";
-		descriptionShort="$STR_CfgVehicles_ZenSwissKnife1";
-		model="ZenModPack\data\models\swissknife\swissknife.p3d";
-		inventorySlot[]={ "Knife" };
-		animClass="Knife";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		itemSize[]={1,2};
-		weight=300;
-		fragility=0.0099999998;
-		simpleHiddenSelections[]= 
-		{
-			"can_opener",
-			"packed",
-			"large_knife",
-			"peg",
-			"saw",
-			"scissors",
-			"small_knife"
-	    };
-		hiddenSelections[] = 
-		{
-			"texture"
-		};
-		hiddenSelectionsTextures[] = 
-		{ 
-			"ZenModPack\data\textures\swissknife\swissknife_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=150; // Vanilla 100
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType="metal";
-		//! KNIFE
-		repairableWithKits[]={4};
-		repairCosts[]={5};
-		itemInfo[]={"Knife"};
-		RestrainUnlockType=1;
-		suicideAnim="onehanded";
-		openItemSpillRange[]={10,20};
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo="MeleeSharpLight_2";
-				range=1.2;
-			};
-			class Heavy
-			{
-				ammo="MeleeSharpHeavy_2";
-				range=1.2;
-			};
-			class Sprint
-			{
-				ammo="MeleeSharpHeavy_2";
-				range=3.3;
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class ChoppingTree
-				{
-					soundSet="ChoppingTree_SoundSet";
-					id=415;
-				};
-				class animalSkinning_in
-				{
-					soundSet="animalSkinning_in_SoundSet";
-					id=516;
-				};
-				class animalSkinning
-				{
-					soundSet="animalSkinning_SoundSet";
-					id=517;
-				};
-				class animalSkinning_out
-				{
-					soundSet="animalSkinning_out_SoundSet";
-					id=518;
-				};
-			};
-		};
-	};
-
-	//! SCISSORS 
-	class ZenSwissKnife_Scissors: ZenSwissKnife_Knife
-	{
-		scope = 2;
-		repairKitType=2;
-		sewingDamage=5; // Health=100 / 20 repairs from pristine
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=100;
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-	};
-
-	//! HAND SAW 
-	class ZenSwissKnife_SmallSaw: HandSaw
-	{
-		scope=2;
-		//! SHARED
-		displayName="$STR_CfgVehicles_ZenSwissKnife0";
-		descriptionShort="$STR_CfgVehicles_ZenSwissKnife1";
-		model="ZenModPack\data\models\swissknife\swissknife.p3d";
-		inventorySlot[]={ "Knife" };
-		animClass="Knife";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		itemSize[]={1,2};
-		weight=300;
-		fragility=0.0099999998;
-		simpleHiddenSelections[]= 
-		{
-			"can_opener",
-			"packed",
-			"large_knife",
-			"peg",
-			"saw",
-			"scissors",
-			"small_knife"
-	    };
-		hiddenSelections[] = 
-		{
-			"texture"
-		};
-		hiddenSelectionsTextures[] = 
-		{ 
-			"ZenModPack\data\textures\swissknife\swissknife_co.paa"
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints=100; // Vanilla 100
-					healthLevels[]=
-					{
-						
-						{
-							1,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.69999999,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.5,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0.30000001,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						},
-						
-						{
-							0,
-							
-							{
-								"ZenModPack\data\textures\swissknife\swissknife.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-		soundImpactType="metal";
-		//! SAW
-		repairableWithKits[]={4};
-		repairCosts[]={15};
-		itemInfo[]=
-		{
-			"Knife"
-		};
-		RestrainUnlockType=1;
-		dismantle_action_type=64;
-		openItemSpillRange[]={10,40};
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo="MeleeSharpLight_1";
-				range=1.2;
-			};
-			class Heavy
-			{
-				ammo="MeleeSharpHeavy_1";
-				range=1.2;
-			};
-			class Sprint
-			{
-				ammo="MeleeSharpHeavy_1";
-				range=3.3;
-			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class CutTiesSaw_end
-				{
-					soundSet="CutTiesSaw_end_SoundSet";
-					id=519;
-				};
-				class CutTiesSaw_loop
-				{
-					soundSet="CutTiesSaw_loop_SoundSet";
-					id=520;
-				};
-				class drop
-				{
-					soundset="hacksaw_drop_SoundSet";
-					id=898;
-				};
-				class HackSaw_loop
-				{
-					soundSet="HackSaw_loop_SoundSet";
-					id=1123;
-				};
-				class HackSaw_end
-				{
-					soundSet="HackSaw_end_SoundSet";
-					id=1124;
-				};
-			};
 		};
 	};
 
@@ -2985,738 +1940,298 @@ class CfgVehicles
 		};
 	};
 
-	//! MUSIC
-	class Zen_CassetteCase : Inventory_Base
+	//! PIMP MY RIDE 
+	class Chemlight_ColorBase : Inventory_Base
 	{
-		scope = 2;
-		displayName = "$STR_CfgVehicles_ZenCassetteCase0";
-		descriptionShort = "$STR_CfgVehicles_ZenCassetteCase1";
-		model = "\dz\gear\tools\cleaning_kit_wood.p3d";
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\music\case\cassette_case.paa" };
-		animClass = "Knife";
-		rotationFlags = 17;
-		weight = 250;
-		weightPerQuantityUnit = 0;
-		itemSize[] = { 2,3 };
-		itemsCargoSize[] = { 10,5 };
-		fragility = 0.0099999998;
-		allowOwnedCargoManipulation = 1; // No idea what this does, but if it's not set to 1, then items inside this inventory fall on the ground when you login with it nested in cargo
-		class DamageSystem
+		inventorySlot[] +=
 		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 100;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"DZ\gear\tools\data\cleaning_kit_wood_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
+			"ZenChemlight"
 		};
-		class MeleeModes
-		{
-			class Default
-			{
-				ammo = "MeleeLightBlunt";
-				range = 1;
-			};
-			class Heavy
-			{
-				ammo = "MeleeLightBlunt_Heavy";
-				range = 1;
-			};
-			class Sprint
-			{
-				ammo = "MeleeLightBlunt_Heavy";
-				range = 2.8;
-			};
-		};
-		soundImpactType = "wood";
-	};
-    class Zen_BoomBox : Inventory_Base
-    {
-        scope = 2;
-        displayName = "$STR_CfgVehicles_ZenBoombox0";
-        descriptionShort = "$STR_CfgVehicles_ZenBoombox1";
-        initVolume = 1.0;
-		maxVolume = 2.0;
-		noiseType = "Loud";
-		attractsZombies = "true";
-        model = "\ZenModPack\data\models\music\boombox\zen_boombox.p3d";
-		itemBehaviour = 1;
-        weight = 500;
-        itemSize[] = {4,3};
-        attachments[] =
-        {
-            "BatteryD",
-            "ZenCassette"
-        };
-        repairableWithKits[] = { 7 };
-        repairCosts[] = { 25 };
-        class EnergyManager
-        {
-            hasIcon = 1;
-            autoSwitchOff = 1;
-            energyUsagePerSecond = 0.01;
-            plugType = 1;
-            attachmentAction = 1;
-            wetnessExposure = 0.1;
-        };
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 50;
-					healthLevels[] =
-					{
+	}
 
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-    };
-    class Zen_Walkman : Inventory_Base
-    {
-        scope = 2;
-        displayName = "$STR_CfgVehicles_ZenWalkman0";
-        descriptionShort = "$STR_CfgVehicles_ZenWalkman1";
-        rotationFlags = 16;
-		initVolume = 0.25;
-		maxVolume = 0.25;
-		noiseType = "Quiet";
-		attractsZombies = "true";
-        model = "\ZenModPack\data\models\music\walkman\zen_walkman.p3d";
-        weight = 500;
-        itemSize[] = { 1,2 };
-        attachments[] =
-        {
-            "BatteryD",
-            "ZenCassette"
-        };
-		inventorySlot[] =
-		{
-			"WalkieTalkie"
-		};
-        repairableWithKits[] = { 7 };
-        repairCosts[] = { 25 };
-        class EnergyManager
-        {
-            hasIcon = 1;
-            autoSwitchOff = 1;
-            energyUsagePerSecond = 0.01;
-            plugType = 1;
-            attachmentAction = 1;
-            wetnessExposure = 0.1;
-        };
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 50;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\music\walkman\walkman.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\music\walkman\walkman.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\music\walkman\walkman_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\music\walkman\walkman_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\music\walkman\walkman_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-    };
-    class Zen_Cassette_Base : Inventory_Base
-    {
-        displayName = "$STR_CfgVehicles_ZenCassette0";
-        descriptionShort = "$STR_CfgVehicles_ZenCassette1";
-        model = "\dz\gear\tools\cassette.p3d";
-        absorbency = 0;
-        rotationFlags = 16;
-        weight = 100;
-        itemSize[] = { 2,1 };
-        fragility = 0.0099999998;
-        varWetMax = 0.5;
-		playSeconds = -1;
-		copyrighted = 0;
-		isMusic = 1;
-		repairableWithKits[] = { 7 }; // electronic repair kit
-		repairCosts[] = { 20 };
-        inventorySlot[] =
-        {
-            "ZenCassette"
-        };
-		class CfgCassette
-		{
-			soundSet = "Your_Song_Soundset";
-			playSeconds = 69; // play time in secs
-		};
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 50;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"DZ\gear\tools\data\cassette.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"DZ\gear\tools\data\cassette.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"DZ\gear\tools\data\cassette_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"DZ\gear\tools\data\cassette_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"DZ\gear\tools\data\cassette_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-        class MeleeModes
-        {
-            class Default
-            {
-                ammo = "MeleeLightBlunt";
-                range = 1;
-            };
-            class Heavy
-            {
-                ammo = "MeleeLightBlunt_Heavy";
-                range = 1;
-            };
-            class Sprint
-            {
-                ammo = "MeleeLightBlunt_Heavy";
-                range = 2.8;
-            };
-        };
-    };
-	class Zen_MusicNoise : HouseNoDestruct
+	//! CAR COMPASS
+	class ZenCarCompass : Compass 
 	{
-		// Zombie noises config
-		scope = 0;
-		class Quiet
-		{
-			strength = 120;
-			type = "sound";
-		};
-		class Loud
-		{
-			strength = 500;
-			type = "sound";
-		};
-		class Louder
-		{
-			strength = 1000;
-			type = "sound";
-		};
+		scope = 1;
 	};
-	class Zen_Cassette_RandomTape : Zen_Cassette_Base
-	{
-		scope = 2;
-		displayName = "Random Tape";
-		descriptionShort = "Will convert to random cassette for money";
-	};
+
 	// Vehicles
 	class OffroadHatchback : CarScript
 	{
 		attachments[] +=
 		{
-			"ZenCassette",
 			"ZenCarGlovebox",
-			"Chemlight"
+			"ZenChemlight",
+			"Shoulder", 
+			"Back", 
+			"ZenTireGasoline",
+			"ZenTireIron",
+			"ZenTireRepair",
+			"ZenJournal_Compass",
+			"ZenBlowtorch"
 		};
 		class GUIInventoryAttachmentsProps
 		{
-			class ZenMusicCarRadio
+			class ZenInterior
 			{
-				view_index=1;
-				name = "$STR_CfgVehicles_ZenCassette0";
-				description = "$STR_CfgVehicles_ZenCassette0";
-				icon = "set:zen_music image:cassette_icon";
-				attachmentSlots[] =
-				{
-					"ZenCassette"
-				};
-			};
-			class ZenPimpMyRide
-			{
-				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				description = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				icon = "set:dayz_inventory image:chemlight";
-				attachmentSlots[] =
-				{
-					"Chemlight"
-				};
-			};
-			class ZenCarGlovebox
-			{
-				name = "$STR_CfgVehicles_ZenGlovebox";
-				description = "$STR_CfgVehicles_ZenGlovebox";
+				name = "$STR_CfgVehicles_ZenInterior";
+				description = "$STR_CfgVehicles_ZenInterior";
 				icon = "missing";
-				attachmentSlots[] = { "ZenCarGlovebox" };
+				attachmentSlots[] = 
+				{
+					"ZenCassette",
+					"ZenJournal_Compass",
+					"ZenCarGlovebox"
+				};
 			};
+			class ZenCarAttachments
+			{
+				name = "$STR_CfgVehicles_ZenAttachments";
+				description = "$STR_CfgVehicles_ZenAttachments";
+				icon = "missing";
+				attachmentSlots[] = 
+				{
+					"ZenChemlight",
+					"Shoulder", 
+					"Back", 
+					"ZenTireGasoline",
+					"ZenTireIron",
+					"ZenTireRepair",
+					"ZenBlowtorch"
+				};
+			};					
 		};
 	};
 	class Offroad_02 : CarScript
 	{
 		attachments[] +=
 		{
-			"ZenCassette",
 			"ZenCarGlovebox",
-			"Chemlight"
+			"ZenChemlight",
+			"Shoulder", 
+			"Back", 
+			"ZenTireGasoline",
+			"ZenTireIron",
+			"ZenTireRepair",
+			"ZenJournal_Compass",
+			"ZenBlowtorch"
 		};
 		class GUIInventoryAttachmentsProps
 		{
-			class ZenMusicCarRadio
+			class ZenInterior
 			{
-				view_index=1;
-				name = "$STR_CfgVehicles_ZenCassette0";
-				description = "$STR_CfgVehicles_ZenCassette0";
-				icon = "Cassette";
-				attachmentSlots[] =
-				{
-					"ZenCassette"
-				};
-			};
-			class ZenPimpMyRide
-			{
-				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				description = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				icon = "set:dayz_inventory image:chemlight";
-				attachmentSlots[] =
-				{
-					"Chemlight"
-				};
-			};
-			class ZenCarGlovebox
-			{
-				name = "$STR_CfgVehicles_ZenGlovebox";
-				description = "$STR_CfgVehicles_ZenGlovebox";
+				name = "$STR_CfgVehicles_ZenInterior";
+				description = "$STR_CfgVehicles_ZenInterior";
 				icon = "missing";
-				attachmentSlots[] = { "ZenCarGlovebox" };
+				attachmentSlots[] = 
+				{
+					"ZenCassette",
+					"ZenJournal_Compass",
+					"ZenCarGlovebox"
+				};
 			};
+			class ZenCarAttachments
+			{
+				name = "$STR_CfgVehicles_ZenAttachments";
+				description = "$STR_CfgVehicles_ZenAttachments";
+				icon = "missing";
+				attachmentSlots[] = 
+				{
+					"ZenChemlight",
+					"Shoulder", 
+					"Back", 
+					"ZenTireGasoline",
+					"ZenTireIron",
+					"ZenTireRepair",
+					"ZenBlowtorch"
+				};
+			};					
 		};
 	};
 	class CivilianSedan : CarScript
 	{
 		attachments[] +=
 		{
-			"ZenCassette",
 			"ZenCarGlovebox",
-			"Chemlight"
+			"ZenChemlight",
+			"Shoulder", 
+			"Back", 
+			"ZenTireGasoline",
+			"ZenTireIron",
+			"ZenTireRepair",
+			"ZenJournal_Compass",
+			"ZenBlowtorch"
 		};
 		class GUIInventoryAttachmentsProps
 		{
-			class ZenMusicCarRadio
+			class ZenInterior
 			{
-				view_index=1;
-				name = "$STR_CfgVehicles_ZenCassette0";
-				description = "$STR_CfgVehicles_ZenCassette0";
-				icon = "set:zen_music image:cassette_icon";
-				attachmentSlots[] =
-				{
-					"ZenCassette"
-				};
-			};
-			class ZenPimpMyRide
-			{
-				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				description = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				icon = "set:dayz_inventory image:chemlight";
-				attachmentSlots[] =
-				{
-					"Chemlight"
-				};
-			};
-			class ZenCarGlovebox
-			{
-				name = "$STR_CfgVehicles_ZenGlovebox";
-				description = "$STR_CfgVehicles_ZenGlovebox";
+				name = "$STR_CfgVehicles_ZenInterior";
+				description = "$STR_CfgVehicles_ZenInterior";
 				icon = "missing";
-				attachmentSlots[] = { "ZenCarGlovebox" };
+				attachmentSlots[] = 
+				{
+					"ZenCassette",
+					"ZenJournal_Compass",
+					"ZenCarGlovebox"
+				};
 			};
+			class ZenCarAttachments
+			{
+				name = "$STR_CfgVehicles_ZenAttachments";
+				description = "$STR_CfgVehicles_ZenAttachments";
+				icon = "missing";
+				attachmentSlots[] = 
+				{
+					"ZenChemlight",
+					"Shoulder", 
+					"Back", 
+					"ZenTireGasoline",
+					"ZenTireIron",
+					"ZenTireRepair",
+					"ZenBlowtorch"
+				};
+			};					
 		};
 	};
 	class Hatchback_02 : CarScript
 	{
 		attachments[] +=
 		{
-			"ZenCassette",
 			"ZenCarGlovebox",
-			"Chemlight"
+			"ZenChemlight",
+			"Shoulder", 
+			"Back", 
+			"ZenTireGasoline",
+			"ZenTireIron",
+			"ZenTireRepair",
+			"ZenJournal_Compass",
+			"ZenBlowtorch"
 		};
 		class GUIInventoryAttachmentsProps
 		{
-			class ZenMusicCarRadio
+			class ZenInterior
 			{
-				view_index=1;
-				name = "$STR_CfgVehicles_ZenCassette0";
-				description = "$STR_CfgVehicles_ZenCassette0";
-				icon = "Cassette";
-				attachmentSlots[] =
-				{
-					"ZenCassette"
-				};
-			};
-			class ZenPimpMyRide
-			{
-				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				description = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				icon = "set:dayz_inventory image:chemlight";
-				attachmentSlots[] =
-				{
-					"Chemlight"
-				};
-			};
-			class ZenCarGlovebox
-			{
-				name = "$STR_CfgVehicles_ZenGlovebox";
-				description = "$STR_CfgVehicles_ZenGlovebox";
+				name = "$STR_CfgVehicles_ZenInterior";
+				description = "$STR_CfgVehicles_ZenInterior";
 				icon = "missing";
-				attachmentSlots[] = { "ZenCarGlovebox" };
+				attachmentSlots[] = 
+				{
+					"ZenCassette",
+					"ZenJournal_Compass",
+					"ZenCarGlovebox"
+				};
 			};
+			class ZenCarAttachments
+			{
+				name = "$STR_CfgVehicles_ZenAttachments";
+				description = "$STR_CfgVehicles_ZenAttachments";
+				icon = "missing";
+				attachmentSlots[] = 
+				{
+					"ZenChemlight",
+					"Shoulder", 
+					"Back", 
+					"ZenTireGasoline",
+					"ZenTireIron",
+					"ZenTireRepair",
+					"ZenBlowtorch"
+				};
+			};					
 		};
 	};
 	class Sedan_02 : CarScript
 	{
 		attachments[] +=
 		{
-			"ZenCassette",
 			"ZenCarGlovebox",
-			"Chemlight" 
+			"ZenChemlight",
+			"Shoulder", 
+			"Back", 
+			"ZenTireGasoline",
+			"ZenTireIron",
+			"ZenTireRepair",
+			"ZenJournal_Compass",
+			"ZenBlowtorch"
 		};
 		class GUIInventoryAttachmentsProps
 		{
-			class ZenMusicCarRadio
+			class ZenInterior
 			{
-				view_index=1;
-				name = "$STR_CfgVehicles_ZenCassette0";
-				description = "$STR_CfgVehicles_ZenCassette0";
-				icon = "Cassette";
-				attachmentSlots[] =
-				{
-					"ZenCassette"
-				};
-			};
-			class ZenPimpMyRide
-			{
-				name = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				description = "$STR_CfgVehicles_Chemlight_ColorBase0";
-				icon = "set:dayz_inventory image:chemlight";
-				attachmentSlots[] =
-				{
-					"Chemlight"
-				};
-			};
-			class ZenCarGlovebox
-			{
-				name = "$STR_CfgVehicles_ZenGlovebox";
-				description = "$STR_CfgVehicles_ZenGlovebox";
+				name = "$STR_CfgVehicles_ZenInterior";
+				description = "$STR_CfgVehicles_ZenInterior";
 				icon = "missing";
-				attachmentSlots[] = { "ZenCarGlovebox" };
-			};
-		};
-	};
-
-	//! ZIPPO 
-	// Vanilla Petrol lighter EnergyManager config
-	class ZenPetrolLighter: PetrolLighter
-	{
-		varQuantityMin=0;
-		varQuantityMax=900; 
-		varQuantityInit=900;
-		varQuantityDestroyOnMin=0;
-		weightPerQuantityUnit=0;
-		class EnergyManager
-		{
-			autoSwitchOff=1;
-			energyAtSpawn=900; // 15 mins burn time
-			energyStorageMax=900;
-			energyUsagePerSecond=1;
-			updateInterval=1;
-			convertEnergyToQuantity=1;
-			autoSwitchOffWhenInCargo=1;
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
-			{
-				class LighterZippo
+				attachmentSlots[] = 
 				{
-					soundSet=""; // Mute action SFX as lighter is lit
-					id=201;
+					"ZenCassette",
+					"ZenJournal_Compass",
+					"ZenCarGlovebox"
 				};
 			};
+			class ZenCarAttachments
+			{
+				name = "$STR_CfgVehicles_ZenAttachments";
+				description = "$STR_CfgVehicles_ZenAttachments";
+				icon = "missing";
+				attachmentSlots[] = 
+				{
+					"ZenChemlight",
+					"Shoulder", 
+					"Back", 
+					"ZenTireGasoline",
+					"ZenTireIron",
+					"ZenTireRepair",
+					"ZenBlowtorch"
+				};
+			};					
 		};
 	};
-
-	// My zippos
-	class ZenZippoLighter: ZenPetrolLighter
+	class Truck_01_Base;
+	class Truck_01_Covered: Truck_01_Base
 	{
-		scope=2;
-		displayName="$STR_CfgVehicles_ZenZippoLighter0";
-		descriptionShort="$STR_CfgVehicles_ZenZippoLighter1";
-		model="ZenModPack\data\models\zippo\zippo.p3d";
-		rotationFlags=17;
-		isMeleeWeapon=1;
-		canBeSplit=0;
-		absorbency=0;
-		weight=50;
-		itemSize[]={1,1};
-		stackedUnit="ml";
-		quantityBar=1;
-		varQuantityMin=0;
-		varQuantityMax=1800;
-		varQuantityInit=1800;
-		varQuantityDestroyOnMin=0;
-		varTotalLifetime=7200; // How many seconds does this zippo work for before ruining from Pristine?
-		weightPerQuantityUnit=0;
-		simpleHiddenSelections[]= 
+		attachments[] +=
 		{
-			"top_open",
-			"top_closed"
-	    };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zippo\zippo_co.paa" };
-		class EnergyManager
-		{
-			autoSwitchOff=1;
-			energyAtSpawn=1800; // 30 mins burn time
-			energyStorageMax=1800;
-			energyUsagePerSecond=1;
-			updateInterval=1;
-			convertEnergyToQuantity=1;
-			autoSwitchOffWhenInCargo=1;
+			"ZenCarGlovebox",
+			"ZenChemlight",
+			"Shoulder", 
+			"Back", 
+			"ZenTireGasoline",
+			"ZenTireIron",
+			"ZenTireRepair",
+			"ZenJournal_Compass",
+			"ZenBlowtorch"
 		};
-		class DamageSystem
+		class GUIInventoryAttachmentsProps
 		{
-			class GlobalHealth
+			class ZenInterior
 			{
-				class Health
+				name = "$STR_CfgVehicles_ZenInterior";
+				description = "$STR_CfgVehicles_ZenInterior";
+				icon = "missing";
+				attachmentSlots[] = 
 				{
-					hitpoints = 100;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\zippo\zippo.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\zippo\zippo.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\zippo\zippo_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\zippo\zippo_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\zippo\zippo_destruct.rvmat"
-							}
-						}
-					};
+					"ZenCassette",
+					"ZenJournal_Compass",
+					"ZenCarGlovebox"
 				};
 			};
-		};
-		class AnimEvents
-		{
-			class SoundWeapon
+			class ZenCarAttachments
 			{
-				class LighterZippo
+				name = "$STR_CfgVehicles_ZenAttachments";
+				description = "$STR_CfgVehicles_ZenAttachments";
+				icon = "missing";
+				attachmentSlots[] = 
 				{
-					soundSet=""; // Mute action SFX as lighter is lit
-					id=201;
+					"ZenChemlight",
+					"Shoulder", 
+					"Back", 
+					"ZenTireGasoline",
+					"ZenTireIron",
+					"ZenTireRepair",
+					"ZenBlowtorch"
 				};
-			};
+			};					
 		};
-		soundImpactType="metal";
-	};
-	class ZenZippoLighter_Peace: ZenZippoLighter
-	{
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zippo\zippo_peace_co.paa" };
-	};
-	class ZenZippoLighter_Anarchy: ZenZippoLighter
-	{
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zippo\zippo_anarchy_co.paa" };
-	};
-	class ZenZippoLighter_Zenarchist: ZenZippoLighter
-	{
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\zippo\zippo_zenarchist_co.paa" };
 	};
 
 	//! GRAVES 
@@ -4045,7 +2560,6 @@ class CfgVehicles
 		};
 	};
 
-
 	// Make punched card non-stackable as it inherits from Paper
 	class PunchedCard : Paper
 	{
@@ -4069,86 +2583,6 @@ class CfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 1;
 		varStackMax = 1;
-		inventorySlot[] +=
-		{
-			"ZenJournal_Paper1",
-			"ZenJournal_Paper2",
-			"ZenJournal_Paper3",
-			"ZenJournal_Paper4",
-			"ZenJournal_Paper5"
-		};
-	};
-
-	// Define colored pens
-	class Pen_ColorBase : Inventory_Base
-	{
-		scope = 0;
-		quantityBar = 1;
-		varQuantityInit = 100;
-		varQuantityMin = 0;
-		varQuantityMax = 100;
-		//varQuantityDestroyOnMin = 0;
-		stackedUnit = "percentage";
-		inventorySlot[] +=
-		{
-			"ZenJournal_Pen"
-		};
-	};
-	class Pen_Black : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Black";
-		penColor[] = { 10,10,10 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_black_co.paa" };
-	};
-	class Pen_Red : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Red";
-		penColor[] = { 200,20,20 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_red_co.paa" };
-	};
-	class Pen_Green : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Green";
-		penColor[] = { 24,150,24 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_green_co.paa" };
-	};
-	class Pen_Blue : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Blue";
-		penColor[] = { 0,65,200 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_blue_co.paa" };
-	};
-	class Pen_Pink : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Pink";
-		penColor[] = { 255,0,162 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_pink_co.paa" };
-	};
-	class Pen_Purple : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Purple";
-		penColor[] = { 144,0,255 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_purple_co.paa" };
-	};
-	class Pen_Orange : Pen_ColorBase
-	{
-		scope = 2;
-		displayName = "$STR_ZenPen_Orange";
-		penColor[] = { 255,150,0 };
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\notes\loot_pen_orange_co.paa" };
 	};
 
 	//! VIKING AXE 
@@ -4803,7 +3237,8 @@ class CfgVehicles
 			"ZenCWB_Screwdriver",
 			"ZenCWB_Wrench",
 			"ZenCWB_Paint1",
-			"ZenCWB_Paint2"
+			"ZenCWB_Paint2",
+			"ZenBlowtorch"
 		};
 		class DamageSystem
 		{
@@ -5086,15 +3521,6 @@ class CfgVehicles
 			"ZenTireRack7",
 			"ZenTireRack8"
 		};
-	};
-
-	//! ZOMBIE DOORS 
-	class ZenZombieDoorBangerBang : Inventory_Base
-	{
-		scope = 1;
-		model = "\dz\gear\consumables\Stone.p3d";
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "#(argb,8,8,3)color(1,1,1,0,CA)" };
 	};
 
 	//! TREESPLOSIONS
@@ -8479,94 +6905,6 @@ class CfgVehicles
 		};
 	};
 
-	// Static music boombox
-	class Zen_BoomBox_Static : Inventory_Base
-    {
-		scope=1;
-		storageCategory = 10;
-        displayName = "$STR_CfgVehicles_ZenBoombox0";
-        descriptionShort = "$STR_CfgVehicles_ZenBoombox1";
-		initVolume = 0.5;
-        maxVolume = 1.0;
-		attractsZombies = "false";
-        model = "\ZenModPack\data\models\music\boombox\zen_boombox.p3d";
-		itemBehaviour = 1;
-        weight = 99999;
-        itemSize[] = {4,3};
-        attachments[] =
-        {
-            "BatteryD",
-            "ZenCassette"
-        };
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 99999;
-					healthLevels[] =
-					{
-
-						{
-							1,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox.rvmat"
-							}
-						},
-
-						{
-							0.69999999,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox.rvmat"
-							}
-						},
-
-						{
-							0.5,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox_damage.rvmat"
-							}
-						},
-
-						{
-							0.30000001,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox_damage.rvmat"
-							}
-						},
-
-						{
-							0,
-
-							{
-								"ZenModPack\data\textures\music\boombox\boombox_destruct.rvmat"
-							}
-						}
-					};
-				};
-			};
-		};
-	};
-
-	// Static invisible music boombox
-	class Zen_BoomBox_Invisible_Static : Zen_BoomBox_Static
-    {
-		scope=1;
-		storageCategory = 10;
-		initVolume = 0.4;
-		maxVolume = 0.4;
-		displayName = "";
-		descriptionShort = "";
-		model = "\dz\gear\consumables\Stone.p3d";
-		hiddenSelections[] = { "zbytek" };
-		hiddenSelectionsTextures[] = { "#(argb,8,8,3)color(1,1,1,0,CA)" };
-	};
-
 	// Fireplace which burns for eternity
 	class Zen_EternalFireplace: Fireplace {};
 
@@ -8578,6 +6916,40 @@ class CfgVehicles
 
 	// THIS MUST BE AT THE END FOR DUMP CFGVEHICLES TO WORK! 
 	class ZenModPack_EndDump {};
+};
+
+class CfgMagazines 
+{
+	class Mag_AK74_45Rnd;
+	class Zen_Mag_AK74_45Rnd_Green: Mag_AK74_45Rnd
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.35,0.36,0.28,1.0,CO)"
+		};
+	};
+	class Zen_Mag_AK74_45Rnd_Black: Mag_AK74_45Rnd
+	{
+		scope=2;
+		hiddenSelectionsTextures[]=
+		{
+			"#(argb,8,8,3)color(0.15,0.15,0.15,1.0,CO)"
+		};
+	};
+};
+
+class CfgWeapons
+{
+	class Rifle_Base;
+	class AK74_Base: Rifle_Base
+	{
+		magazines[] +=
+		{
+			"Zen_Mag_AK74_45Rnd_Green",
+			"Zen_Mag_AK74_45Rnd_Black"
+		};
+	};
 };
 
 class CfgSlots
@@ -8594,12 +6966,12 @@ class CfgSlots
 		description = "Chlorine Tablets.";
 	};
 
-	//! RAID ALARM
-	class Slot_ZenMegaphone
+	class Slot_ZenBlowtorch
 	{
-		name = "ZenMegaphone";
-		displayName = "$STR_CfgVehicles_Megaphone0";
-		ghostIcon = "missing";
+		name = "ZenBlowtorch";
+		displayName = "$STR_Blowtorch0";
+		ghostIcon = "set:zenblowtorch image:zenblowtorch";
+		show = "true";
 	};
 
 	//! SLEEPING BAGS 
@@ -8617,6 +6989,14 @@ class CfgSlots
 		displayName = "$STR_CfgVehicles_ZenGlovebox";
 		ghostIcon = "missing";
 		description = "$STR_CfgVehicles_ZenGlovebox";
+	};
+
+	//! PIMP MY RIDE
+	class Slot_ZenChemlight
+	{
+		name = "ZenChemlight";
+		displayName = "$STR_CfgVehicles_Chemlight_ColorBase0";
+		ghostIcon = "set:dayz_inventory image:chemlight";
 	};
 
 	//! FIRE FUEL
@@ -8714,14 +7094,6 @@ class CfgSlots
 		displayName = "$STR_ZenNoteTxt";
 		ghostIcon = "set:dayz_inventory image:paper";
 	};
-
-	//! MUSIC 
-	class Slot_ZenCassette
-    {
-        name = "ZenCassette";
-        displayName = "$STR_CfgVehicles_ZenCassette0";
-		ghostIcon = "set:zen_music image:cassette_icon";
-    };
 
 	//! CAR WORKBENCH 
 	class Slot_ZenCWB_Spark2
@@ -9226,20 +7598,6 @@ class CfgNonAIVehicles
 {
 	class ProxyAttachment;
 
-	//! RAID ALARM
-	class Proxyzenbaseradio_prox : ProxyAttachment
-	{
-		scope = 2;
-		inventorySlot = "Back";
-		model = "ZenModPack/data/models/RaidAlarm/proxy/zenbaseradio_prox.p3d";
-	};
-	class Proxyzenmegaphone_prox : ProxyAttachment
-	{
-		scope = 2;
-		inventorySlot = "ZenMegaphone";
-		model = "ZenModPack/data/models/RaidAlarm/proxy/zenmegaphone_prox.p3d";
-	};
-
 	//! CAMONET SHELTER
 	class Proxyalicebackpack_g : ProxyAttachment
 	{
@@ -9581,18 +7939,6 @@ class CfgAmmo
 
 class CfgSoundShaders
 {
-	//! RAID ALARM
-	class Zen_RaidAlarm_SoundShader
-	{
-		frequency = 1;
-		range = 500;
-		volume = 1;
-		samples[] =
-		{
-			{ "ZenModPack\data\sounds\raidalarm\alarm", 1 }
-		};
-	};
-
 	//! NOTIFICATION AUDIO 
 	class Zen_NotificationAudio_SoundShader_Base
 	{
@@ -9603,15 +7949,6 @@ class CfgSoundShaders
 
 	// Radio static
 	class Zen_MissionRadioStatic_SoundShader : Zen_NotificationAudio_SoundShader_Base { samples[] = { { "ZenModPack\data\sounds\notifications\radiostatic", 1 } }; };
-
-	//! MUSIC
-	class Zen_Cassette_SoundShader_Base
-    {
-        samples[] = {};
-        frequency = 1;
-        range = 100;
-        volume = 1;
-    };
 
 	//! CHESS 
 	class ZenChess_SoundShader_Base
@@ -9633,40 +7970,6 @@ class CfgSoundShaders
 			{ "ZenModPack\data\sounds\chess\chess5", 1 },
 			{ "ZenModPack\data\sounds\chess\chess6", 1 }
 		}; 
-	};
-
-	//! ZOMBIE DOORS 
-	class Zombie_Hit_Door_SoundShader
-	{
-		samples[] =
-		{
-			{
-				"\DZ\sounds\vehicles\shared\collisions\offroad_hit_character_1",
-				1
-			},
-			{
-				"\DZ\sounds\vehicles\shared\collisions\offroad_hit_character_2",
-				1
-			},
-			{
-				"\DZ\sounds\vehicles\shared\collisions\offroad_hit_character_3",
-				1
-			},
-			{
-				"\DZ\sounds\vehicles\shared\collisions\offroad_hit_character_4",
-				1
-			},
-			{
-				"\DZ\sounds\vehicles\shared\collisions\offroad_hit_character_5",
-				1
-			},
-			{
-				"\DZ\sounds\vehicles\shared\collisions\offroad_hit_character_6",
-				1
-			}
-		};
-		volume = 1;
-		range = 40;
 	};
 
 	//! UTILITIES
@@ -9692,53 +7995,30 @@ class CfgSoundSets
 	class baseVehicles_SoundSet;
 	class baseCharacter_SoundSet;
 
-	//! RAID ALARM
-	class Zen_RaidAlarm_SoundSet : baseVehicles_SoundSet
-	{
-		soundShaders[] = { "Zen_RaidAlarm_SoundShader" };
-		volumefactor = 1;
-		class Noise
-		{
-			strength = 500;
-			type = "shot";
-		};
-	};
-
 	//! NOTIFICATION 
 	// Tip: Apply a 1000hz High Pass Filter in Audacity to get radio-sounding tinny voice audio
 	class Zen_BaseMissionRadio_SoundSet
 	{
-		spatial=0;
+		spatial=1;
 		doppler=0;
 		loop=0;
-		range=50;
-		volume=0.1;
+		range=20;
+		volumefactor=0.3;
 		playStatic=1; // Plays a static sound in the background of the audio
+		playOnRadio=1; // Plays sound on any turned on radio
 	};
 
 	//! Radio static
 	class Zen_MissionRadioStatic_SoundSet { soundShaders[] = { "Zen_MissionRadioStatic_SoundShader" }; volumeFactor = 0.15; };
 
 	//! UTILITIES
-	class Zen_NotifySoundset { soundShaders[] = { "Zen_NotifySoundset" }; volumeFactor = 0.15; };
+	class Zen_NotifySoundset 
+	{ 
+		spatial = 0;
+		soundShaders[] = { "Zen_NotifySoundset" }; 
+		volumeFactor = 0.1; 
+	};
 
 	//! CHESS 
 	class ZenChess_SoundSet { soundShaders[] = { "ZenChess_SoundShader" }; volumeFactor = 1.0; };
-
-	//! ZOMBIE DOORS 
-	class Zombie_Hit_Door_SoundSet : baseVehicles_SoundSet
-	{
-		soundShaders[] =
-		{
-			"Zombie_Hit_Door_SoundShader"
-		};
-		volumefactor = 1;
-		frequencyrandomizer = 1;
-		volumerandomizer = 1;
-		class Noise
-		{
-			strength = 20;
-			type = "sound";
-		};
-	};
 };

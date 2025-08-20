@@ -8,32 +8,11 @@ modded class Hologram
             return;
         }
 
-        //! NOTES
-		if (action_item.IsInherited(ZenNote))
-		{
-			SetIsColliding(false);
-			return;
-		}
-
 		super.EvaluateCollision(action_item);
 	}
 
     override void SetProjectionPosition(vector position)
 	{
-        //! MUSIC
-		Zen_BoomBox boombox = Zen_BoomBox.Cast(m_Parent);
-		if (boombox)
-		{
-			m_Projection.SetPosition(position + "0 0.15 0");
-			
-			if (IsFloating())
-			{
-				m_Projection.SetPosition(SetOnGround(position + "0 0.15 0"));
-			}
-
-			return;
-		}
-
         //! KIT BOX
         ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
         if (zen_kit != NULL)
@@ -44,19 +23,6 @@ modded class Hologram
 
 		super.SetProjectionPosition( position );
 	}
-
-    override void SetProjectionOrientation(vector orientation)
-    {
-        //! RAID ALARM
-        ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
-        if (zen_kit != NULL)
-        {
-            m_Projection.SetOrientation(orientation + zen_kit.GetDeployOrientationOffset());
-            return;
-        }
-
-        super.SetProjectionOrientation(orientation);
-    }
 
     override string ProjectionBasedOnParent()
     {
@@ -80,11 +46,6 @@ modded class Hologram
             return newType;
         }
 
-        //! RAID ALARM
-        Zen_RaidAlarmStationKit station_kit = Zen_RaidAlarmStationKit.Cast(m_Parent);
-        if (station_kit != NULL)
-            return station_kit.GetDeployedClassname();
-
         //! KIT BOX
         ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
         if (zen_kit != NULL)
@@ -95,24 +56,6 @@ modded class Hologram
 
     override EntityAI PlaceEntity(EntityAI entity_for_placing)
     {
-        //! RAID ALARM
-        string itemType = entity_for_placing.GetType();
-        itemType.ToLower();
-
-        // Check if this item is on our raid config
-        foreach(string s : GetZenDiscordConfig().ItemsDeployedTriggerRaidAlert)
-        {
-            s.ToLower();
-            if (itemType == s || entity_for_placing.IsKindOf(s))
-            {
-                ZenRaidAlarmPlugin plugin = ZenRaidAlarmPlugin.Cast(GetPlugin(ZenRaidAlarmPlugin));
-                if (plugin)
-                    plugin.AlertNearestRaidStation(entity_for_placing.GetPosition());
-
-                break;
-            }
-        }
-
         //! CAMO SHELTER
         if (m_Parent.IsInherited(Zen_CamoShelterKit))
         {

@@ -2,10 +2,7 @@ class ZenGlovebox : WoodenCrate
 {
 	void ZenGlovebox()
 	{
-		if (GetGame().IsDedicatedServer())
-		{
-			SetAllowDamage(false);
-		}
+		SetAllowDamage(false);
 	}
 
 	override bool CanPutInCargo(EntityAI parent)
@@ -34,6 +31,8 @@ class ZenGlovebox : WoodenCrate
 		super.OnItemLocationChanged(old_owner, new_owner);
 
 		if (!new_owner || !new_owner.IsInherited(CarScript))
+		{
 			DeleteSafe();
+		}
 	}
-};
+}

@@ -7,6 +7,7 @@ class ZenBasebuildingConfig
 	bool PackTentsAnywhere;
 	ref map<string, float> CantPlaceInsideOfSelf;
 	ref array<ref ZenBasebuildingLimits> BasebuildingLimits;
+	bool NoBuildZonesExpansionAutoCreate;
 	string NoBuildZoneDefaultMessage;
 	ref array<ref ZenNoBuildZone> NoBuildZones;
 	ref array<string> Whitelist;
@@ -30,6 +31,7 @@ class ZenBasebuildingConfig
 	{
 		DebugOn = false;
 
+		NoBuildZonesExpansionAutoCreate = true;
 		PackTentsAnywhere = true;
 
 		CantPlaceInsideOfSelf = new map<string, float>;
@@ -100,12 +102,12 @@ class ZenNoBuildZone
 	float MinimumDistance;
 	bool IgnoreHeight;
 
-	void ZenNoBuildZone(string name, vector pos, float dist, bool height)
+	void ZenNoBuildZone(string name, vector pos, float dist, bool ignoreHeight)
 	{
 		ZoneName = name;
 		Position = pos;
 		MinimumDistance = dist;
-		IgnoreHeight = height;
+		IgnoreHeight = ignoreHeight;
 	}
 }
 

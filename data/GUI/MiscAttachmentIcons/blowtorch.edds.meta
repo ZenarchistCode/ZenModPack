@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{8B58879F281B6683}ZenMods/ZenModPack/data/GUI/MiscAttachmentIcons/blowtorch.png"
+ Author "zen"
+ ChangeDate -995921164
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "blowtorch.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}
