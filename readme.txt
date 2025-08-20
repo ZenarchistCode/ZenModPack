@@ -1,6 +1,10 @@
 Check the Wiki guide for details & instructions: https://github.com/ZenarchistCode/ZenModPack/wiki
 
+*****
 
+To contact me you can send me a message on here to get in touch: https://buymeacoffee.com/zenarchist - I get an insane amount of messages so it's the best way for me to filter out the noise and focus on people who are willing to support my work with a coffee first.
+
+*****
 
 Change Notes:
 
