@@ -13,6 +13,7 @@ class ZenModPackClientConfig
 	bool ShowRadioBadge = true;
 	bool ImmersiveLogin = true;
 	bool BetterChatFont = false;
+	bool MagObfuscation = false;
 
 	void Load()
 	{
@@ -32,6 +33,7 @@ class ZenModPackClientConfig
 			if (CONFIG_VERSION == CURRENT_VERSION)
 			{
 				// Config exists and version matches.
+				Save();
 				return;
 			}
 		}

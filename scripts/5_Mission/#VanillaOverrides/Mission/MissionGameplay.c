@@ -161,7 +161,7 @@ modded class MissionGameplay
         }
 	}
 
-    private bool CheckInput(string inputName)
+    private bool Zen_CheckInput(string inputName)
     {
         if(GetUApi())
 		{
@@ -186,7 +186,7 @@ modded class MissionGameplay
 
         foreach (string inputName : m_AutoRunInterruptInputs)
         {
-            if (CheckInput(inputName))
+            if (Zen_CheckInput(inputName))
             {
                 return true;
             }
@@ -206,7 +206,7 @@ modded class MissionGameplay
             return false;
         }
 
-        if (CheckInput("UAZenAutoRunToggle") && !player.IsAutoRunning() && !IsControlDisabled() && !AutoRunShouldInterrupt(player))
+        if (Zen_CheckInput("UAZenAutoRunToggle") && !player.IsAutoRunning() && !IsControlDisabled() && !AutoRunShouldInterrupt(player))
         {
             return true;
         }

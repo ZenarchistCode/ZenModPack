@@ -103,6 +103,7 @@ modded class MissionBase
 
         GetZenModPackClientConfig().BetterChatFont = ZenModEnabled("ZenBetterChatFont");
         GetZenModPackClientConfig().ImmersiveLogin = ZenModEnabled("ZenImmersiveLogin");
+        GetZenModPackClientConfig().MagObfuscation = ZenModEnabled("ZenMagObfuscation");
         GetZenModPackClientConfig().Save();
 	}
 

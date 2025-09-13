@@ -501,19 +501,19 @@ class ZenFunctions
 		if (!GetGame().IsClient())
 			return;
 
-		if (isEnabled)
+		if (!isEnabled)
 		{
 			GetGame().GetMission().AddActiveInputExcludes({"menu"});
 
 			if (hideHud)
-				GetGame().GetMission().GetHud().Show(true);
+				GetGame().GetMission().GetHud().Show(false);
 		}
 		else
 		{
 			GetGame().GetMission().RemoveActiveInputExcludes({"menu"});
 
 			if (hideHud)
-				GetGame().GetMission().GetHud().Show(false);
+				GetGame().GetMission().GetHud().Show(true);
 		}
 	}
 

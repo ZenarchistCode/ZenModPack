@@ -6,7 +6,7 @@ modded class Well
 	// This is called whenever a new well is created (ie. loaded in on server startup)
 	void Well()
 	{
-		if (!ZenModEnabled("ZenRepairPumps"))
+		if (!ZenModEnabled("ZenRepairWells"))
 		{
 			m_ZenIsRepaired = true;
 			return;

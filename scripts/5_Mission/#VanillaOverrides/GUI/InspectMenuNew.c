@@ -50,7 +50,7 @@ modded class InspectMenuNew
 
 	static void ZenUpdateAmmoInfo(Widget root_widget, EntityAI item)
 	{
-		if (!ZenModEnabled("ZenMagObfuscation"))
+		if (!GetZenModPackClientConfig().MagObfuscation)
 		{
 			return;
 		}

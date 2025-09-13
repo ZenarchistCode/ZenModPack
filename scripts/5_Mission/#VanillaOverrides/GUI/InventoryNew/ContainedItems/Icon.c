@@ -2,7 +2,7 @@ modded class Icon
 {
 	override void RefreshMuzzleIcon()
 	{
-		if (!ZenModEnabled("ZenMagObfuscation"))
+		if (!GetZenModPackClientConfig().MagObfuscation)
 		{
 			super.RefreshMuzzleIcon();
 			return;

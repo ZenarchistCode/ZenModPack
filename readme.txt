@@ -4,9 +4,16 @@ Check the Wiki guide for details & instructions: https://github.com/ZenarchistCo
 
 To contact me you can send me a message on here to get in touch: https://buymeacoffee.com/zenarchist - I get an insane amount of messages so it's the best way for me to filter out the noise and focus on people who are willing to support my work with a coffee first.
 
+If you encounter a bug with any of my mods please report it here: https://github.com/ZenarchistCode/ZenModPack/issues
+
 *****
 
 Change Notes:
+
+1st September 2025:
+ZenZombieDoors:
+- Fixed door hitting plugin not loading if ZenModPack is not present.
+- Moved note & blacklist logging from print logs to profiles/Zenarchist/Logs/ZenNotes.log
 
 20th August 2025:
 ZenDiscordAPI:
