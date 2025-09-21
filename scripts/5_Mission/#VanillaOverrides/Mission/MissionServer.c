@@ -55,10 +55,6 @@ modded class MissionServer
 		//! CAR COMPASS 
 		GetZenCarCompassConfig();
 
-		//! TREESPLOSIONS 
-		if (ZenModEnabled("ZenTreesplosions"))
-			GetTreesplosionsConfig();
-
 		//! BASEBUILDING CONFIG 
 		if (ZenModEnabled("ZenBasebuildingConfig"))
 			GetZenBasebuildingConfig();
@@ -128,11 +124,31 @@ modded class MissionServer
 		ZenServerDebugStartup();
 	}
 
+	// If a player just logged out and they were the LAST player to logout, save all DBs.
+	// This is a robust way to save databases at server restarts if server runs CFTools and kicks
+	// players before a restart, which most high-pop DayZ servers typically do to prevent item duping.
+	// It can also trigger if the server is simply quiet and the last player logs out - no harm there either.
+	override void PlayerDisconnected(PlayerBase player, PlayerIdentity identity, string uid)
+	{
+		super.PlayerDisconnected(player, identity, uid);
+		
+		if (m_LogoutPlayers.Count() > 0)
+			return;
+
+		ZMPrint("Final active player disconnected: saving all skill databases.");
+		SaveAllZenDBs();
+	}
+
 	override void OnMissionFinish()
 	{
 		super.OnMissionFinish();
 
 		ZMPrint("[ZenModPack] OnMissionFinish");
+	}
+
+	void SaveAllZenDBs()
+	{
+		ZMPrint("[ZenModPack] SaveAllZenDBs");
 
 		//! REPAIR WELLS 
 		if (ZenModEnabled("ZenRepairWells"))
@@ -155,22 +171,7 @@ modded class MissionServer
 
 		//PrintZenPlayerDropCounts();
 
-		if (GetGame() && GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM))
-		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenDeferredInit);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Zen_Deforestation);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ExtinguishFire);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(StopFire);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DumpFirewoodObjects);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SetupWoodPiles);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DumpChickenCoopObjects);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SetupChickenCoops);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DumpStaticBarbedWireObjects);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SetupStaticBarbedWireDamageZones);
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SendZenServerDiversionConfig);
-		}
-
-		ZMPrint("[ZenModPack] OnMissionFinish - saved all config successfully.");
+		ZMPrint("[ZenModPack] Saved all configs & DBs successfully.");
 	}
 
 	//! TODO: Prints any players who dropped more than X items during the session

@@ -23,18 +23,6 @@ class EarPlugsWidget extends Managed // Extend Managed for auto-cleanup
 		m_volume.Show(false);
 	}
 
-	void ~EarPlugsWidget()
-	{
-		if (!GetGame())
-			return;
-			
-		if (m_fadeTimer && m_fadeTimer.IsRunning())
-			m_fadeTimer.Stop();
-
-		m_icon.Show(false);
-		m_volume.Show(false);
-	}
-
 	// Called whenever a menu is opened or HUD is hidden (inventory, maps, admin tools, ~ key etc)
 	void HideAll()
 	{

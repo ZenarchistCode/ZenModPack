@@ -72,6 +72,8 @@
 	    6: Tire Repair Kit
 	    7: Electronic Repair Kit
 	    8: Epoxy Putty
+		9: DOESN'T EXIT
+		10: Blowtorch
 
 	Rotation Flags
 	    ROTATE_Front		=	1
@@ -6958,12 +6960,12 @@ class CfgSlots
 	class Slot_Material_ZenChlorine
 	{
 		name = "Material_ZenChlorine";
-		displayName = "Chlorine Tablets";
+		displayName = "$STR_CfgVehicles_PurificationTablets0";
 		selection = "Material_ZenChlorine";
 		ghostIcon = "missing";
 		show = "true";
 		stackMax = 0;
-		description = "Chlorine Tablets.";
+		description = "$STR_CfgVehicles_PurificationTablets1";
 	};
 
 	class Slot_ZenBlowtorch

@@ -498,6 +498,12 @@ class ZenFunctions
 	//! Enable/disable player controls - WARNING: This function does not check if controls should be enabled given what the player is doing at the time when it's called, so use carefully and thoughtfully
 	static void SetPlayerControl(bool isEnabled = true, bool hideHud = false)
 	{
+		if (!GetGame())
+			return;
+
+		if (!GetGame().GetMission())
+			return;
+			
 		if (!GetGame().IsClient())
 			return;
 

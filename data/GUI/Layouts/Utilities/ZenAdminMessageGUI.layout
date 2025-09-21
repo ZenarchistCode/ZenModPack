@@ -1,5 +1,5 @@
 FrameWidgetClass root_frame {
- color 1 1 1 0.9412
+ color 1 1 1 0.99
  position 0 0
  size 1 1
  halign center_ref
@@ -27,7 +27,7 @@ FrameWidgetClass root_frame {
     PanelWidgetClass header {
      inheritalpha 0
      ignorepointer 1
-     color 0.0196 0.0235 0.0196 0.9804
+     color 0.0196 0.0235 0.0196 1.0
      position 0 0
      size 1 0.18
      halign center_ref
@@ -192,7 +192,7 @@ FrameWidgetClass root_frame {
   }
   ImageWidgetClass vignette {
    ignorepointer 1
-   color 0 0 0 0.7843
+   color 0 0 0 1.0
    position 0 0
    size 1.6 0.9
    valign center_ref

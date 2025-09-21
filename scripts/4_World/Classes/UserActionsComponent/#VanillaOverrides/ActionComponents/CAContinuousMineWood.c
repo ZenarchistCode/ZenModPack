@@ -81,7 +81,7 @@ modded class CAContinuousMineWood : CAContinuousBase
 		SaveDeadTreeObject(targetObject);
 	}
 
-	// Separate this from above method so ZenTreesplosions can more easily save dead trees from explosions
+	// Separate this from above method so other mods (eg ZenTreesplosions) can more easily save dead trees
 	static void SaveDeadTreeObject(Object targetObject)
 	{
 		// Detect hard tree being cut down

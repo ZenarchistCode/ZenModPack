@@ -40,12 +40,6 @@ class ZenBrokenGlassesWidget extends Managed
 		m_glass6.LoadImageFile(0, MOD_DIRECTORY + "brokenglass1.edds");
 	}
 
-	void ~ZenBrokenGlassesWidget()
-	{
-		if (GetGame())
-			HideFX();
-	}
-
 	void ShowFX(float dmg)
 	{
 		if (!ZenModEnabled("ZenBrokenGlasses"))
