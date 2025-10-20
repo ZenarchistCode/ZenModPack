@@ -227,10 +227,8 @@ class CfgPatches
 {
 	class ZenModPack
 	{
-		requiredVersion = 0.1;
 		requiredAddons[] =
 		{
-			//"DZ_ZenModPack_Preload",
 			"DZ_Data",
 			"DZ_Scripts",
 			"DZ_Radio",
@@ -250,7 +248,9 @@ class CfgPatches
 			"DZ_Characters_Shoes",
 			"DZ_Characters_Gloves",
 			"DZ_Characters_Masks",
-			"DZ_Weapons_Muzzles"
+			"DZ_Weapons_Muzzles",
+
+			"JM_CF_Scripts"
 		};
 	};
 };
@@ -259,19 +259,9 @@ class CfgMods
 {
 	class ZenModPack
 	{
-		dir = "ZenModPack";
-		name = "Zen's Enormous Package";
-		author = "Zenarchist";
-		credits = "Daemonforge, affenb3rt, DayZ Modding Community";
-		version = "1.0";
+		author = "";
 		type = "mod";
 		inputs = "ZenModPack/data/inputs.xml";
-		dependencies[] = 
-		{ 
-			"Game", 
-			"World", 
-			"Mission" 
-		};
 		class defs
 		{
 			class imageSets
@@ -287,39 +277,28 @@ class CfgMods
 					"ZenModPack/data/gui/miscattachmenticons/blowtorch.imageset"
 				};
 			};
-			class engineScriptModule
-			{
-				files[]=
-				{
-					"ZenModPack/scripts/1_Core"
-				};
-			};
-			class gameLibScriptModule
-			{
-				files[]=
-				{
-					"ZenModPack/scripts/2_GameLib"
-				};
-			};
 			class gameScriptModule
 			{
+				value = "";
 				files[] = 
 				{ 
-					"ZenModPack/scripts/3_Game"
+					"ZenModPack/Scripts/3_Game"
 				};
 			};
 			class worldScriptModule
 			{
+				value = "";
 				files[] = 
 				{ 
-					"ZenModPack/scripts/4_World"
+					"ZenModPack/Scripts/4_World"
 				};
 			};
 			class missionScriptModule
 			{
+				value = "";
 				files[] = 
 				{ 
-					"ZenModPack/scripts/5_mission"
+					"ZenModPack/Scripts/5_Mission"
 				};
 			};
 		};
@@ -1090,12 +1069,12 @@ class CfgVehicles
 		descriptionShort = "$STR_CfgVehicles_ZenFlask1";
 		zenLiquidName = "#STR_ZenGui_LiquidWhisky";
 		model = "zenmodpack\data\models\flask\zenflask.p3d";
-		// Syberia 
-		medPainkillerLevel = 3;
-		medPainkillerTimeSec = 1;
-		medAntidepresantLevel = 1;
-		medAntidepresantTimer = 1;
-		overdosedIncrement = 0.05;
+		// Syberia
+		medPainkillerLevel=1;
+		medPainkillerTimeSec=0.05;
+		medAntidepresantLevel=5;
+		medAntidepresantTimer=0.1;
+		overdosedIncrement=0.0005;
 		// Vanilla
 		weight = 300;
 		itemSize[] = { 1,2 };
@@ -1371,12 +1350,12 @@ class CfgVehicles
 		varQuantityMin=0;
 		varQuantityMax=750;
 		varTemperatureMax=1;
-		// Syberia 
-		medPainkillerLevel=3;
-		medPainkillerTimeSec=1;
-		medAntidepresantLevel=1;
-		medAntidepresantTimer=1;
-		overdosedIncrement=0.05;
+		// Syberia
+		medPainkillerLevel=1;
+		medPainkillerTimeSec=0.05;
+		medAntidepresantLevel=5;
+		medAntidepresantTimer=0.1;
+		overdosedIncrement=0.0005;
 		// Texture
 		hiddenSelections[]= { "zbytek" };
 		hiddenSelectionsTextures[]=
