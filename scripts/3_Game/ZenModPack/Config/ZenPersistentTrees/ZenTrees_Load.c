@@ -2,22 +2,26 @@
 class ZenTrees_Load
 {
 	// Config location
-	//private const static string zenModFolder = "$mission:storage_1\\data\\Zenarchist\\"; // CAUSES CFTOOLS TO BE UNABLE TO RESTART SERVER! PROBABLY DUE TO READ/WRITE FILE PERMISSIONS DURING BACKUP?
-	private const static string zenModFolder = "$profile:\\Zenarchist\\DATABASE\\";
+	private const static string zenModFolder = "$mission:storage_%1\\zenarchist\\";
 	private const static string zenConfigName = "ZenTrees_Load.json";
 
+	string GetDbFolder()
+	{
+		return string.Format(zenModFolder, GetGame().ServerConfigGetInt("instanceId"));
+	}
+
 	// Config data
-	autoptr array<ref ZenTreeState> CutTrees = new array<ref ZenTreeState>;
+	ref array<ref ZenTreeState> CutTrees = new array<ref ZenTreeState>;
 
 	void Load()
 	{
 		if (!GetGame().IsDedicatedServer())
 			return;
 
-		if (FileExist(zenModFolder + zenConfigName))
+		if (FileExist(GetDbFolder() + zenConfigName))
 		{
 			// If config exists, load file
-			JsonFileLoader<ZenTrees_Load>.JsonLoadFile(zenModFolder + zenConfigName, this);
+			JsonFileLoader<ZenTrees_Load>.JsonLoadFile(GetDbFolder() + zenConfigName, this);
 			return;
 		}
 
@@ -27,12 +31,12 @@ class ZenTrees_Load
 
 	void Save()
 	{
-		if (!FileExist(zenModFolder))
+		if (!FileExist(GetDbFolder()))
 		{
-			MakeDirectory(zenModFolder);
+			MakeDirectory(GetDbFolder());
 		}
 
-		JsonFileLoader<ZenTrees_Load>.JsonSaveFile(zenModFolder + zenConfigName, this);
+		JsonFileLoader<ZenTrees_Load>.JsonSaveFile(GetDbFolder() + zenConfigName, this);
 	}
 
 	// Clears any "respawned" trees (ie. trees that have exceeded their timestamp)

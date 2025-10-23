@@ -73,8 +73,7 @@ modded class CAContinuousMineWood
             return;
 
         Object targetObject;
-        bool ok = Class.CastTo(targetObject, action_data.m_Target.GetObject());
-        if (!ok)
+        if (!Class.CastTo(targetObject, action_data.m_Target.GetObject()))
             return;
 
         SaveDeadTreeObject(targetObject);

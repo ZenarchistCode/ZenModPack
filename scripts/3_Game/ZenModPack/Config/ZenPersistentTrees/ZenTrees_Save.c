@@ -1,13 +1,8 @@
 // This config stores trees cut down during this play session in memory to save on shutdown (not saved to JSON)
 class ZenTrees_Save
 {
-	// Config location
-	//private const static string zenModFolder = "$mission:storage_1\\data\\Zenarchist\\"; // CAUSES CFTOOLS TO BE UNABLE TO RESTART SERVER! PROBABLY DUE TO READ/WRITE FILE PERMISSIONS DURING BACKUP?
-	private const static string zenModFolder = "$profile:\\Zenarchist\\DATABASE\\";
-	private const static string zenConfigName = "ZenTrees_Save.json";
-
 	// Config data
-	autoptr array<ref ZenTreeState> CutTrees = new array<ref ZenTreeState>;
+	ref array<ref ZenTreeState> CutTrees = new array<ref ZenTreeState>;
 
 	// Save tree state
 	void SaveTreeState(vector location, float hp)

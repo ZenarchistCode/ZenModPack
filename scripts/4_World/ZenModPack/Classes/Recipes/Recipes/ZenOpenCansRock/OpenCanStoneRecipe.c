@@ -65,21 +65,23 @@ class OpenCanStoneRecipe extends RecipeBase
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity
 	{
-		if ( player.IsPlacingLocal() )
+		if (player.IsPlacingLocal())
 			return false;
 		
 		return true;
 	}
 
-	override void Do(ItemBase ingredients[], PlayerBase player,array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
+	override void Do(ItemBase ingredients[], PlayerBase player, array<ItemBase> results, float specialty_weight)//gets called upon recipe's completion
 	{
 		ItemBase can;
-		Class.CastTo(can, ingredients[0]);
+		if (!Class.CastTo(can, ingredients[0]))
+			return;
+
 		ItemBase tool;
-		Class.CastTo(tool, ingredients[1]);
-		PlayerBase playerPB;
-		Class.CastTo(playerPB, player);
+		if (!Class.CastTo(tool, ingredients[1]))
+			return;
+
 		can.SetHealth(1);
-		OpenItem.OpenAndSwitch(tool, can, playerPB, specialty_weight);
+		OpenItem.OpenAndSwitch(tool, can, player, specialty_weight);
 	}
-};
+}

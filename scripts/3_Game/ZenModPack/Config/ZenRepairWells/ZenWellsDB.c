@@ -4,9 +4,13 @@ class ZenWellsDB
 	static const string CONFIG_VERSION = "1";
 
 	// Config location
-	//private const static string zenModFolder = "$mission:storage_1\\data\\Zenarchist\\"; // CAUSES CFTOOLS TO BE UNABLE TO RESTART SERVER! PROBABLY DUE TO READ/WRITE FILE PERMISSIONS DURING BACKUP?
-	private const static string zenModFolder = "$profile:\\Zenarchist\\DATABASE\\";
+	private const static string zenModFolder = "$mission:storage_%1\\zenarchist\\";
 	private const static string zenConfigName = "ZenWellsDB.json";
+
+	string GetDbFolder()
+	{
+		return string.Format(zenModFolder, GetGame().ServerConfigGetInt("instanceId"));
+	}
 
 	// Main config data
 	string ConfigVersion = "";
@@ -18,15 +22,15 @@ class ZenWellsDB
 		if (!GetGame().IsDedicatedServer())
 			return;
 
-		if (FileExist(zenModFolder + zenConfigName))
+		if (FileExist(GetDbFolder() + zenConfigName))
 		{ 
 			// If config exists, load file
-			JsonFileLoader<ZenWellsDB>.JsonLoadFile(zenModFolder + zenConfigName, this);
+			JsonFileLoader<ZenWellsDB>.JsonLoadFile(GetDbFolder() + zenConfigName, this);
 
 			// If version mismatch, backup old version of json before replacing it
 			if (ConfigVersion != CONFIG_VERSION)
 			{
-				JsonFileLoader<ZenWellsDB>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
+				JsonFileLoader<ZenWellsDB>.JsonSaveFile(GetDbFolder() + zenConfigName + "_old", this);
 			}
 			else
 			{
@@ -49,14 +53,14 @@ class ZenWellsDB
 		if (!GetGame().IsDedicatedServer())
 			return;
 
-		if (!FileExist(zenModFolder))
+		if (!FileExist(GetDbFolder()))
 		{	
 			// If config folder doesn't exist, create it.
-			MakeDirectory(zenModFolder);
+			MakeDirectory(GetDbFolder());
 		}
 
 		// Save JSON config
-		JsonFileLoader<ZenWellsDB>.JsonSaveFile(zenModFolder + zenConfigName, this);
+		JsonFileLoader<ZenWellsDB>.JsonSaveFile(GetDbFolder() + zenConfigName, this);
 	}
 
 	// Get a repairable well index (if it exists) based on location

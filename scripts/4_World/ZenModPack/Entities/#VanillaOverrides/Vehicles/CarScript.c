@@ -234,19 +234,19 @@ modded class CarScript
 			return false;
 
 		PlayerBase clientPlayer = PlayerBase.Cast(GetGame().GetPlayer());
-		if (clientPlayer)
-		{
-			if (!clientPlayer.IsInVehicle())
-				return false;
+		if (!clientPlayer)
+			return false;
 
-			CarScript car = null;
-			if (clientPlayer.GetCommand_Vehicle() && Class.CastTo(car, clientPlayer.GetCommand_Vehicle().GetTransport()))
+		if (!clientPlayer.IsInVehicle())
+			return false;
+
+		CarScript car = null;
+		if (clientPlayer.GetCommand_Vehicle() && Class.CastTo(car, clientPlayer.GetCommand_Vehicle().GetTransport()))
+		{
+			int crewIdx = car.CrewMemberIndex(clientPlayer);
+			if (crewIdx >= 0 && crewIdx <= 1)
 			{
-				int crewIdx = car.CrewMemberIndex(clientPlayer);
-				if (crewIdx >= 0 && crewIdx <= 1)
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 

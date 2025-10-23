@@ -60,9 +60,13 @@ class ZenUpdateMessage
 class ZenUpdateMessagePersistence
 {
 	// Config location
-	//private const static string zenModFolder = "$mission:storage_1\\data\\Zenarchist\\"; // CAUSES CFTOOLS TO BE UNABLE TO RESTART SERVER! PROBABLY DUE TO READ/WRITE FILE PERMISSIONS DURING BACKUP?
-	private const static string zenModFolder = "$profile:\\Zenarchist\\DATABASE\\";
+	private const static string zenModFolder = "$mission:storage_%1\\zenarchist\\";
 	private const static string zenConfigName = "ZenUpdateMessages.json";
+
+	string GetDbFolder()
+	{
+		return string.Format(zenModFolder, GetGame().ServerConfigGetInt("instanceId"));
+	}
 
 	ref map<string, ref ZenPlayerUpdateMsg> PlayerUpdates = new map<string, ref ZenPlayerUpdateMsg>;
 
@@ -72,10 +76,10 @@ class ZenUpdateMessagePersistence
 		if (!GetGame().IsDedicatedServer())
 			return;
 
-		if (FileExist(zenModFolder + zenConfigName))
+		if (FileExist(GetDbFolder() + zenConfigName))
 		{ 
 			// If config exists, load file
-			JsonFileLoader<ZenUpdateMessagePersistence>.JsonLoadFile(zenModFolder + zenConfigName, this);
+			JsonFileLoader<ZenUpdateMessagePersistence>.JsonLoadFile(GetDbFolder() + zenConfigName, this);
 
 			int oldCount = PlayerUpdates.Count();
 
@@ -91,21 +95,21 @@ class ZenUpdateMessagePersistence
 				}
 			}
 
-			ZMPrint("[ZenUpdateMessagePersistence] Loaded " + PlayerUpdates.Count() + "/" + oldCount + " player update messages data from " + zenModFolder + zenConfigName);
+			ZMPrint("[ZenUpdateMessagePersistence] Loaded " + PlayerUpdates.Count() + "/" + oldCount + " player update messages data from " + GetDbFolder() + zenConfigName);
 		}
 	}
 
 	// Save config
 	void Save()
 	{
-		ZMPrint("[ZenUpdateMessagePersistence] Saving " + PlayerUpdates.Count() + " player update messages data to " + zenModFolder + zenConfigName);
+		ZMPrint("[ZenUpdateMessagePersistence] Saving " + PlayerUpdates.Count() + " player update messages data to " + GetDbFolder() + zenConfigName);
 
-		if (!FileExist(zenModFolder))
+		if (!FileExist(GetDbFolder()))
 		{
-			MakeDirectory(zenModFolder);
+			MakeDirectory(GetDbFolder());
 		}
 
-		JsonFileLoader<ZenUpdateMessagePersistence>.JsonSaveFile(zenModFolder + zenConfigName, this);
+		JsonFileLoader<ZenUpdateMessagePersistence>.JsonSaveFile(GetDbFolder() + zenConfigName, this);
 	}
 }
 

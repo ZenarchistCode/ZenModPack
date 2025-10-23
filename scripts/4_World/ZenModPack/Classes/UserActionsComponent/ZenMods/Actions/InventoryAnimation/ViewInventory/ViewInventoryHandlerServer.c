@@ -1,11 +1,11 @@
 class ViewInventoryHandlerServer extends ViewInventoryHandlerBase
 {
-    void ViewInventoryHandlerServer( PlayerBase player )
+    void ViewInventoryHandlerServer(PlayerBase player)
     {
     }
 
-    override bool OnInputUserDataProcess( ParamsReadContext ctx )
+    override bool OnInputUserDataProcess(ParamsReadContext ctx)
     {
-        return ctx.Read( m_IsViewingInventorySynced );
+        return ctx.Read(m_IsViewingInventorySynced);
     }
 }

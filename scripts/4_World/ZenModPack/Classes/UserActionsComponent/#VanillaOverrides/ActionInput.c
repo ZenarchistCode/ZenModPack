@@ -15,17 +15,20 @@ modded class StandardActionInput
 
 		for (int i = 1; i < m_SelectActions.Count(); i++)
 		{
-			ActionBase key = m_SelectActions[i];
-			int keyW = key.Zen_GetDisplayPriority();
+			ActionBase ab = m_SelectActions[i];
+			if (!ab)
+				continue;
+
+			int displayPriority = ab.Zen_GetDisplayPriority();
 
 			int j = i - 1;
-			while (j >= 0 && m_SelectActions[j].Zen_GetDisplayPriority() > keyW)
+			while (j >= 0 && m_SelectActions[j].Zen_GetDisplayPriority() > displayPriority)
 			{
 				m_SelectActions[j + 1] = m_SelectActions[j];
 				j--;
 			}
 
-			m_SelectActions[j + 1] = key;
+			m_SelectActions[j + 1] = ab;
 		}
 	}
 

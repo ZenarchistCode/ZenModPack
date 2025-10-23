@@ -87,4 +87,33 @@ class Zen
 	{
 		return IsWinter() || IsLateWinter();
 	}
+
+	// For event-related auto-code.
+	static bool IsChristmas()
+	{
+		int year, month, day;
+		GetYearMonthDay(year, month, day);
+		return month == 12 && day >= 24 && day <= 25;
+	}
+
+	static bool IsEaster()
+	{
+		int year, month, day;
+		GetYearMonthDay(year, month, day);
+		return month == 4 && day >= 5 && day <= 6;
+	}
+
+	static bool IsHalloween()
+	{
+		int year, month, day;
+		GetYearMonthDay(year, month, day);
+		return month == 10 && day >= 30 && day <= 31;
+	}
+
+	static bool IsAustraliaDay()
+	{
+		int year, month, day;
+		GetYearMonthDay(year, month, day);
+		return month == 1 && day >= 25 && day <= 27;
+	}
 }
