@@ -62,18 +62,9 @@ class Zen_ArtillerySmokeGrenade : M18SmokeGrenade_Red
 			}
 		}
 
-		// Send artillery sound playing to all players (TODO - can't we just send an RPC to NULL to notify all players?)
+		// Send artillery sound playing to all players
 		Param1<vector> fireParam = new Param1<vector>(firePos);
-		array<Man> all_players = new array<Man>;
-		GetGame().GetPlayers(all_players);
-		for (i = 0; i < all_players.Count(); i++)
-		{
-			PlayerBase player;
-			if (Class.CastTo(player, all_players.Get(i)))
-			{
-				GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveAirstrikeData", fireParam, true, player.GetIdentity(), player);
-			}
-		}
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveAirstrikeData", fireParam, true, null);
 
 		// Schedule the big bang
 		int randomDelay = Math.RandomInt(GetZenArtilleryConfig().MinBombSecs, GetZenArtilleryConfig().MaxBombSecs) * 1000;
@@ -94,17 +85,7 @@ class Zen_ArtillerySmokeGrenade : M18SmokeGrenade_Red
 	void DropBomb()
 	{
 		// Get smoke grenade position
-		vector pos = GetPosition();
-
-		// Get radius & random x/y
-		int radius = GetZenArtilleryConfig().BombDropRadius;
-		float randomX = Math.RandomFloatInclusive(-radius, radius);
-		float randomY = Math.RandomFloatInclusive(-radius, radius);
-
-		// Set bomb position
-		pos[0] = pos[0] + randomX;
-		pos[2] = pos[2] + randomY;
-		pos[1] = GetGame().SurfaceY(pos[0], pos[2]); // Get surface
+		vector pos = ZenFunctions.GetRandomPointInCircle(GetPosition(), GetZenArtilleryConfig().BombDropRadius);
 
 		// Create bomb
 		Object bomb = GetGame().CreateObject(GetBombType(), pos);

@@ -291,7 +291,7 @@ modded class CarScript
 		// Look for EXACT classname match first (as some modded cars inherit from vanilla scripts, but have different models)
 		for (i = 0; i < GetZenCarCompassConfig().CarConfig.Count(); i++)
 		{
-			if (this.GetType() == GetZenCarCompassConfig().CarConfig.Get(i).CarType)
+			if (this.GetType() == GetZenCarCompassConfig().CarConfig.Get(i).CarTypeCfg)
 			{
 				cfgFound = true;
 				offsetPos = GetZenCarCompassConfig().CarConfig.Get(i).Position;
@@ -305,7 +305,7 @@ modded class CarScript
 		{
 			for (i = 0; i < GetZenCarCompassConfig().CarConfig.Count(); i++)
 			{
-				if (this.IsKindOf(GetZenCarCompassConfig().CarConfig.Get(i).CarType))
+				if (this.IsKindOf(GetZenCarCompassConfig().CarConfig.Get(i).CarTypeCfg))
 				{
 					cfgFound = true;
 					offsetPos = GetZenCarCompassConfig().CarConfig.Get(i).Position;

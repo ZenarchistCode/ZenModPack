@@ -62,7 +62,32 @@ class Empty_Can_Opened : Bottle_Base
 	}
 }
 
-class Empty_SodaCan_ColorBase : Empty_Can_Opened {};
+class Empty_SodaCan_ColorBase : ItemBase {};
+
+class Zen_Empty_SodaCan_Random : Empty_SodaCan_ColorBase
+{
+	static ref array<string> ZEN_EMPTY_CANS_ARRAY = 
+	{
+		"Empty_SodaCan_Pipsi",
+		"Empty_SodaCan_Cola",
+		"Empty_SodaCan_Spite",
+		"Empty_SodaCan_Kvass",
+		"Empty_SodaCan_Fronta"
+	};
+
+	override void EEInit()
+	{
+		super.EEInit();
+
+		if (GetGame().IsDedicatedServer())
+			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ZenShapeshifterMorph, 1000, false);
+	}
+
+	private void ZenShapeshifterMorph()
+	{
+		GetInventory().ReplaceItemWithNew(InventoryMode.SERVER, new ReplaceItemWithNewLambdaBase(this, ZEN_EMPTY_CANS_ARRAY.GetRandomElement()));
+	}
+}
 
 class Used_MedicalItem : ItemBase
 {

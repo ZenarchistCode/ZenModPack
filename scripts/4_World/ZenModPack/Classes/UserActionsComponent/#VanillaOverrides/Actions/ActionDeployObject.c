@@ -24,56 +24,59 @@ modded class ActionDeployObject
 			return true;
 		}
 
-		if (GetGame().IsDedicatedServer())
+		return ZenBuilding_ActionCondition(player, target, item);
+	}
+	
+	bool ZenBuilding_ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
+	{
+		#ifdef SERVER
+		// Check no build zones first.
+		ZenNoBuildZone noBuildZone;
+		vector noBuildPos;
+		vector ourPos;
+
+		for (int i = 0; i < GetZenBasebuildingConfig().NoBuildZones.Count(); i++)
 		{
-			// Check no build zones first.
-			ZenNoBuildZone noBuildZone;
-			vector noBuildPos;
-			vector ourPos;
+			noBuildZone = GetZenBasebuildingConfig().NoBuildZones.Get(i);
+			noBuildPos = noBuildZone.Position;
+			ourPos = player.GetPosition();
 
-			for (int i = 0; i < GetZenBasebuildingConfig().NoBuildZones.Count(); i++)
+			if (noBuildZone.IgnoreHeight)
 			{
-				noBuildZone = GetZenBasebuildingConfig().NoBuildZones.Get(i);
-				noBuildPos = noBuildZone.Position;
-				ourPos = player.GetPosition();
+				noBuildPos[1] = 0;
+				ourPos[1] = 0;
+			}
 
-				if (noBuildZone.IgnoreHeight)
+			if (vector.Distance(noBuildPos, ourPos) <= noBuildZone.MinimumDistance)
+			{
+				// Check whitelist
+				if (GetZenBasebuildingConfig().Whitelist)
 				{
-					noBuildPos[1] = 0;
-					ourPos[1] = 0;
-				}
-
-				if (vector.Distance(noBuildPos, ourPos) <= noBuildZone.MinimumDistance)
-				{
-					// Check whitelist
-					if (GetZenBasebuildingConfig().Whitelist)
+					foreach (string s : GetZenBasebuildingConfig().Whitelist)
 					{
-						foreach (string s : GetZenBasebuildingConfig().Whitelist)
+						if (item.IsKindOf(s))
 						{
-							s.ToLower();
-							if (item.IsKindOf(s))
-							{
-								return true;
-							}
+							return true;
 						}
 					}
-					
-					string msg = GetZenBasebuildingConfig().NoBuildZoneDefaultMessage;
-
-					if (noBuildZone.WarningMessage != "")
-						msg = noBuildZone.WarningMessage;
-
-					msg.Replace("%distance%", (Math.Round(noBuildZone.MinimumDistance - vector.Distance(noBuildPos, ourPos)) + 1).ToString() + "m");
-					NotificationSystem.SendNotificationToPlayerIdentityExtended(player.GetIdentity(), 10.0, noBuildZone.ZoneName, msg, "set:dayz_gui image:icon_hammer");
-
-					player.PlacingCancelLocal();
-					player.PlacingCancelServer();
-
-					return false;
 				}
+				
+				string msg = GetZenBasebuildingConfig().NoBuildZoneDefaultMessage;
+
+				if (noBuildZone.WarningMessage != "")
+					msg = noBuildZone.WarningMessage;
+
+				msg.Replace("%distance%", (Math.Round(noBuildZone.MinimumDistance - vector.Distance(noBuildPos, ourPos)) + 1).ToString() + "m");
+				NotificationSystem.SendNotificationToPlayerIdentityExtended(player.GetIdentity(), 10.0, noBuildZone.ZoneName, msg, "set:dayz_gui image:icon_hammer");
+
+				player.PlacingCancelLocal();
+				player.PlacingCancelServer();
+
+				return false;
 			}
 		}
-
+		#endif
+		
 		return true;
 	}
 }

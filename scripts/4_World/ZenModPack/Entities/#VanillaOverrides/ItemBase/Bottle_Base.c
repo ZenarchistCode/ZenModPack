@@ -4,8 +4,8 @@ modded class Bottle_Base
 	void Bottle_Base()
 	{
 		//! CATCH RAIN
-		RegisterNetSyncVariableBool("m_IsCatchingRain");
-		m_RainProcComponent = new RainProcurementComponentBottle(this);
+		RegisterNetSyncVariableBool("m_IsZenCatchingRain");
+		m_ZenRainProcComponent = new RainProcurementComponentZenBottle(this);
 	}
 
 	override void SetActions()
@@ -22,21 +22,21 @@ modded class Bottle_Base
 	}
 
 	//! CATCH RAIN
-	protected ref RainProcurementComponentBottle m_RainProcComponent;
-	bool m_IsCatchingRain = false;
+	protected ref RainProcurementComponentZenBottle m_ZenRainProcComponent;
+	bool m_IsZenCatchingRain = false;
 
-	void SetCatchingRain(bool b)
+	void SetZenCatchingRain(bool b)
 	{
-		m_IsCatchingRain = b;
+		m_IsZenCatchingRain = b;
 		SetSynchDirty();
 
-		if (m_IsCatchingRain)
+		if (m_IsZenCatchingRain)
 		{
-			m_RainProcComponent.StartRainProcurement();
+			m_ZenRainProcComponent.StartRainProcurement();
 		}
 		else
 		{
-			m_RainProcComponent.StopRainProcurement();
+			m_ZenRainProcComponent.StopRainProcurement();
 		}
 	}
 
@@ -44,17 +44,17 @@ modded class Bottle_Base
 	{
 		super.OnItemLocationChanged(old_owner, new_owner);
 
-		SetCatchingRain(false);
+		SetZenCatchingRain(false);
 	}
 
-	bool IsCatchingRain()
+	bool IsZenCatchingRain()
 	{
-		return m_IsCatchingRain;
+		return m_IsZenCatchingRain;
 	}
 }
 
 //! CATCH RAIN 
-class RainProcurementComponentBottle : RainProcurementComponentBase 
+class RainProcurementComponentZenBottle : RainProcurementComponentBase 
 {
 	override float GetBaseLiquidAmount()
 	{

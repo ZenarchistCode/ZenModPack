@@ -1,5 +1,10 @@
 modded class MissionGameplay
 {
+	//! UTILITIES 
+	static bool SHOW_ZEN_ADMIN_DIALOG = false; 
+	static string SHOW_ZEN_ADMIN_DIALOG_TEXT = "";
+	static bool SHOW_ZEN_ADMIN_DIALOG_ISPOPUP = false;
+	
 	//! SHARED
 	override void OnInit()
     {
@@ -29,8 +34,11 @@ modded class MissionGameplay
 	{
 		super.OnUpdate(timeslice); 
 
-		if (!GetGame())
+		if (!g_Game)
 			return;
+		
+		//! UTILITIES
+		UpdateZenAdminMessages();
 
 		//! AUTO RUN 
 		UpdateZenAutoRun();
@@ -43,6 +51,23 @@ modded class MissionGameplay
 
 		//! RADIO BADGE 
 		UpdateZenRadioBadge(timeslice);
+	}
+	
+	//! UTILITIES 
+	void UpdateZenAdminMessages() 
+	{
+		if (!SHOW_ZEN_ADMIN_DIALOG)
+			return;
+		
+		if (g_Game.GetUIManager() != NULL)
+        {
+            ZenAdminMessageGUI gui = ZenAdminMessageGUI.Cast(g_Game.GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL));
+            if (gui)
+			{
+                gui.SetAdminMessage(SHOW_ZEN_ADMIN_DIALOG_TEXT, SHOW_ZEN_ADMIN_DIALOG_ISPOPUP);
+				SHOW_ZEN_ADMIN_DIALOG = false;
+			}
+        }
 	}
 
 	//! RADIO BADGE (TODO: Find a better way to track the radio)

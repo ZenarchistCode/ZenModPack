@@ -10,9 +10,6 @@ modded class ActionConstructor
         //! CAMO SHELTER
         actions.Insert(ActionPackZenCamoShelter);
 
-        //! CAUSE OF DEATH 
-        actions.Insert(ActionZenCheckCauseOfDeath);
-
         //! CHICKEN COOPS
         actions.Insert(ActionZenMineCoopHands);
 

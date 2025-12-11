@@ -91,7 +91,7 @@ class ZenWellsDB
 	// Save reparied well state to json config
 	void SetWellRepaired(int index, vector location, bool repaired, bool forceSave)
 	{
-		int ts = JMDate.Now(false).GetTimestamp() + GetZenWellsConfig().TimeToBreak;
+		int ts = CF_Date.Now().GetTimestamp() + GetZenWellsConfig().TimeToBreak;
 
 		if (index < 0 || index > RepairableWells.Count())
 		{

@@ -106,6 +106,7 @@ class ZenFunctions
 		int count = children.Count();
 		float itemHealth;
 		bool isRuined, isLocked;
+		
 		for (int i = 0; i < count; i++)
 		{
 			EntityAI child = children.Get(i);
@@ -199,6 +200,7 @@ class ZenFunctions
 	static void SendGlobalMessageEx(string msg, string prefix = "")
 	{
 		#ifdef SERVER
+		ZMPrint(prefix + msg);
 		array<Man> players = new array<Man>;
 		GetGame().GetWorld().GetPlayerList(players);
 		for (int x = 0; x < players.Count(); x++)
@@ -216,6 +218,7 @@ class ZenFunctions
 	static void ZenClientMessage(string message)
 	{
 #ifndef SERVER
+		ZMPrint("[CLIENT] " + message);
 		if (GetGame().GetPlayer())
 		{
 			GetGame().GetMission().OnEvent(ChatMessageEventTypeID, new ChatMessageEventParams(CCDirect, "", message, ""));
@@ -531,6 +534,28 @@ class ZenFunctions
 	static void DisablePlayerControl()
 	{
 		SetPlayerControl(false, false);
+	}
+
+	static PlayerBase GetPlayerByIdentity(PlayerIdentity id)
+	{
+		return GetPlayerByID(id.GetId());
+	}
+
+	static PlayerBase GetPlayerByID(string id)
+	{
+		array<Man> players = new array<Man>;
+		GetGame().GetWorld().GetPlayerList(players);
+
+		for (int x = 0; x < players.Count(); x++)
+		{
+			PlayerBase pb = PlayerBase.Cast(players.Get(x));
+			if (pb && pb.GetIdentity().GetId() == id)
+			{
+				return pb;
+			}
+		}
+
+		return null;
 	}
 
 	// Sends a GameLabs CFTools Cloud deployed message @ the given position.

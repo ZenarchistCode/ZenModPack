@@ -72,6 +72,7 @@ class ZenModPackConfig
 		ModEnabled.Insert("ZenCarAttachments", false); // Disabled by default to avoid confusion
 		ModEnabled.Insert("ZenHideGearInCars", true);
 		ModEnabled.Insert("ZenCraftingSounds", true);
+		ModEnabled.Insert("ZenGroundCleaning", true);
 		ModEnabled.Insert("ZenBetterChatFont", false);
 		ModEnabled.Insert("ZenCanteenTablets", true);
 		ModEnabled.Insert("ZenFireplaceStick", true);
@@ -114,6 +115,7 @@ class ZenModPackConfig
 		// No client sync required
 		ServerSideModEnabled.Insert("ZenEfficientVehiclePhysics", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenDropRuinedClothing", false); // Disabled by default to avoid confusion
+		ServerSideModEnabled.Insert("ZenAutoConvertStash", true);
 		ServerSideModEnabled.Insert("ZenRebuildableWells", true);
 		ServerSideModEnabled.Insert("ZenPersistentTrees", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenStaticBarbedWire", false); // Disabled by default as not all servers may want this impact on server performance
@@ -123,12 +125,14 @@ class ZenModPackConfig
 		ServerSideModEnabled.Insert("ZenZombieConfig", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenChickenCoops", true);
 		ServerSideModEnabled.Insert("ZenShelterCargo", false); // Disabled by default to avoid confusion
+		ServerSideModEnabled.Insert("ZenStaminaSlope", false); // Disabled by default to avoid confusion
 		ServerSideModEnabled.Insert("ZenZombieDoors", true);
 		ServerSideModEnabled.Insert("ZenRadioPlugin", true);
+		//ServerSideModEnabled.Insert("ZenFishingJunk", false); // Disabled by default as might be confusing for some server admins if they're not aware of it
 		ServerSideModEnabled.Insert("ZenNightConfig", false); // Disabled by default as might be confusing for some server admins if they're not aware of it
 		ServerSideModEnabled.Insert("ZenBloodDrips", false); // Disabled by default because this may negatively affect server performance on high pop servers without config adjustments
 		ServerSideModEnabled.Insert("ZenWoodHealth", true);
-		ServerSideModEnabled.Insert("ZenModLogger", true);
+		ServerSideModEnabled.Insert("ZenModLogger", false);
 		ServerSideModEnabled.Insert("ZenLeftovers", true);
 		ServerSideModEnabled.Insert("ZenCampSites", false); // Disabled because not all playable maps are accounted for in default config
 		ServerSideModEnabled.Insert("ZenFireWood", true);
@@ -136,6 +140,7 @@ class ZenModPackConfig
 		ServerSideModEnabled.Insert("ZenGraves", false); // Disabled by default to avoid confusion
 
 		// Mods which ideally should be enabled/disabled only after a server wipe 
+		PersistentModEnabled.Insert("ZenItemTimestamp", false);
 		PersistentModEnabled.Insert("ZenWeaponEngrave", false);
 		PersistentModEnabled.Insert("ZenComboLocks", false);
 		PersistentModEnabled.Insert("ZenAlcohol", false);

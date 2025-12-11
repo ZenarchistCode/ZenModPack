@@ -3,10 +3,8 @@ modded class MissionBase
 	//! SHARED 
 	void MissionBase()
 	{
-		// Check if it's winter early on game load
-		Zen.IsWinter();
-		Zen.IsLateWinter();
-		
+        ZenGameFunctions.PrintMods();
+        
 		#ifdef SERVER
 		// SERVER RECEIVE RPC
 
@@ -31,6 +29,56 @@ modded class MissionBase
         GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenBasebuildingCfgClient", this, SingeplayerExecutionType.Client);
 		#endif
 	}
+
+    /*
+	//!!!!!! TODO: FIX THIS! It needs to be sync'ed to client or the player bugs out sometimes due to the fact the fishing action simulates on both sides and the server-side junk doesn't match client-side.
+	override void InitWorldYieldDataDefaults(CatchYieldBank bank)
+	{
+        super.InitWorldYieldDataDefaults(bank);
+
+        if (!g_Game.IsDedicatedServer())
+            return;
+
+        if (!ZenModEnabled("ZenFishingJunk"))
+            return;
+
+        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenModInitWorldYieldExtraJunk);
+        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenModInitWorldYieldExtraJunk, 34, false, bank);
+	}
+	*/
+
+    void ZenModInitWorldYieldExtraJunk(CatchYieldBank bank)
+    {
+        if (!bank)
+            return;
+
+        GetZenFishingJunkConfig();
+
+        Print("[ZenModPack] Fish junk - total yield count BEFORE=" + bank.GetYieldsMap().Count());
+
+        for (int i = bank.GetYieldsMap().Count(); i >= 0; i--)
+        {
+            if (YieldItemJunk.Cast(bank.GetYieldsMap().GetElement(i)) != null)
+            {
+                Print("[ZenModPack] Fish junk: Removing " + bank.GetYieldsMap().GetElement(i).GetType());
+                bank.GetYieldsMap().RemoveElement(i);
+            }
+        }
+
+        foreach (string itemName, int itemWeight : GetZenFishingJunkConfig().FishingJunk)
+        {
+            bank.RegisterYieldItem(new YieldItemJunk(itemWeight, itemName));
+            Print("[ZenModPack] Fish junk: Adding " + itemName);
+        }
+
+        foreach (string itemName2, int itemWeight2 : GetZenFishingJunkConfig().FishingJunkEmpty)
+        {
+            bank.RegisterYieldItem(new YieldItemJunkEmpty(itemWeight2, itemName2));
+            Print("[ZenModPack] Fish junk: Adding " + itemName2);
+        }
+
+        Print("[ZenModPack] Fish junk - total yield count AFTER=" + bank.GetYieldsMap().Count());
+    }
 
 	override UIScriptedMenu CreateScriptedMenu(int id)
     {
@@ -109,7 +157,13 @@ modded class MissionBase
         GetZenModPackClientConfig().ImmersiveLogin = ZenModEnabled("ZenImmersiveLogin");
         GetZenModPackClientConfig().MagObfuscation = ZenModEnabled("ZenMagObfuscation");
         GetZenModPackClientConfig().Save();
+
+        AfterZenModPackConfigReceived();
 	}
+
+    void AfterZenModPackConfigReceived()
+    {
+    }
 
     //! BASEBUILDING CONFIG 
 	void RPC_ReceiveZenBasebuildingCfgClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
@@ -179,9 +233,7 @@ modded class MissionBase
             // Handle report confirmation server-side
             if (sender && data.param1)
             {
-				int highBits, lowBits;
-				GetGame().GetPlayerNetworkIDByIdentityID(sender.GetPlayerId(), lowBits, highBits);
-				PlayerBase player = PlayerBase.Cast(GetGame().GetObjectByNetworkId(lowBits, highBits));
+				PlayerBase player = PlayerBase.Cast(sender.GetPlayer());
 				if (!player)
 				{
 					Error("[ZenModPack Utilities] RPC_SendZenPlayerMessageConfirmRead :: Error converting player ID into player object: " + sender.GetId());
@@ -209,9 +261,7 @@ modded class MissionBase
             // Handle report confirmation server-side
             if (sender && data.param1)
             {
-                int highBits, lowBits;
-                GetGame().GetPlayerNetworkIDByIdentityID(sender.GetPlayerId(), lowBits, highBits);
-                PlayerBase player = PlayerBase.Cast(GetGame().GetObjectByNetworkId(lowBits, highBits));
+                PlayerBase player = PlayerBase.Cast(sender.GetPlayer());
                 if (!player)
                 {
                     Error("[ZenModPack Utilities] RPC_SendZenPlayerUpdateMessageConfirmRead :: Error converting player ID into player object: " + sender.GetId());
@@ -227,7 +277,7 @@ modded class MissionBase
 	// Server -> client :: receive admin text message and dialogue
     void RPC_ReceiveZenAdminMessage(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
-        if (type == CallType.Client && GetGame().IsClient())
+        if (type == CallType.Client && g_Game.IsClient())
         {
             Param2<string, bool> data;
             if (!ctx.Read(data))
@@ -235,13 +285,14 @@ modded class MissionBase
                 Error("Error sync'ing server-side data to client - RPC_ReceiveZenAdminMessage");
                 return;
             }
-
-            if (GetGame().GetUIManager() != NULL)
-            {
-                ZenAdminMessageGUI gui = ZenAdminMessageGUI.Cast(GetGame().GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL));
-                if (gui)
-                    gui.SetAdminMessage(data.param1, data.param2);
-            }
+			
+			MissionGameplay mission = MissionGameplay.Cast(GetGame().GetMission());
+			if (mission)
+			{
+				mission.SHOW_ZEN_ADMIN_DIALOG = true;
+				mission.SHOW_ZEN_ADMIN_DIALOG_TEXT = data.param1;
+				mission.SHOW_ZEN_ADMIN_DIALOG_ISPOPUP = data.param2;
+			}
         }
     }
 

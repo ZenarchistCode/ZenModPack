@@ -85,6 +85,7 @@ class ZenPlayerMessageConfig
 		for (int i = 0; i < PlayerReplies.Count(); i++)
 		{
 			string toFind = PlayerReplies.Get(i).BohemiaID;
+
 			if (BohemiaID == toFind)
 			{
 				return PlayerReplies.Get(i);

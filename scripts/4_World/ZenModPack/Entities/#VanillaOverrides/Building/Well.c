@@ -32,7 +32,7 @@ modded class Well
 	// Sets this well's repaired state.
 	void SetupZenRepairableWell()
 	{
-		int ts = JMDate.Now(false).GetTimestamp();
+		int ts = CF_Date.Now().GetTimestamp();
 		int idx = GetZenWellsDB().GetRepairableWellIndex(GetPosition());
 		ZenRepairableWell well = NULL;
 

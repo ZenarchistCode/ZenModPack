@@ -4,7 +4,7 @@ modded class PlayerBase
 	static int ZENMOD_PLAYER_COUNT = 0;
 	static int ZENMOD_DRIVER_COUNT = 0;
 
-	private int m_ZenPlayerUID;
+	//private int m_ZenPlayerUID;
 
 	override void Init()
 	{
@@ -14,7 +14,7 @@ modded class PlayerBase
 		RegisterNetSyncVariableBool("m_ZenLoginHasFinishedServer");
 
 		//! SHARED
-		RegisterNetSyncVariableInt("m_ZenPlayerUID");
+		//RegisterNetSyncVariableInt("m_ZenPlayerUID");
 	}
 
 	void ~PlayerBase()
@@ -47,7 +47,7 @@ modded class PlayerBase
 			return true;
 		
 		if (ZenModEnabled("ZenAutoWinterDetect"))
-			return Zen.IsWinter();
+			return ZenGameFunctions.IsWinter();
 		
 		return false;
 	}
@@ -68,8 +68,17 @@ modded class PlayerBase
 	{
 		super.OnPlayerLoaded();
 
-		//! CAUSE OF DEATH
-		ZenCauseOfDeath_OnPlayerLoaded();
+		/*if (GetIdentity() != null)
+		{
+			string loginMsg = "Player login @ " + GetPosition();
+			loginMsg = loginMsg + ": uid=" + GetIdentity().GetId();
+			loginMsg = loginMsg + " name1=" + GetIdentity().GetName();
+			loginMsg = loginMsg + "/2=" + GetIdentity().GetPlainName();
+			loginMsg = loginMsg + "/3=" + GetIdentity().GetFullName();
+			loginMsg = loginMsg + "/cached=" + GetCachedName();
+			loginMsg = loginMsg + "/ netid=" + GetIdentity().GetPlayerId();
+			ZMPrint(loginMsg);
+		}*/
 
 		//! IMMERSIVE LOGIN
 		ZenImmersiveLogin_OnPlayerLoaded();
@@ -197,9 +206,6 @@ modded class PlayerBase
 		if (GetGame().IsClient())
 			return;
 
-		//! CAUSE OF DEATH 
-		HandleZenCauseOfDeath(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
-
 		//! ARTILLERY
 		if (ammo.Contains("Zen_ArtilleryBomb_Ammo"))
 			HandleZenArtillery(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
@@ -214,6 +220,7 @@ modded class PlayerBase
 		HandleZenUtilities(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 	}
 
+	/*
 	void SetZenPlayerUID(int id)
 	{
 		m_ZenPlayerUID = id;
@@ -224,6 +231,7 @@ modded class PlayerBase
 	{
 		return m_ZenPlayerUID;
 	}
+	*/
 
 	PlayerBase GetPlayerByZenUID(int id)
 	{
@@ -233,7 +241,7 @@ modded class PlayerBase
 		foreach (Man playerMan : players)
 		{
 			PlayerBase player = PlayerBase.Cast(playerMan);
-			if (player != NULL && player.GetZenPlayerUID() == id)
+			if (player != NULL && player.GetIdentity().GetPlayerId() == id)
 			{
 				return player;
 			}
@@ -463,128 +471,6 @@ modded class PlayerBase
         return false;
     }
 
-	//! CAUSE OF DEATH
-	protected string m_CauseOfDeath;
-
-	void ZenCauseOfDeath_OnPlayerLoaded()
-	{
-		if (GetGame().IsDedicatedServer() && (ZenModEnabled("ZenCauseOfDeath") || ZenModEnabled("ZenGraves")))
-		{
-			m_CauseOfDeath = GetCauseOfDeathConfig().GetCauseOfDeath("unknown").CauseMessage;
-		}
-	}
-
-	string GetCauseOfDeath()
-	{
-		return m_CauseOfDeath;
-	}
-
-	void SetCauseOfDeath(string cause)
-	{
-		m_CauseOfDeath = cause;
-	}
-
-	// Registers the check COD action
-	override void SetActionsRemoteTarget(out TInputActionMap InputActionMap)
-	{
-		AddAction(ActionZenCheckCauseOfDeath, InputActionMap);
-		super.SetActionsRemoteTarget(InputActionMap);
-	}
-
-	// Tracks last known damage source
-	void HandleZenCauseOfDeath(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
-	{
-		//! CAUSE OF DEATH 
-		if (GetHealth() <= 0 && (ZenModEnabled("ZenCauseOfDeath") || ZenModEnabled("ZenGraves")))
-		{
-			string cause = "unknown";
-			ammo.ToLower();
-
-			if (ammo.Contains("falldamage"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("falldamage").CauseMessage;
-			}
-			else
-			if (ammo.Contains("melee"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("melee").CauseMessage;
-			}
-			else
-			if (ammo.Contains("zombie"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("zombie").CauseMessage;
-			}
-			else
-			if (ammo.Contains("bullet"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("bullet").CauseMessage;
-			}
-			else
-			if (ammo.Contains("explosion"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("explosion").CauseMessage;
-			}
-			else
-			if (ammo.Contains("grenade"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("grenade").CauseMessage;
-			}
-			else
-			if (ammo.Contains("landmine"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("landmine").CauseMessage;
-			}
-			else
-			if (ammo.Contains("transport"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("transport").CauseMessage;
-			}
-			else
-			if (ammo.Contains("wolf"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("wolf").CauseMessage;
-			}
-			else
-			if (ammo.Contains("bear"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("bear").CauseMessage;
-			}
-			else
-			if (ammo.Contains("firedamage"))
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("fire").CauseMessage;
-			}
-
-			// Loop through causes of death and see if one is found
-			if (cause == "unknown")
-			{
-				foreach(CauseOfDeathDef cod : GetCauseOfDeathConfig().CauseOfDeathDefs)
-				{
-					string codKey = cod.AmmoType;
-					codKey.ToLower();
-					if (ammo.Contains(codKey))
-					{
-						cause = GetCauseOfDeathConfig().GetCauseOfDeath(codKey).CauseMessage;
-					}
-				}
-			}
-
-			// No cause found in config.
-			if (cause == "unknown")
-			{
-				cause = GetCauseOfDeathConfig().GetCauseOfDeath("unknown").CauseMessage;
-			}
-
-			// For debugging / adding new ammo types
-			if (GetCauseOfDeathConfig().DebugOn)
-			{
-				cause = cause + " [ammo=" + ammo + "]";
-			}
-
-			m_CauseOfDeath = cause;
-		}
-	}
-
 	//! IMMERSIVE LOGIN
 	// (Client Only) Used to determine if client player should lie down this login, or just sit down.
 	static bool HAS_LOGGED_IN_THIS_SESSION = false;
@@ -800,336 +686,6 @@ modded class PlayerBase
 	bool ZenLoginHasFinished()
 	{
 		return !ZenModEnabled("ZenImmersiveLogin") || m_ZenLoginHasFinishedClient || m_ZenLoginHasFinishedServer;
-	}
-
-	//! GRAVES
-
-	// @override this to change player name for certain mods
-	string GetZenGravePlayerName()
-	{
-		if (GetZenGravesConfig().ShowPlayerName)
-			return GetCachedName();
-
-		return GetZenGravesConfig().UnknownPerson;
-	}
-	
-	/* 
-	// This is included for compatibility with mods that change the player's name using something other than their steam profile
-	// eg. SyberiaServer mod should override this to return CharProfile name, don't forget to add ZenGraves to requiredAddons in config.cpp when overriding 
-	override string GetZenGravePlayerName()
-	{
-		if (m_charProfile)
-			return m_charProfile.m_name;
-
-		return GetZenGravesConfig().UnknownPerson;
-	}
-	*/
-
-	bool HasGraveIdentity()
-	{
-		#ifdef ENFUSION_AI_PROJECT
-		if (IsAI())
-			return false;
-		#endif
-
-		return GetCachedID() && GetCachedID() != string.Empty;
-	}
-
-	string GetZenGravesCauseOfDeath()
-	{
-		if (!m_CauseOfDeath || m_CauseOfDeath == string.Empty)
-			return GetZenGravesConfig().GetCauseOfDeath("unknown").CauseMessage;
-
-		return m_CauseOfDeath;
-	}
-
-	void SetZenGravesCauseOfDeath(string msg)
-	{
-		m_CauseOfDeath = msg;
-	}
-
-	int GetZenGravesAgeMinutes()
-	{
-		return StatGet(AnalyticsManagerServer.STAT_PLAYTIME) / 60;
-	}
-
-	// Generate ZenDeadPlayerData object
-	ZenDeadPlayerData GenerateZenDeadPlayerData()
-	{
-		if (!HasGraveIdentity())
-		{
-			GetZenGravesConfig().DebugMsg("GenerateZenDeadPlayerData() - No steam ID found!");
-			return null;
-		}
-
-		// Don't spawn grave for admin account etc
-		foreach (string s : GetZenGravesConfig().IgnoreSteamIDs)
-		{
-			if (s == GetCachedID())
-				return null;
-		}
-
-		// Don't spawn grave in safezones etc
-		foreach (ZenNoSpawnCrossZone zone : GetZenGravesConfig().NoCrossZones)
-		{
-			if (vector.Distance(zone.Position, GetPosition()) < zone.Distance)
-				return null;
-		}
-
-		// Don't spawn a cross within X meters of another cross config
-		for (int i = GetZenGravesConfig().DeadPlayers.Count() - 1; i >= 0; i--)
-		{
-			if (vector.Distance(GetZenGravesConfig().DeadPlayers.Get(i).Position, GetPosition()) <= GetZenGravesConfig().MinDistanceBetweenCrosses)
-			{
-				GetZenGravesConfig().DebugMsg("GenerateZenDeadPlayerData() - Distance to existing cross too close!");
-				return null;
-			}
-
-			// Remove any duplicates stored in JSON config - only spawn 1 cross per server restart per player
-			if (GetZenGravesConfig().DeadPlayers.Get(i).SteamID == GetCachedID())
-			{
-				GetZenGravesConfig().DeadPlayers.Remove(i);
-			}
-		}
-
-		int year, month, day;
-		GetYearMonthDay(year, month, day);
-
-		// Save new cross info
-		return new ZenDeadPlayerData(
-			GetCachedID(),
-			GetZenGravePlayerName(),
-			GetZenGravesCauseOfDeath(),
-			GetPosition(),
-			GetOrientation(),
-			GetZenGravesAgeMinutes(),
-			day,
-			month,
-			year);
-	}
-
-	// Save all items to JSON to be spawned as a stash when corpse despawns
-	void SaveZenSkeletonItems()
-	{
-		if (!ZenModEnabled("ZenGraves"))
-		{
-			return;
-		}
-
-		#ifdef EXPANSIONMODCORE
-		if (Expansion_IsInSafeZone())
-		{
-			return;
-		}
-		#endif
-
-		// Check that we have an identity
-		if (!HasGraveIdentity())
-		{
-			GetZenGravesConfig().DebugMsg("SaveZenSkeletonItems() - Don't save: No steam identity found!");
-			return;
-		}
-
-		// Roll dice for ChanceOfGrave
-		if (Math.RandomFloat01() > GetZenGravesConfig().ChanceOfGrave)
-		{
-			GetZenGravesConfig().DebugMsg("SaveZenSkeletonItems() - Don't save: Failed dice roll for ChanceOfGrave");
-			return;
-		}
-
-		// Check player age
-		if (GetZenGravesAgeMinutes() < GetZenGravesConfig().MinPlayerAgeMinutes)
-		{
-			GetZenGravesConfig().DebugMsg("SaveZenSkeletonItems() - Don't save: Player underage! (Age=" + GetZenGravesAgeMinutes() + " minutes)");
-			return;
-		}
-
-		// If server should not spawn a cross for this cause of death, stop here.
-		int i;
-		for (i = 0; i < GetZenGravesConfig().CrossCauseOfDeath.Count(); i++)
-		{
-			ZenGravesCauseOfDeath cod = GetZenGravesConfig().CrossCauseOfDeath.Get(i);
-			if (cod.CauseMessage == GetZenGravesCauseOfDeath() && cod.SpawnCross == false)
-			{
-				GetZenGravesConfig().DebugMsg("SaveZenSkeletonItems() - Do not spawn a cross for death cause: " + GetZenGravesCauseOfDeath());
-				return;
-			}
-		}
-
-		string surface_type;
-		vector position = GetPosition();
-
-		// Syberia compatibility - (Syberia spawns characters 10km in the sky during character creation screen)
-		if (position[1] > 9000)
-			return;
-
-		GetGame().SurfaceGetType(position[0], position[2], surface_type);
-
-		// Check that we can actually bury stuff at this location
-		if (!GetGame().IsSurfaceDigable(surface_type))
-		{
-			GetZenGravesConfig().DebugMsg("SaveZenSkeletonItems() - Don't save: Surface is not diggable, don't spawn a cross.");
-			return;
-		}
-
-		// Generate new cross info
-		ZenDeadPlayerData deadData = GenerateZenDeadPlayerData();
-		if (!deadData)
-			return;
-
-		// Store clothing & shoulder slots first
-		ItemBase shoulder = ItemBase.Cast(FindAttachmentBySlotName("shoulder"));
-		if (shoulder && !shoulder.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(shoulder.GetType(), 1, shoulder.GetHealth(), true));
-		}
-
-		ItemBase melee = ItemBase.Cast(FindAttachmentBySlotName("melee"));
-		if (melee && !melee.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(melee.GetType(), 1, melee.GetHealth(), true));
-		}
-
-		ItemBase headgear = ItemBase.Cast(FindAttachmentBySlotName("headgear"));
-		if (headgear && !headgear.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(headgear.GetType(), 1, headgear.GetHealth(), true));
-		}
-
-		ItemBase eyewear = ItemBase.Cast(FindAttachmentBySlotName("eyewear"));
-		if (eyewear && !eyewear.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(eyewear.GetType(), 1, eyewear.GetHealth(), true));
-		}
-
-		ItemBase mask = ItemBase.Cast(FindAttachmentBySlotName("mask"));
-		if (mask && !mask.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(mask.GetType(), 1, mask.GetHealth(), true));
-		}
-
-		ItemBase body = ItemBase.Cast(FindAttachmentBySlotName("body"));
-		if (body && !body.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(body.GetType(), 1, body.GetHealth(), true));
-		}
-
-		ItemBase gloves = ItemBase.Cast(FindAttachmentBySlotName("gloves"));
-		if (gloves && !gloves.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(gloves.GetType(), 1, gloves.GetHealth(), true));
-		}
-
-		ItemBase vest = ItemBase.Cast(FindAttachmentBySlotName("vest"));
-		if (vest && !vest.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(vest.GetType(), 1, vest.GetHealth(), true));
-		}
-
-		ItemBase hips = ItemBase.Cast(FindAttachmentBySlotName("hips"));
-		if (hips && !hips.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(hips.GetType(), 1, hips.GetHealth(), true));
-		}
-
-		ItemBase legs = ItemBase.Cast(FindAttachmentBySlotName("legs"));
-		if (legs && !legs.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(legs.GetType(), 1, legs.GetHealth(), true));
-		}
-
-		ItemBase feet = ItemBase.Cast(FindAttachmentBySlotName("feet"));
-		if (feet && !feet.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(feet.GetType(), 1, feet.GetHealth(), true));
-		}
-
-		ItemBase back = ItemBase.Cast(FindAttachmentBySlotName("back"));
-		if (back && !back.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(back.GetType(), 1, back.GetHealth(), true));
-		}
-
-		ItemBase armband = ItemBase.Cast(FindAttachmentBySlotName("armband"));
-		if (armband && !armband.IsRuined() && Math.RandomFloat01() <= GetZenGravesConfig().ChanceOfSkeletonClothing)
-		{
-			deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(armband.GetType(), 1, armband.GetHealth(), true));
-		}
-
-		Ammunition_Base ammo;
-		Magazine magazine;
-		float quantity;
-		array<EntityAI> itemsArray = new array<EntityAI>;
-		GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, itemsArray);
-
-		// Player has no items to store - stop here.
-		if (itemsArray.Count() == 0)
-		{
-			GetZenGravesConfig().DebugMsg("SaveZenSkeletonItems() - No inventory items found!");
-			return;
-		}
-
-		for (i = 0; i < itemsArray.Count(); i++)
-		{
-			EntityAI item = itemsArray.Get(i);
-			if (item && !item.IsMan())
-			{
-				// Skip all clothing items as they're saved separately above
-				if (item == shoulder)
-					continue;
-				if (item == melee)
-					continue;
-				if (item == headgear)
-					continue;
-				if (item == eyewear)
-					continue;
-				if (item == mask)
-					continue;
-				if (item == body)
-					continue;
-				if (item == gloves)
-					continue;
-				if (item == vest)
-					continue;
-				if (item == hips)
-					continue;
-				if (item == legs)
-					continue;
-				if (item == feet)
-					continue;
-				if (item == back)
-					continue;
-				if (item == armband)
-					continue;
-
-				// Skip if item is "dummy" item (eg. Magnum_Cylinder)
-				if (item.IsInherited(DummyItem))
-					continue;
-
-				// Skip if dice% fails
-				if (Math.RandomFloat01() > GetZenGravesConfig().ChanceOfSkeletonItems)
-					continue;
-
-				quantity = item.GetQuantity();
-
-				// Ignore magazines on purpose. CBF checking what ammo is in them, spawn the mags, but assume that the ammo was pilfered by whoever buried the body
-				ammo = Ammunition_Base.Cast(item);
-				if (ammo)
-				{
-					quantity = ammo.GetAmmoCount();
-				}
-				else
-				if (item.HasEnergyManager() && item.GetCompEM())
-				{
-					quantity = item.GetCompEM().GetEnergy();
-				}
-
-				deadData.SkeletonItems.Insert(new ZenGraves_InventoryItem(item.GetType(), quantity, item.GetHealth()));
-			}
-		}
-
-		// Add player data to JSON
-		GetZenGravesConfig().DeadPlayers.Insert(deadData);
 	}
 
 	//! UTILITIES
@@ -1373,18 +929,28 @@ modded class PlayerBase
 		if (!GetIdentity() || GetType().Contains("_Ghost"))
 			return;
 
-		if (GetIdentity().GetName() == "Survivor")
+		if (GetZenUpdateMessage().NotifySurvivorOfNameChange && GetCachedName() == "Survivor")
 		{
 			Zen_SendMessageDelayed(GetZenUpdateMessage().SurvivorNotification, 10000);
 		}
 
+		string cachedID = GetCachedID();
+
+		// Check for admin -> player replies
+		ZenPlayerMessage playerMsg = GetZenPlayerMessageConfig().GetPlayerMessage(cachedID);
+
+		if (playerMsg && playerMsg.Message != "")
+		{
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPlayerMessageReply, 1000, false, playerMsg);
+			return;
+		}
+
 		string loginMsg = GetZenUpdateMessage().LOGIN_MESSAGE;
-		loginMsg.Replace("#survivorname#", GetIdentity().GetName());
+		loginMsg.Replace("#survivorname#", GetCachedName());
 		ZenFunctions.SendPlayerMessage(this, loginMsg);
 
 		// Load last update ID 
-		string cachedID = GetCachedID();
-		int timestamp = JMDate.Now(false).GetTimestamp();
+		int timestamp = CF_Date.Now().GetTimestamp();
 		ZenPlayerUpdateMsg updateConfig;
 		GetZenUpdateMessagePersistence().PlayerUpdates.Find(cachedID, updateConfig);
 		if (!updateConfig)
@@ -1394,7 +960,7 @@ modded class PlayerBase
 		if (GetZenUpdateMessage().UPDATE_MESSAGE != "" && updateConfig.updateID != GetZenUpdateMessage().UPDATE_VERSION)
 		{
 			string updateMsg = GetZenUpdateMessage().UPDATE_MESSAGE;
-			updateMsg.Replace("#survivorname#", GetIdentity().GetName());
+			updateMsg.Replace("#survivorname#", GetCachedName());
 
 			if (GetZenUpdateMessage().PopupInGame)
 			{
@@ -1415,21 +981,13 @@ modded class PlayerBase
 				GetZenUpdateMessagePersistence().PlayerUpdates.Set(cachedID, updateConfig);
 			}
 		}
-
-		// Check for admin -> player replies
-		ZenPlayerMessage playerMsg = GetZenPlayerMessageConfig().GetPlayerMessage(cachedID);
-		if (playerMsg && playerMsg.Message != "")
-		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenPlayerMessageReply, 1000, false, playerMsg);
-			return;
-		}
 	}
 
 	// Marks the update message pop-up as read
 	void MarkReadZenUpdateMessage()
 	{
 		// Load last update ID 
-		int timestamp = JMDate.Now(false).GetTimestamp();
+		int timestamp = CF_Date.Now().GetTimestamp();
 
 		ZenPlayerUpdateMsg updateConfig;
 		GetZenUpdateMessagePersistence().PlayerUpdates.Find(GetCachedID(), updateConfig);
@@ -1737,8 +1295,19 @@ modded class PlayerBase
 
 	override bool Consume(PlayerConsumeData data)
 	{
-		if (data)
+		bool result = super.Consume(data);
+
+		if (result && data && data.m_Source)
 		{
+			#ifdef TerjeMedicine
+            if (data.m_Source.IsKindOf("ZenJameson") || data.m_Source.IsKindOf("ZenFlask"))
+            {
+                TerjeConsumableEffects medEffects = new TerjeConsumableEffects();
+                medEffects.Apply(data.m_Source, "CfgVehicles " + data.m_Source.GetType(), this, data.m_Amount);
+				return result;
+            }
+			#endif
+
 			ItemBase source = ItemBase.Cast(data.m_Source);
 			if (source)
 			{
@@ -1749,14 +1318,18 @@ modded class PlayerBase
 					GiveShock(data.m_Amount * -0.1);
 				}
 			}
-		}
+        }
 
-		return super.Consume(data);
+		return result;
 	}
 
 	void StartZenAlcoholTimer()
 	{
-		if (!m_ZenAlcoholUpdateTimer)
+		#ifdef TerjeMedicine
+		return; // let terje mod handle it.
+		#endif
+
+		if (!m_ZenAlcoholUpdateTimer || !m_ZenAlcoholUpdateTimer.IsRunning())
 		{
 			m_ZenAlcoholUpdateTimer = new Timer();
 			m_ZenAlcoholUpdateTimer.Run(60, this, "UpdateZenAlcohol", NULL, true);

@@ -48,10 +48,13 @@ class ZenBasebuildingConfig
 		NoBuildZones.Insert(new ZenNoBuildZone("Example", "0 0 0", 1, true));
 
 		Whitelist = new array<string>;
+		Whitelist.Insert("ExplosivesBase");
+		Whitelist.Insert("Trap_Base");
 		Whitelist.Insert("ZenNote");
 		Whitelist.Insert("ZenSleepingBag_Base");
 		Whitelist.Insert("Zen_ChessBoard");
 		Whitelist.Insert("Zen_BoomBox");
+		Whitelist.Insert("Zen_TireRack");
 	}
 
 	void Save()

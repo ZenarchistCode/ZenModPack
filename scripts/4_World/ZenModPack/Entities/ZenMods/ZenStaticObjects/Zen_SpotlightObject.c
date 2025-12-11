@@ -1,5 +1,11 @@
 class Zen_SpotlightObject extends Inventory_Base
 {
+	void Zen_SpotlightObject()
+	{
+		SetPilotLight(true);
+		SetIsHologram(true);
+	}
+
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
@@ -13,4 +19,34 @@ class Zen_SpotlightObject extends Inventory_Base
 
 		DeleteSafe();
 	}
+
+	override bool DisableVicinityIcon()
+	{
+		return true;
+	}
+
+	override int GetHideIconMask()
+	{
+		return EInventoryIconVisibility.HIDE_VICINITY;
+	}
+
+	override bool CanPutInCargo(EntityAI parent)
+	{
+		return false;
+	}
+
+	override bool CanPutIntoHands(EntityAI parent)
+	{
+		return false;
+	}
+
+	override bool IsTakeable()
+	{
+		return false;
+	}
+
+	override bool CanBeActionTarget()
+	{
+        return false;
+    }
 }

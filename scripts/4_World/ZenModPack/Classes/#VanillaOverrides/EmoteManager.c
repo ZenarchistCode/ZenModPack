@@ -1,17 +1,5 @@
 modded class EmoteManager
 {
-	//! SHARED
-	override void KillPlayer()
-	{
-		super.KillPlayer();
-
-		//! CAUSE OF DEATH 
-		if (GetGame().IsDedicatedServer())
-		{
-			m_Player.SetCauseOfDeath(GetCauseOfDeathConfig().GetCauseOfDeath("suicide").CauseMessage);
-		}
-	}
-
 	override bool InterruptGestureCheck()
 	{
 		//! IMMERSIVE LOGIN

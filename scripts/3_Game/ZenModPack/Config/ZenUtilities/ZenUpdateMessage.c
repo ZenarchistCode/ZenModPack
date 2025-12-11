@@ -84,7 +84,7 @@ class ZenUpdateMessagePersistence
 			int oldCount = PlayerUpdates.Count();
 
 			// Scan player data and remove any that are out of date by 1 month or longer 
-			int timestamp = JMDate.Now(false).GetTimestamp();
+			int timestamp = CF_Date.Now().GetTimestamp();
 			for (int i = PlayerUpdates.Count(); i >= 0; i--)
 			{
 				ZenPlayerUpdateMsg msg = PlayerUpdates.GetElement(i);

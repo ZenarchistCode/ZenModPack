@@ -23,19 +23,11 @@ modded class MissionServer
 		GetZenUpdateMessagePersistence();
 		GetZenServerDiversionConfig();
 		m_ModLogger = new ZenModLogger;
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenDeferredInit, 30000, false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenDeferredInit, 30000, false);
 
 		//! GENERAL CONFIG
 		ZMPrint("[ZenModPack] Loading config");
 		GetZenModPackConfig();
-
-		//! CAUSE OF DEATH
-		if (ZenModEnabled("ZenCauseOfDeath") || ZenModEnabled("ZenGraves"))
-			GetCauseOfDeathConfig();
-
-		//! GRAVES
-		if (ZenModEnabled("ZenGraves"))
-			GetZenGravesConfig();
 
 		//! REPAIR WELLS 
 		if (ZenModEnabled("ZenRepairWells"))
@@ -58,15 +50,6 @@ modded class MissionServer
 		//! BASEBUILDING CONFIG 
 		if (ZenModEnabled("ZenBasebuildingConfig"))
 			GetZenBasebuildingConfig();
-
-		//! PERSISTENT TREES
-		if (ZenModEnabled("ZenPersistentTrees"))
-		{
-			GetZenTreesConfig();
-			GetZenTrees_Load();
-			GetZenTrees_Save();
-			GetZenTrees_Load().ClearRespawnedTrees();
-		}
 
 		//! CHICKEN COOPS
 		if (ZenModEnabled("ZenChickenCoops"))
@@ -112,16 +95,19 @@ modded class MissionServer
 
 		ZMPrint("[ZenModPack] OnMissionStart");
 
-		//! PERSISTENT TREES 
-		if (ZenModEnabled("ZenPersistentTrees"))
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zen_Deforestation, 2500, false);
-
-		//! GRAVES 
-		if (ZenModEnabled("ZenGraves"))
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Zen_SpawnGraves, 5000);
-
 		//! GENERAL SERVER-SIDE DEBUG 
 		ZenServerDebugStartup();
+	}
+
+	void ~MissionServer()
+	{
+		SaveAllZenDBsShutdown();
+	}
+
+	void SaveAllZenDBsShutdown()
+	{
+		ZMPrint("[ZenModPack] OnMissionFinish");
+		SaveAllZenDBs();
 	}
 
 	// If a player just logged out and they were the LAST player to logout, save all DBs.
@@ -132,18 +118,14 @@ modded class MissionServer
 	{
 		super.PlayerDisconnected(player, identity, uid);
 		
-		if (m_LogoutPlayers.Count() > 0)
+		array<Man> players = new array<Man>();
+		g_Game.GetPlayers(players);
+		
+		if (players.Count() > 1)
 			return;
 
 		ZMPrint("Final active player disconnected: saving all skill databases.");
 		SaveAllZenDBs();
-	}
-
-	override void OnMissionFinish()
-	{
-		super.OnMissionFinish();
-
-		ZMPrint("[ZenModPack] OnMissionFinish");
 	}
 
 	void SaveAllZenDBs()
@@ -157,14 +139,6 @@ modded class MissionServer
 		//! REPAIR PUMPS
 		if (ZenModEnabled("ZenRepairPumps"))
 			GetZenPumpsConfig().Save();
-
-		//! PERSISTENT TREES 
-		if (ZenModEnabled("ZenPersistentTrees"))
-			GetZenTrees_Save().TransferSavedTrees();
-
-		//! GRAVES 
-		if (ZenModEnabled("ZenGraves"))
-			Zen_Save_Graves();
 
 		//! UTILITIES
 		GetZenUpdateMessagePersistence().Save();
@@ -202,7 +176,7 @@ modded class MissionServer
 	// Perform some general debuggin'
 	private void ZenServerDebugStartup()
 	{
-		if (GetGame().ConfigGetInt("CfgVehicles ZenModPackConfig dumpCfgVehicles") != 1)
+		if (g_Game.ConfigGetInt("CfgVehicles ZenModPackConfig dumpCfgVehicles") != 1)
 			return;
 		
 		string cfg_name = "";
@@ -211,9 +185,9 @@ modded class MissionServer
 		ZenModLogger.Log("[ZENMODPACK CFGVEHICLES DUMP START]", "CfgVehicles");
 		ZenModLogger.Log("", "CfgVehicles");
 
-		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgVehicles"); i++)
+		for (int i = 0; i < g_Game.ConfigGetChildrenCount("CfgVehicles"); i++)
 		{
-			GetGame().ConfigGetChildName("CfgVehicles", i, cfg_name);
+			g_Game.ConfigGetChildName("CfgVehicles", i, cfg_name);
 
 			if (cfg_name == "ZenModPackConfig")
 			{
@@ -224,7 +198,7 @@ modded class MissionServer
 			if (cfg_name == "ZenModPack_EndDump")
 				break;
 
-			if (foundZenModPack && GetGame().ConfigGetInt("CfgVehicles " + cfg_name + " scope") == 2)
+			if (foundZenModPack && g_Game.ConfigGetInt("CfgVehicles " + cfg_name + " scope") == 2)
 				ZenModLogger.Log(cfg_name, "CfgVehicles", false);
 		}
 
@@ -238,7 +212,7 @@ modded class MissionServer
 
 		//! IMMERSIVE LOGIN
 		if (!m_ZenDisableFireSpawn)
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(CreateFire, 10, false, m_player);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(CreateFire, 10, false, m_player);
 	}
 
 	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity) 
@@ -256,11 +230,12 @@ modded class MissionServer
 			//! SERVER DIVERSION
 			if (GetZenServerDiversionConfig().ServerIP != "")
 			{
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenServerDiversionMessage, 6969, false, player);
+				g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenServerDiversionMessage, 6969, false, player);
 			}
 		}
 
-		//! SHARED 
+		//! SHARED
+		/* 
 		int playerUID;
 		if (!m_ZenPlayerUIDs.Find(identity.GetId(), playerUID))
 		{
@@ -270,9 +245,10 @@ modded class MissionServer
 		}
 
 		player.SetZenPlayerUID(playerUID);
+		*/
 
 		// Delay sending of client config to avoid spamming new client login along with data from other mods
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendNotificationConfig, 500 + Math.RandomInt(0, 500), false, player);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendNotificationConfig, 500 + Math.RandomInt(0, 500), false, player);
 
 		if (ZenModEnabled("ZenBasebuildingConfig"))
 			SendZenBasebuildingConfig(player, identity);
@@ -312,12 +288,12 @@ modded class MissionServer
 		// Get fire surface pos
 		float x = posXZ[0] + randX;
 		float z = posXZ[2] + randZ;
-		float y = GetGame().SurfaceY(x, z);
+		float y = g_Game.SurfaceY(x, z);
 		vector firePos = { x,y,z };
 
 		// Check surface type
 		string surface_type;
-		GetGame().SurfaceGetType(firePos[0], firePos[2], surface_type);
+		g_Game.SurfaceGetType(firePos[0], firePos[2], surface_type);
 		surface_type.ToLower();
 
 		// Don't start fires under water
@@ -325,7 +301,7 @@ modded class MissionServer
 			return;
 
 		// Create fire
-		FireplaceBase fire = FireplaceBase.Cast(GetGame().CreateObject("Fireplace", firePos));
+		FireplaceBase fire = FireplaceBase.Cast(g_Game.CreateObject("Fireplace", firePos));
 
 		if (!fire)
 			return;
@@ -357,7 +333,7 @@ modded class MissionServer
 			rag.LockToParent();
 
 		// Ignite fire
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StartFire, 100, false, fire);
+		g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StartFire, 100, false, fire);
 
 		// Orient player towards fire 
 		ZenFunctions.OrientObjectToPosition(player, fire.GetPosition());
@@ -372,8 +348,8 @@ modded class MissionServer
 			fire.StartFire(true);
 			fire.SetTemperatureDirect(FireplaceBase.PARAM_MIN_FIRE_TEMPERATURE);
 			// Put fire out after 12 seconds
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ExtinguishFire, 12000, false, fire);
-			GetGame().CreateObjectEx("ClutterCutterFireplace", fire.GetPosition(), ECE_PLACE_ON_SURFACE|ECE_NOLIFETIME);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ExtinguishFire, 12000, false, fire);
+			g_Game.CreateObjectEx("ClutterCutterFireplace", fire.GetPosition(), ECE_PLACE_ON_SURFACE|ECE_NOLIFETIME);
 		}
 	}
 
@@ -384,7 +360,7 @@ modded class MissionServer
 		{
 			// Set fire extinguish sound effect
 			fire.SetExtinguishingState();
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StopFire, 3000, false, fire);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StopFire, 3000, false, fire);
 		}
 	}
 
@@ -414,83 +390,6 @@ modded class MissionServer
 		}
 	}
 
-	//! PERSISTENT TREES 
-	// Restore saved "health" of trees and cut down any that have 0 health
-	void Zen_Deforestation()
-	{
-		ZMPrint("[ZenModPack] ZenPersistentTrees::Zen_Deforestation");
-
-		for (int i = 0; i < GetZenTrees_Load().CutTrees.Count(); i++)
-		{
-			CutDownTree(GetZenTrees_Load().CutTrees.Get(i));
-		}
-
-		// Delete loaded trees from memory
-		GetZenTrees_Load().Delete();
-	}
-
-	// Cut down the given tree based on config info
-	void CutDownTree(ZenTreeState treeConfig)
-	{
-		// Get all objects within 10cm of the vector location
-		array<Object> objectsNearTree = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(treeConfig.Location, 0.01, objectsNearTree, null);
-		Object obj;
-
-		// Cut down any trees/bushes within 0.01m of location
-		for (int x = 0; x < objectsNearTree.Count(); x++)
-		{
-			obj = objectsNearTree.Get(x);
-
-			if (!obj)
-				continue;
-
-			// Check if object is a "hard" tree and hard trees config is enabled
-			if (GetZenTreesConfig().TreeHard && obj.IsInherited(TreeHard) && obj.IsCuttable())
-			{
-				obj.SetHealth(treeConfig.Health);
-
-				if (treeConfig.Health <= 0)
-					dBodyDestroy(obj);
-
-				return;
-			}
-
-			// Check if object is a "soft" tree and soft trees config is enabled
-			if (GetZenTreesConfig().TreeSoft && obj.IsInherited(TreeSoft) && obj.IsCuttable())
-			{
-				obj.SetHealth(treeConfig.Health);
-
-				if (treeConfig.Health <= 0)
-					dBodyDestroy(obj);
-
-				return;
-			}
-
-			// Check if object is a "hard" bush and hard bush config is enabled
-			if (GetZenTreesConfig().BushHard && obj.IsInherited(BushHard))
-			{
-				obj.SetHealth(treeConfig.Health);
-
-				if (treeConfig.Health <= 0)
-					dBodyDestroy(obj);
-
-				return;
-			}
-
-			// Check if object is a "soft" bush and soft bush config is enabled
-			if (GetZenTreesConfig().BushSoft && obj.IsInherited(BushSoft))
-			{
-				obj.SetHealth(treeConfig.Health);
-
-				if (treeConfig.Health <= 0)
-					dBodyDestroy(obj);
-
-				return;
-			}
-		}
-	}
-
 	//! FIREWOOD 
 	void ZenFireWoodInit()
 	{
@@ -499,12 +398,12 @@ modded class MissionServer
 		if (GetZenFirewoodConfig().DumpObjectLocations)
 		{
 			// Wait 20 secs to ensure all vanilla + modded items are loaded in
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DumpFirewoodObjects, 20000, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DumpFirewoodObjects, 20000, false);
 		}
 		else
 		if (GetZenFirewoodConfig().SpawnFirewoodObjects || GetZenFirewoodConfig().DebugOn)
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupWoodPiles, 20000, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupWoodPiles, 20000, false);
 		}
 	}
 
@@ -534,7 +433,7 @@ modded class MissionServer
 
 				// Get objects within 3 meter of the config'd wood pile vector
 				array<Object> objectsNearWoodpile = new array<Object>;
-				GetGame().GetObjectsAtPosition3D(loc, 3, objectsNearWoodpile, null);
+				g_Game.GetObjectsAtPosition3D(loc, 3, objectsNearWoodpile, null);
 
 				// Prepare reused variables
 				string debugName = "";
@@ -576,7 +475,7 @@ modded class MissionServer
 			return;
 
 		childObjType.ToLower();
-		Object newObj = GetGame().CreateObject(childObjType, vector.Zero);
+		Object newObj = g_Game.CreateObject(childObjType, vector.Zero);
 		newObj.SetPosition(parentObj.GetPosition() + offset);
 		newObj.SetOrientation(parentObj.GetOrientation() + orient);
 		newObj.Update();
@@ -587,11 +486,11 @@ modded class MissionServer
 	{
 		ZenFirewoodLogger.Log("Start object dump.");
 
-		vector centerPos = GetGame().ConfigGetVector(string.Format("CfgWorlds %1 centerPosition", GetGame().GetWorldName()));
+		vector centerPos = g_Game.ConfigGetVector(string.Format("CfgWorlds %1 centerPosition", g_Game.GetWorldName()));
 
 		// Get all objects on the map in a 20km radius from the center of that 20km radius (enough for most maps?)
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(centerPos, 20000, objectsOnMap, null);
+		g_Game.GetObjectsAtPosition3D(centerPos, 20000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach(ZenFirewoodType woodType : GetZenFirewoodConfig().WoodTypes)
@@ -642,7 +541,7 @@ modded class MissionServer
 		objectsOnMap = NULL;
 
 		// Setup wood piles
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupWoodPiles, 5000, false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupWoodPiles, 5000, false);
 	}
 
 	//! CHICKEN COOPS
@@ -653,12 +552,12 @@ modded class MissionServer
 		if (GetZenChickenCoopsConfig().DumpObjectLocations)
 		{
 			// Wait 20 secs to ensure all vanilla + modded items are loaded in
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DumpChickenCoopObjects, 20000, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DumpChickenCoopObjects, 20000, false);
 		}
 		else
 		if (GetZenChickenCoopsConfig().SpawnChickenCoops || GetZenChickenCoopsConfig().DebugOn)
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupChickenCoops, 20000, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupChickenCoops, 20000, false);
 		}
 	}
 
@@ -683,7 +582,7 @@ modded class MissionServer
 
 				// Get objects within 1 meter of the config'd coop vector
 				array<Object> objectsNearCoop = new array<Object>;
-				GetGame().GetObjectsAtPosition3D(loc, 1, objectsNearCoop, null);
+				g_Game.GetObjectsAtPosition3D(loc, 1, objectsNearCoop, null);
 
 				// Prepare reused variables
 				string debugName = "";
@@ -730,7 +629,7 @@ modded class MissionServer
 			return;
 
 		childObjType.ToLower();
-		Object newObj = GetGame().CreateObject(childObjType, vector.Zero);
+		Object newObj = g_Game.CreateObject(childObjType, vector.Zero);
 		newObj.SetPosition(parentObj.GetPosition() + offset);
 		newObj.SetOrientation(parentObj.GetOrientation() + orient);
 		newObj.Update();
@@ -741,11 +640,11 @@ modded class MissionServer
 	{
 		ZenChickenCoopsLogger.Log("Start object dump.");
 
-		vector centerPos = GetGame().ConfigGetVector(string.Format("CfgWorlds %1 centerPosition", GetGame().GetWorldName()));
+		vector centerPos = g_Game.ConfigGetVector(string.Format("CfgWorlds %1 centerPosition", g_Game.GetWorldName()));
 
 		// Get all objects on the map in a 20km radius from the center of that 20km radius (enough for most maps?)
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(centerPos, 20000, objectsOnMap, null);
+		g_Game.GetObjectsAtPosition3D(centerPos, 20000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach(ZenChickenCoopType coopType : GetZenChickenCoopsConfig().CoopTypes)
@@ -796,298 +695,7 @@ modded class MissionServer
 		objectsOnMap = NULL;
 
 		// Setup chicken coops
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupChickenCoops, 5000, false);
-	}
-
-	//! GRAVES 
-	void Zen_Save_Graves()
-	{
-		// Scan through corpses and save their gear before they get deleted on server restart
-		if (GetZenGravesConfig().BurySkeleton && m_DeadPlayersArray && m_DeadPlayersArray.Count() > 0)
-		{
-			ZMPrint("[ZenModPack] ZenGraves::Zen_Save_Graves - Saving " + m_DeadPlayersArray.Count() + " dead player graves.");
-			CorpseData corpse_data;
-
-			for (int i = 0; i < m_DeadPlayersArray.Count(); i++)
-			{
-				corpse_data = m_DeadPlayersArray.Get(i);
-				if (corpse_data && corpse_data.m_Player)
-				{
-					corpse_data.m_Player.SaveZenSkeletonItems();
-				}
-			}
-		}
-
-		// Save dead player config on server shutdown
-		GetZenGravesConfig().Save();
-	}
-
-	// Spawn any currently active player graves
-	void Zen_SpawnGraves()
-	{
-		ZMPrint("[ZenModPack] ZenGraves::Zen_SpawnGraves - Spawning " + GetZenGravesConfig().DeadPlayers.Count() + " dead player graves.");
-
-		for (int i = GetZenGravesConfig().DeadPlayers.Count() - 1; i >= 0; i--)
-		{
-			ZenDeadPlayerData deadData = GetZenGravesConfig().DeadPlayers.Get(i);
-			Zen_SpawnGrave(deadData);
-
-			// Remove config after cross has been spawned, don't need it anymore.
-			GetZenGravesConfig().DeadPlayers.Remove(i);
-		}
-
-		GetZenGravesConfig().Save();
-	}
-
-	// Spawns a crucifix
-	void Zen_SpawnGrave(ZenDeadPlayerData deadData)
-	{
-		// Delete any duplicate objects nearby cross within 1m
-		array<Object> objectsAtCross = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(deadData.Position, GetZenGravesConfig().MinDistanceBetweenCrosses, objectsAtCross, null);
-		ZenGraves_DeadPlayerCross cross;
-
-		int i;
-		for (i = 0; i < objectsAtCross.Count(); i++)
-		{
-			cross = ZenGraves_DeadPlayerCross.Cast(objectsAtCross[i]);
-
-			if (cross)
-				break;
-		}
-
-		if (cross)
-		{
-			// Cross already exists
-			GetZenGravesConfig().DebugMsg("Zen_SpawnGrave() - Cross already exists @ " + cross.GetPosition());
-			return;
-		}
-		else
-		{
-			// Cross does not exist - spawn it in
-			cross = ZenGraves_DeadPlayerCross.Cast(GetGame().CreateObject("ZenGraves_DeadPlayerCross", deadData.Position, false, true, true));
-		}
-
-		// If cross doesn't exist by now, either something has gone wrong or the cross has already been spawned. Delete the deadData and stop.
-		if (!cross)
-		{
-			GetZenGravesConfig().DebugMsg("[ERROR!] Zen_SpawnGrave() - Grave could not be spawned for cross @ " + deadData.Position);
-		}
-
-		// Place cross
-		cross.SetOrientation(deadData.Orientation);
-		cross.PlaceOnSurface();
-		cross.SetPosition(cross.GetPosition() + "0 -0.01 0");
-		cross.SetDeathDate(deadData.Day, deadData.Month, deadData.Year, GetZenGravesConfig().DateFormat);
-		
-		// If server has set cross to not display player info
-		if (!GetZenGravesConfig().ShowPlayerInfoOnCross)
-		{
-			GetZenGravesConfig().DebugMsg("Zen_SpawnGrave() - Don't spawn RPC trigger (ShowPlayerInfoOnCross is false)");
-			return;
-		}
-
-		// Set cross info
-		cross.m_PlayerName = GetZenGravesConfig().Prefix + " " + deadData.Name;
-		string description = GetZenGravesConfig().Description;
-		if (GetZenGravesConfig().ShowCauseOfDeath)
-			description = description + " " + GetZenGravesConfig().CauseOfDeath + " " + deadData.CauseOfDeath;
-		description.Replace("#name", deadData.Name);
-
-		// Set player age in description if it's enabled.
-		if (GetZenGravesConfig().ShowPlayerAge)
-		{
-			string ageText = GetZenGravesConfig().AgeText;
-
-			if (deadData.AgeMinutes < 60) // < 1 hour
-				ageText = ageText + " " + deadData.AgeMinutes.ToString() + " " + GetZenGravesConfig().Minutes;
-			else
-			if (deadData.AgeMinutes < 1440) // < 1 day
-				ageText = ageText + " " + Math.Round(deadData.AgeMinutes / 60).ToString() + " " + GetZenGravesConfig().Hours;
-			else
-			if (deadData.AgeMinutes < 10080) // < 1 week
-				ageText = ageText + " " + Math.Round(deadData.AgeMinutes / 1440).ToString() + " " + GetZenGravesConfig().Days;
-			else
-				ageText = ageText + " " + Math.Round(deadData.AgeMinutes / 10080).ToString() + " " + GetZenGravesConfig().Weeks;
-
-			description.Replace("#age", ageText);
-		}
-		else
-			description.Replace("#age", "");
-
-		cross.m_PlayerDescription = description;
-		cross.SpawnZenGravesRpcTrigger();
-		GetZenGravesConfig().DebugMsg("\Zen_SpawnGrave() - Placed cross @ " + deadData.Position + " for " + deadData.SteamID + " (" + deadData.Name + ")");
-
-		// Spawn skeleton stash
-		if (GetZenGravesConfig().BurySkeleton)
-			Zen_SpawnDeathSkeleton(deadData, cross);
-	}
-
-	// Spawn a buried skeleton
-	void Zen_SpawnDeathSkeleton(ZenDeadPlayerData deadData, ZenGraves_DeadPlayerCross cross)
-	{
-		int i;
-
-		// Check for any duplicate objects nearby cross within 1m
-		array<Object> objectsAtCross = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(cross.GetPosition(), 1, objectsAtCross, null);
-
-		for (i = 0; i < objectsAtCross.Count(); i++)
-		{
-			ZenGraves_UndergroundStash nearbyStash = ZenGraves_UndergroundStash.Cast(objectsAtCross[i]);
-
-			// If nearby stash found, stop here and remove deadData inventory items and set bury flag to false
-			if (nearbyStash)
-			{
-				deadData.SkeletonItems.Clear();
-				return;
-			}
-		}
-
-		// Create skeleton
-		EntityAI skeletonBuried = EntityAI.Cast(GetGame().CreateObject("ZenGraves_DeadPlayerSkeleton", cross.GetPosition(), ECE_PLACE_ON_SURFACE));
-		if (!skeletonBuried || !deadData.SkeletonItems)
-		{
-			GetZenGravesConfig().DebugMsg("SpawnZenDeathSkeleton() - Failed to spawn skeleton @ " + deadData.Position);
-			return;
-		}
-
-		skeletonBuried.SetHealth(skeletonBuried.GetMaxHealth() * 0.1); // 10% health, badly damaged
-
-		// Check what items we have to use as storage
-		array<ItemBase> skeletonClothing = new array<ItemBase>;
-		ZenGraves_InventoryItem skeletonItem;
-		ItemBase spawnedItem;
-
-		// Spawn clothing items on skeleton
-		for (i = 0; i < deadData.SkeletonItems.Count(); i++)
-		{
-			skeletonItem = deadData.SkeletonItems.Get(i);
-
-			// Skip cargo items that aren't clothes
-			if (!skeletonItem.Attachment)
-				continue;
-
-			spawnedItem = ItemBase.Cast(skeletonBuried.GetInventory().CreateAttachment(skeletonItem.Type));
-
-			if (spawnedItem)
-			{
-				spawnedItem.SetHealth(skeletonItem.Health * GetZenGravesConfig().SkeletonItemHealthModifier);
-
-				if (!spawnedItem.IsRuined() && spawnedItem.GetInventory())
-				{
-					skeletonClothing.Insert(spawnedItem);
-					GetZenGravesConfig().DebugMsg("    SpawnedItem: " + skeletonItem.Type + " x1");
-				}
-			}
-		};
-
-		// Spawn cargo items on skeleton
-		if (skeletonClothing.Count() > 0)
-		{
-			for (i = 0; i < deadData.SkeletonItems.Count(); i++)
-			{
-				skeletonItem = deadData.SkeletonItems.Get(i);
-				spawnedItem = null;
-
-				// Skip clothes
-				if (skeletonItem.Attachment)
-					continue;
-
-				// 50% chance to spawn top-down versus bottom-up in terms of clothing cargo position on skeleton (to randomize loot a little)
-				if (Math.RandomFloat01() <= 0.5)
-				{
-					// Head -> toes
-					for (int i2 = 0; i2 < skeletonClothing.Count(); i2++)
-					{
-						ItemBase checkClothing1 = skeletonClothing.Get(i2);
-						if (SpawnZenCrossItemInItem(skeletonItem, checkClothing1))
-						{
-							GetZenGravesConfig().DebugMsg("    SpawnedItem: " + skeletonItem.Type + " x" + skeletonItem.Quantity);
-							break;
-						}
-					}
-				}
-				else
-				{
-					// Toes -> head
-					for (int i3 = skeletonClothing.Count() - 1; i3 >= 0; i3--)
-					{
-						ItemBase checkClothing = skeletonClothing.Get(i3);
-						if (SpawnZenCrossItemInItem(skeletonItem, checkClothing))
-						{
-							GetZenGravesConfig().DebugMsg("    SpawnedItem: " + skeletonItem.Type + " x" + skeletonItem.Quantity);
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		// Generate slightly random position
-		vector stashPos = cross.GetPosition();
-		stashPos[0] = stashPos[0] + Math.RandomFloatInclusive(-0.2, 0.2);
-		stashPos[2] = stashPos[2] + Math.RandomFloatInclusive(-0.2, 0.2);
-
-		// Create stash
-		ZenGraves_UndergroundStash stash = ZenGraves_UndergroundStash.Cast(GetGame().CreateObject("ZenGraves_UndergroundStash", stashPos, ECE_PLACE_ON_SURFACE));
-
-		if (!stash)
-		{
-			GetZenGravesConfig().DebugMsg("SpawnZenDeathSkeleton() - Failed to spawn stash @ " + deadData.Position);
-			return;
-		}
-
-		vector stashOrientation = cross.GetOrientation();
-		stashOrientation[2] = 0;
-		stash.SetOrientation(stashOrientation);
-		stash.PlaceOnGround();
-		stash.GetInventory().AddEntityToInventory(skeletonBuried);
-		stash.Update();
-
-		// Final check: if buried stash is > 2m from original cross position, just delete this grave (eg. this can happen if grave is spawned in Livonia bunker)
-		if (vector.Distance(cross.GetPosition(), stash.GetPosition()) > 2)
-		{
-			GetZenGravesConfig().DebugMsg("SpawnZenDeathSkeleton() - Failed to spawn stash due to distance constraint @ " + deadData.Position);
-			stash.DeleteSafe();
-			cross.DeleteSafe();
-		}
-	}
-
-	// Spawn an item inside the given item
-	ItemBase SpawnZenCrossItemInItem(ZenGraves_InventoryItem skeletonItem, ItemBase insideItem)
-	{
-		if (insideItem.IsRuined() || !insideItem.GetInventory())
-			return null;
-
-		ItemBase spawnedItem = ItemBase.Cast(insideItem.GetInventory().CreateInInventory(skeletonItem.Type));
-
-		if (!spawnedItem)
-			return null;
-
-		spawnedItem.SetHealth(skeletonItem.Health * GetZenGravesConfig().SkeletonItemHealthModifier);
-		spawnedItem.SetQuantity(skeletonItem.Quantity);
-
-		// Check for special item quantity types (ignore magazines as we don't know what ammo type is in them - spawn them empty)
-		Ammunition_Base ammo = Ammunition_Base.Cast(spawnedItem);
-		if (ammo)
-		{
-			ammo.ServerSetAmmoCount(skeletonItem.Quantity);
-		}
-		else
-		if (spawnedItem.HasEnergyManager() && spawnedItem.GetCompEM())
-		{
-			spawnedItem.GetCompEM().SetEnergy(skeletonItem.Quantity);
-		}
-
-		Edible_Base edible = Edible_Base.Cast(spawnedItem);
-		if (edible && edible.HasFoodStage())
-		{
-			edible.ChangeFoodStage(FoodStageType.ROTTEN);
-		}
-
-		return spawnedItem;
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupChickenCoops, 5000, false);
 	}
 
 	//! BASEBUILDING CONFIG
@@ -1102,12 +710,12 @@ modded class MissionServer
 	{
 		if (GetZenStaticBarbedWireConfig().DumpObjects)
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DumpStaticBarbedWireObjects, 20000, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DumpStaticBarbedWireObjects, 20000, false);
 		}
 		else
 		if (GetZenStaticBarbedWireConfig().TurnedOn)
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupStaticBarbedWireDamageZones, 20000, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupStaticBarbedWireDamageZones, 20000, false);
 		}
 	}
 
@@ -1135,7 +743,7 @@ modded class MissionServer
 			{
 				// Get objects within 0.5 meter of the config'd vector
 				array<Object> objectsNearWire = new array<Object>;
-				GetGame().GetObjectsAtPosition3D(loc, 0.5, objectsNearWire, null);
+				g_Game.GetObjectsAtPosition3D(loc, 0.5, objectsNearWire, null);
 
 				for (int x = 0; x < objectsNearWire.Count(); x++)
 				{
@@ -1155,7 +763,7 @@ modded class MissionServer
 					if (debugName.Contains(wirePos.TypeName) || className.Contains(wirePos.TypeName))
 					{
 						// Create damage zone for barbed wire cutting players
-						ZenStaticBarbedWire wireObj = ZenStaticBarbedWire.Cast(Object.Cast(GetGame().CreateObject("ZenStaticBarbedWire", "0 0 0")));
+						ZenStaticBarbedWire wireObj = ZenStaticBarbedWire.Cast(Object.Cast(g_Game.CreateObject("ZenStaticBarbedWire", "0 0 0")));
 
 						if (wireObj)
 						{
@@ -1176,7 +784,7 @@ modded class MissionServer
 	{
 		// Get all objects on the map
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(Vector(0, 0, 0), 50000, objectsOnMap, null);
+		g_Game.GetObjectsAtPosition3D(Vector(0, 0, 0), 50000, objectsOnMap, null);
 		int objCount = 0;
 
 		foreach (ZenStaticBarbedWireType wireType : GetZenStaticBarbedWireConfig().WireTypes)
@@ -1225,7 +833,7 @@ modded class MissionServer
 		objectsOnMap.Clear();
 
 		// Setup zones
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupStaticBarbedWireDamageZones, 5000, false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SetupStaticBarbedWireDamageZones, 5000, false);
 	}
 
 	//! NIGHT CONFIG 
@@ -1249,7 +857,7 @@ modded class MissionServer
 			}
 
 			Param1<int> lightID = new Param1<int>(id);
-			GetGame().RPCSingleParam(player, ERPCs.RPC_SEND_LIGHTING_SETUP, lightID, true, player.GetIdentity());
+			g_Game.RPCSingleParam(player, ERPCs.RPC_SEND_LIGHTING_SETUP, lightID, true, player.GetIdentity());
 		}
 	}
 
@@ -1265,7 +873,7 @@ modded class MissionServer
 		// this can happen on some mods where the hologram gets fucked up during placement
 		// I found hundreds of objects placed at this location on my server once so this keeps an eye on that.
 		array<Object> nearest_objects = new array<Object>;
-        GetGame().GetObjectsAtPosition3D("0 0 0", 1, nearest_objects, NULL);
+        g_Game.GetObjectsAtPosition3D("0 0 0", 1, nearest_objects, NULL);
 		foreach (Object obj : nearest_objects)
 		{
 			ZenModLogger.Log("Deleted " + obj.GetType() + " @ 0 0 0", "000ghosts");
@@ -1278,7 +886,7 @@ modded class MissionServer
 			return;
 
 		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param1<string>(GetZenServerDiversionConfig().RedirectMessage), true, player.GetIdentity());
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenServerDiversionConfig, 10000, false, player);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendZenServerDiversionConfig, 10000, false, player);
 	}
 
 	void SendZenServerDiversionConfig(PlayerBase player)

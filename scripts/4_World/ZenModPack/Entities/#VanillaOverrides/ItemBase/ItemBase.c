@@ -1,8 +1,10 @@
 modded class ItemBase
-{
+{	
 	//! SHARED
 	static int ZENMOD_ITEM_COUNT = 0;
 	protected bool m_WasZenHologrammed;
+	protected int m_ZenCreationTimestamp;
+	protected int m_ZenFirstTouchedTimestamp;
 
 	void SetZenHologrammed(bool hologram, string textureOverride = "")
 	{
@@ -81,7 +83,6 @@ modded class ItemBase
 	override void DeferredInit()
 	{
 		super.DeferredInit();
-
 
 		if (ZenItemStatsLogger.ALREADY_PRINTED )
 			return;
@@ -270,53 +271,105 @@ modded class ItemBase
 
 		return true;
 	}
-
-	/*
-	//! TODO UTILITIES - Loot cycling detection?
-#ifdef SERVER
-	bool m_ZenIsVirgin = false;
-
+	
+	int GetZenCreationTimestamp() 
+	{
+		return m_ZenCreationTimestamp;
+	}
+	
+	void SetZenCreationTimestamp(int ts)
+	{
+		m_ZenCreationTimestamp = ts;
+	}
+	
+	int GetZenFirstTouchedTimestamp() 
+	{
+		return m_ZenFirstTouchedTimestamp;
+	}
+	
+	void SetZenFirstTouchedTimestamp(int ts)
+	{
+		m_ZenFirstTouchedTimestamp = ts;
+	}
+	
+	bool IsZenVirgin()
+	{
+		if (m_ZenFirstTouchedTimestamp <= 0)
+			return true; // :(
+		
+		return false;
+	}
+	
+	// Called when item is created by Central Economy system (ie. on spawn)
 	override void EEOnCECreate()
 	{
 		super.EEOnCECreate();
 
-		m_ZenIsVirgin = true; // :(
+		m_ZenFirstTouchedTimestamp = 0;
+		m_ZenCreationTimestamp = CF_Date.Now().GetTimestamp();
 	}
-
+	
 	override void OnItemLocationChanged(EntityAI old_owner, EntityAI new_owner)
 	{
 		super.OnItemLocationChanged(old_owner, new_owner);
-
-		if (!GetZenUtilitiesConfig().ShouldLogLootCyclers)
+		
+		if (!GetGame().IsDedicatedServer())
 			return;
-
-		// Only count items spawned this session
-		if (!m_ZenIsVirgin)
+		
+		if (!ZenModEnabled("ZenItemTimestamp"))
 			return;
+		
+		if (m_ZenFirstTouchedTimestamp == 0 && new_owner != null && new_owner.IsMan())
+			m_ZenFirstTouchedTimestamp = CF_Date.Now().GetTimestamp();
+		
+		//if (!GetZenUtilitiesConfig().ShouldLogLootCyclers)
+		//	return;
 
 		// If new owner is not null, item was not dropped onto the ground.
-		if (new_owner != NULL)
+		if (new_owner != null)
 			return;
 
-		// If old owner is null, it wasn't dropped by a player
-		if (old_owner == NULL)
-			return;
-
-		if (IsRuined())
+		// If old owner is null, it wasn't dropped by a player.
+		if (old_owner == null)
 			return;
 
 		PlayerBase player = PlayerBase.Cast(old_owner);
 		if (!player)
 			player = PlayerBase.Cast(old_owner.GetHierarchyRootPlayer());
 
+		// If it was not dropped by a player, nothing to log.
 		if (!player)
 			return;
-
-		// If lifetime doesn't match lifetime max, this is potentially a new item???
-		ZenFunctions.DebugMessage("Lifetime=" + GetLifetime() + " Max=" + GetLifetimeMax() + " m_ZenIsVirgin=" + m_ZenIsVirgin);
-		player.IncreaseZenLootCyclingCounter();
-		m_ZenIsVirgin = false;
+		
+		//! TODO: We can now check:
+		// 1. Was the timestamp difference between now and first touched < X minutes?
+		// 2. If so, increase player's loot cycle counter - if it exceeds X per session flag them for potential cycling.
 	}
-#endif
-*/
+	
+	override void OnStoreSave(ParamsWriteContext ctx)
+	{
+		super.OnStoreSave(ctx);
+		
+		if (!ZenModEnabled("ZenItemTimestamp"))
+			return;
+		
+		ctx.Write(m_ZenFirstTouchedTimestamp);
+		ctx.Write(m_ZenCreationTimestamp);
+	}
+	
+	override bool OnStoreLoad(ParamsReadContext ctx, int version)
+	{
+		bool superLoad = super.OnStoreLoad(ctx, version);
+		
+		if (!ZenModEnabled("ZenItemTimestamp"))
+			return superLoad;
+		
+		if (!ctx.Read(m_ZenFirstTouchedTimestamp))
+			return false;
+		
+		if (!ctx.Read(m_ZenCreationTimestamp))
+			return false;
+		
+		return superLoad;
+	}
 }

@@ -64,33 +64,5 @@ modded class CAContinuousMineWood
 		}
 
 		ZenAfterCreatePrimaryItems(action_data);
-		SaveDeadTreeActionData(action_data);
-    }
-
-    void SaveDeadTreeActionData(ActionData action_data)
-    {
-        if (!ZenModEnabled("ZenPersistentTrees"))
-            return;
-
-        Object targetObject;
-        if (!Class.CastTo(targetObject, action_data.m_Target.GetObject()))
-            return;
-
-        SaveDeadTreeObject(targetObject);
-    }
-
-    static void SaveDeadTreeObject(Object targetObject)
-    {
-        if (GetZenTreesConfig().TreeHard && targetObject.IsInherited(TreeHard) && targetObject.IsCuttable())
-            GetZenTrees_Save().SaveTreeState(targetObject.GetPosition(), targetObject.GetHealth());
-
-        if (GetZenTreesConfig().TreeSoft && targetObject.IsInherited(TreeSoft) && targetObject.IsCuttable())
-            GetZenTrees_Save().SaveTreeState(targetObject.GetPosition(), targetObject.GetHealth());
-
-        if (GetZenTreesConfig().BushHard && targetObject.IsInherited(BushHard))
-            GetZenTrees_Save().SaveTreeState(targetObject.GetPosition(), targetObject.GetHealth());
-
-        if (GetZenTreesConfig().BushSoft && targetObject.IsInherited(BushSoft))
-            GetZenTrees_Save().SaveTreeState(targetObject.GetPosition(), targetObject.GetHealth());
     }
 }

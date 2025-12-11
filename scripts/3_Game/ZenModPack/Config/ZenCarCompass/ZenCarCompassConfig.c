@@ -1,10 +1,14 @@
 class ZenCarCompassConfig
 {
+	// Set actual config version (doesn't save to json)
+	private static const string CONFIG_VERSION = "1.29 v1";
+	
 	// Config location
 	private const static string zenModFolder = "$profile:\\Zenarchist\\";
 	private const static string zenConfigName = "ZenCarCompassConfig.json";
 
 	// Config data
+	string ConfigVersion = "";
 	ref array<ref ZenCarCompassOffset> CarConfig;
 
 	// Load config file or create default file if config doesn't exsit
@@ -17,10 +21,19 @@ class ZenCarCompassConfig
 		{
 			// If config exists, load file
 			JsonFileLoader<ZenCarCompassConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
+			
+			if (ConfigVersion != CONFIG_VERSION)
+			{
+				JsonFileLoader<ZenCarCompassConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
+				ConfigVersion = CONFIG_VERSION;
+				Save();
+			}
+			
 			return;
 		}
 
 		// Save config
+		ConfigVersion = CONFIG_VERSION;
 		CarConfig = new array<ref ZenCarCompassOffset>;
 
 		CarConfig.Insert(new ZenCarCompassOffset("Sedan_02", "0 0.97 0.765", "0 5 0"));
@@ -52,13 +65,13 @@ class ZenCarCompassConfig
 
 class ZenCarCompassOffset
 {
-	string CarType;
+	string CarTypeCfg;
 	vector Position;
 	vector Orientation;
 
 	void ZenCarCompassOffset(string type, vector pos, vector ori)
 	{
-		CarType = type;
+		CarTypeCfg = type;
 		Position = pos;
 		Orientation = ori;
 	}

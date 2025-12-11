@@ -194,7 +194,6 @@
 		ZenGraves_UndergroundStash
 		ZenJameson
 		ZenNote
-		ZenPetrolLighter
 		ZenRandomAmmoBox // Don't spawn in types.xml: for JSON spawn config only, as the classname will shift into a different item causing types.xml to spawn infinitely
 		ZenRaybans_Black
 		ZenRaybans_Blue
@@ -327,7 +326,6 @@ class CfgVehicles
 	class Container_Base;
 	class ShelterLeather;
 	class Inventory_Base;
-	class PetrolLighter;
 	class ShelterFabric;
 	class FireplaceBase;
 	class KitchenKnife;
@@ -449,7 +447,7 @@ class CfgVehicles
 	{
 		simulation="ItemBook";
 		model="\DZ\gear\books\Book_kniga.p3d";
-		inventorySlot[]=
+		inventorySlot[]+=
 		{
 			"Book"
 		};
@@ -571,7 +569,7 @@ class CfgVehicles
 		model = "\dz\vehicles\parts\JerryCan.p3d";
 		displayName = "$STR_ZenFireFuel0";
 		descriptionShort = "$STR_ZenFireFuel1";
-		inventorySlot[] = { "ZenFuel" };
+		inventorySlot[] += { "ZenFuel" };
 		canBeSplit = 0;
 		varQuantityInit = 1;
 		varQuantityMin = 0;
@@ -1069,12 +1067,12 @@ class CfgVehicles
 		descriptionShort = "$STR_CfgVehicles_ZenFlask1";
 		zenLiquidName = "#STR_ZenGui_LiquidWhisky";
 		model = "zenmodpack\data\models\flask\zenflask.p3d";
-		// Syberia
+		// Syberia/Terje
 		medPainkillerLevel=1;
-		medPainkillerTimeSec=0.05;
-		medAntidepresantLevel=5;
-		medAntidepresantTimer=0.1;
-		overdosedIncrement=0.0005;
+		medPainkillerTimeSec=1;
+		medAntidepresantLevel=2;
+		medAntidepresantTimer=1;
+		overdosedIncrement=0.003;
 		// Vanilla
 		weight = 300;
 		itemSize[] = { 1,2 };
@@ -1105,7 +1103,7 @@ class CfgVehicles
 			energy=231;
 			water=15;
 			nutritionalIndex=75;
-			toxicity=0.2;
+			toxicity=0;
 			digestibility=2;
 		};
 		class DamageSystem
@@ -1350,12 +1348,12 @@ class CfgVehicles
 		varQuantityMin=0;
 		varQuantityMax=750;
 		varTemperatureMax=1;
-		// Syberia
+		// Syberia/Terje
 		medPainkillerLevel=1;
-		medPainkillerTimeSec=0.05;
-		medAntidepresantLevel=5;
-		medAntidepresantTimer=0.1;
-		overdosedIncrement=0.0005;
+		medPainkillerTimeSec=1;
+		medAntidepresantLevel=2;
+		medAntidepresantTimer=1;
+		overdosedIncrement=0.003;
 		// Texture
 		hiddenSelections[]= { "zbytek" };
 		hiddenSelectionsTextures[]=
@@ -1370,7 +1368,7 @@ class CfgVehicles
 			energy=231;
 			water=15;
 			nutritionalIndex=75;
-			toxicity=0.2;
+			toxicity=0;
 			digestibility=2;
 		};
 		class DamageSystem
@@ -1594,7 +1592,7 @@ class CfgVehicles
 		model="\ZenModPack\data\models\bunnymask\rabbitmask_g.p3d";
 		vehicleClass="Clothing";
 		simulation="clothing";
-		inventorySlot[]=
+		inventorySlot[]+=
 		{
 			"Eyewear"
 		};
@@ -1753,7 +1751,7 @@ class CfgVehicles
 		model="\ZenModPack\data\models\raybans\raybans_g.p3d";
 		vehicleClass="Clothing";
 		simulation="clothing";
-		inventorySlot[]=
+		inventorySlot[]+=
 		{
 			"Eyewear"
 		};
@@ -2214,81 +2212,6 @@ class CfgVehicles
 			};					
 		};
 	};
-
-	//! GRAVES 
-	class ZenGraves_DeadPlayerCross : Inventory_Base
-	{
-		scope = 2;
-		displayName = "$STR_CfgVehicles_ZenGrave0";
-		descriptionShort = "$STR_CfgVehicles_ZenGrave1";
-		model = "\DZ\structures\specific\cemeteries\cemetery_smallcross.p3d";
-		forceFarBubble = "true";
-		class DamageSystem
-		{
-			class GlobalHealth
-			{
-				class Health
-				{
-					hitpoints = 999999;
-					healthLevels[] =
-					{
-
-						{
-							1,
-							{}
-						},
-
-						{
-							0.69999999,
-							{}
-						},
-
-						{
-							0.5,
-							{}
-						},
-
-						{
-							0.30000001,
-							{}
-						},
-
-						{
-							0,
-							{}
-						}
-					};
-				};
-			};
-			class DamageZones {};
-		};
-	};
-	class ZenGraves_DeadPlayerSkeleton : Inventory_Base
-	{
-		scope = 2;
-		canBeDigged = 1;
-		displayName = "$STR_CfgVehicles_ZenSkeleton0";
-		descriptionShort = "$STR_CfgVehicles_ZenSkeleton1";
-		model = "\DZ\structures_bliss\specific\Forest\Forest_HumanSkeleton.p3d";
-		attachments[] =		
-		{
-			"Shoulder",
-			"Melee",
-			"Headgear",
-			"Eyewear",
-			"Mask",
-			"Body",
-			"Gloves",
-			"Vest",
-			"Hips",
-			"Legs",
-			"Feet",
-			"Back",
-			"Armband"
-		};
-	};
-
-	class ZenGraves_UndergroundStash : UndergroundStash {};
 
 	//! CAMONET SHELTER
 	class Zen_CamoShelterKit : Inventory_Base
@@ -2913,7 +2836,7 @@ class CfgVehicles
 		itemBehaviour = 1;
 		repairableWithKits[] = { 8 };
 		repairCosts[] = { 30 };
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"ZenChess1",
 			"ZenChess2",
@@ -3276,6 +3199,69 @@ class CfgVehicles
 		};
 		soundImpactType = "metal";
 	};
+	class Zen_CarWorkbench_Static : Zen_CarWorkbench
+	{
+		scope = 2;
+		hiddenSelections[] = { "zbytek" };
+		hiddenSelectionsTextures[] = { "ZenModPack\data\textures\workbench\workbench_static_co.paa" };
+		class Cargo
+		{
+			itemsCargoSize[] = { 0,0 };
+		};
+		class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 5000;
+					healthLevels[] =
+					{
+
+						{
+							1,
+
+							{
+								"ZenModPack\data\textures\workbench\workbench_damage.rvmat"
+							}
+						},
+
+						{
+							0.69999999,
+
+							{
+								"ZenModPack\data\textures\workbench\workbench_damage.rvmat"
+							}
+						},
+
+						{
+							0.5,
+
+							{
+								"ZenModPack\data\textures\workbench\workbench_damage.rvmat"
+							}
+						},
+
+						{
+							0.30000001,
+
+							{
+								"ZenModPack\data\textures\workbench\workbench_damage.rvmat"
+							}
+						},
+
+						{
+							0,
+
+							{
+								"ZenModPack\data\textures\workbench\workbench_destruct.rvmat"
+							}
+						}
+					};
+				};
+			};
+		};
+	};
 	class Pliers : Inventory_Base
 	{
 		inventorySlot[] +=
@@ -3357,7 +3343,7 @@ class CfgVehicles
 							1,
 
 							{
-								"ZenModPack\data\textures\tirerack\tirerack.rvmat"
+								"ZenModPack\data\textures\tirerack\tirerack_damage.rvmat"
 							}
 						},
 
@@ -3365,7 +3351,7 @@ class CfgVehicles
 							0.69999999,
 
 							{
-								"ZenModPack\data\textures\tirerack\tirerack.rvmat"
+								"ZenModPack\data\textures\tirerack\tirerack_damage.rvmat"
 							}
 						},
 
@@ -3398,6 +3384,14 @@ class CfgVehicles
 		};
 		soundImpactType = "metal";
 	};
+	class Zen_TireRack_Static : Zen_TireRack
+	{
+		// Static version - cannot be moved or picked up by players, spawns random tires from config JSON
+		scope = 2;
+		displayName = "$STR_ZenTireRackName";
+		descriptionShort = "$STR_ZenTireRackDesc";
+	};
+
 	class LugWrench : Inventory_Base
 	{
 		inventorySlot[] +=
@@ -3603,7 +3597,7 @@ class CfgVehicles
 		displayName="$STR_cfgVehicles_GhillieSuit_ColorBase0";
 		descriptionShort="$STR_cfgVehicles_GhillieSuit_ColorBase1";
 		model = "\dz\characters\backpacks\GhillieBushrag_g.p3d";
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"Back",
 			"Hips",
@@ -3704,7 +3698,7 @@ class CfgVehicles
 		displayName="$STR_CfgVehicles_GhillieHood_ColorBase0";
 		descriptionShort="$STR_CfgVehicles_GhillieHood_ColorBase1";
 		model = "\DZ\characters\headgear\GhillieHood_g.p3d";
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"Headgear"
 		};
@@ -3823,7 +3817,7 @@ class CfgVehicles
 		displayName="$STR_cfgVehicles_GhillieTop_ColorBase0";
 		descriptionShort="$STR_cfgVehicles_GhillieTop_ColorBase1";
 		model = "\dz\characters\backpacks\GhillieBushrag_g.p3d";
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"Back",
 			"Hips",
@@ -3926,7 +3920,7 @@ class CfgVehicles
 		displayName="$STR_cfgvehicles_GhillieBushrag_colorbase0";
 		descriptionShort="$STR_cfgVehicles_GhillieBushrag_ColorBase1";
 		model = "\dz\characters\backpacks\GhillieBushrag_g.p3d";
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"Back",
 			"Hips",
@@ -4309,20 +4303,12 @@ class CfgVehicles
 	{
 		displayNameEmpty = "$STR_ZenLeftoversEmpty";
 	};
-	class Empty_SodaCan_ColorBase : Bottle_Base 
+	class Empty_SodaCan_ColorBase : Zen_EmptyFood 
 	{
 		scope = 0;
 		descriptionShort = "$STR_ZenLeftoversDescription";
-		model="\dz\gear\drinks\SodaCan.p3d";
-		hiddenSelections[]= { "camoGround" };
-		varQuantityInit = 0;
-		varQuantityMin = 0;
-		varQuantityMax = 100;
-		destroyOnEmpty = 0;
-		varQuantityDestroyOnMin = 0;
-		varLiquidTypeInit = 512;
-		liquidContainerType = "1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 512 + 1024 + 2048 + 4096 + 8192 + 16384 + 32768 + 65536  + 131072 + 262144 + 524288 + 2097152 + 4194304 - (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256) - 32768";
-		varTemperatureMax=200;
+		model="\dz\gear\drinks\sodacan_used.p3d";
+		hiddenSelections[]= { "camoground" };
 		class DamageSystem
 		{
 			class GlobalHealth
@@ -4383,40 +4369,34 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Pipsi0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_pipsi_empty_co.paa" };
-		varWetInit = 0; // namalsk compatibility
-		varWetMax = 3;
 	};
 	class Empty_SodaCan_Cola : Empty_SodaCan_ColorBase
 	{
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Cola0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_cola_empty_co.paa" };
-		varWetInit = 0;
-		varWetMax = 3;
 	};
 	class Empty_SodaCan_Spite : Empty_SodaCan_ColorBase
 	{
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Spite0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_spite_empty_co.paa" };
-		varWetInit = 0;
-		varWetMax = 3;
 	};
 	class Empty_SodaCan_Kvass : Empty_SodaCan_ColorBase
 	{
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Kvass0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_rasputin_kvass_empty_co.paa" };
-		varWetInit = 0;
-		varWetMax = 3;
 	};
 	class Empty_SodaCan_Fronta : Empty_SodaCan_ColorBase
 	{
 		scope = 2;
 		displayName = "$STR_CfgVehicles_SodaCan_Fronta0";
 		hiddenSelectionsTextures[] = { "\ZenModPack\data\textures\leftovers\sodacan_fanda_empty_co.paa" };
-		varWetInit = 0;
-		varWetMax = 3;
+	};
+	class Zen_Empty_SodaCan_Random : Empty_SodaCan_ColorBase
+	{
+		scope = 2;
 	};
 
 	// Edibles
@@ -4433,7 +4413,7 @@ class CfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 0;
 		isMeleeWeapon = 1;
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"Paper"
 		};
@@ -5339,7 +5319,7 @@ class CfgVehicles
 		varQuantityMax = 100;
 		isMeleeWeapon = 1;
 		varTemperatureMax=200;
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"DirectCookingA",
 			"DirectCookingB",
@@ -5515,7 +5495,7 @@ class CfgVehicles
 		varQuantityMin = 0;
 		varQuantityMax = 0;
 		isMeleeWeapon = 1;
-		inventorySlot[] =
+		inventorySlot[] +=
 		{
 			"DirectCookingA",
 			"DirectCookingB",
@@ -6136,8 +6116,11 @@ class CfgVehicles
 	//! Canteen chlorine tabs slot
 	class PurificationTablets : Edible_Base
 	{
-		scope = 2;
-		inventorySlot[] = { "Material_ZenChlorine" };
+		inventorySlot[] += { "Material_ZenChlorine" };
+	};
+	class ChelatingTablets : Edible_Base
+	{
+		inventorySlot[] += { "Material_ZenChlorine" };
 	};
 	class Canteen : Bottle_Base
 	{
@@ -6188,10 +6171,6 @@ class CfgVehicles
 		{
 			"ZenModPack\data\textures\VanillaRetexture\Items\dex\dex_bottle_co.paa"
 		};
-		// Syberia
-		medAdrenalinLevel=1;
-		medAdrenalinTimeSec=600;
-		overdosedIncrement=0.1;
 		medicalItem=1;
 		class DamageSystem
 		{
@@ -6273,6 +6252,14 @@ class CfgVehicles
 			};
 		};
 	};
+	class Zen_DexBottle_TerjeMedicine: Zen_DexBottle
+	{
+		// PURELY for Terje's TerjeConsumableEffects class to apply delayed effects of eating a pill - not a real item and should not spawn.
+		scope=0;
+		medAdrenalinLevel=1;
+		medAdrenalinTimeSec=300;
+		overdosedIncrement=0.1;
+	};
 
 	class Flag_Base;
 	class Zen_TradingFlag: Flag_Base
@@ -6315,6 +6302,12 @@ class CfgVehicles
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_black_co.paa",
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_black_co.paa"
 		};
+		// Terje Medicine Compatibility
+		class Protection
+		{
+			melee=0.7;
+			firearm=0.35;
+		};
 	};
 	class Zen_Mich2001Helmet_Camo: Mich2001Helmet
 	{
@@ -6325,6 +6318,12 @@ class CfgVehicles
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_camo_co.paa",
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_camo_co.paa",
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_camo_co.paa"
+		};
+		// Terje Medicine Compatibility
+		class Protection
+		{
+			melee=0.7;
+			firearm=0.35;
 		};
 	};
 	class Zen_Mich2001Helmet_DarkCamo: Mich2001Helmet
@@ -6337,6 +6336,12 @@ class CfgVehicles
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_darkcamo_co.paa",
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_darkcamo_co.paa"
 		};
+		// Terje Medicine Compatibility
+		class Protection
+		{
+			melee=0.7;
+			firearm=0.35;
+		};
 	};
 	class Zen_Mich2001Helmet_Zenarchist: Mich2001Helmet
 	{
@@ -6347,6 +6352,12 @@ class CfgVehicles
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_zenarchist_co.paa",
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_zenarchist_co.paa",
 			"\ZenModPack\data\textures\vanillaretexture\clothing\helmets\mich2001_zenarchist_co.paa"
+		};
+		// Terje Medicine Compatibility
+		class Protection
+		{
+			melee=0.7;
+			firearm=0.35;
 		};
 	};
 
@@ -6753,14 +6764,6 @@ class CfgVehicles
 	{
 		scope=1;
 		model="\ZenModPack\data\models\Treehouse\treehouse_ladder_bare.p3d";
-		forceFarBubble = "true";
-	};
-
-	//! Climbable Ladder
-	class Land_ZenLadder_SmallWood: HouseNoDestruct
-	{
-		scope=1;
-		model="\ZenModPack\data\models\Ladders\ladder_small.p3d";
 		forceFarBubble = "true";
 	};
 
@@ -7583,13 +7586,13 @@ class CfgNonAIVehicles
 	class Proxyalicebackpack_g : ProxyAttachment
 	{
 		scope = 2;
-		inventorySlot[] = {"Back"};
+		inventorySlot[] += {"Back"};
 		model = "\DZ\characters\backpacks\alicebackpack_g.p3d";
 	};
 	class Proxymosin9130 : ProxyAttachment
 	{
 		scope = 2;
-		inventorySlot[] = {"Shoulder"};
+		inventorySlot[] += {"Shoulder"};
 		model = "\DZ\weapons\firearms\mosin9130\mosin9130.p3d";
 	};
 

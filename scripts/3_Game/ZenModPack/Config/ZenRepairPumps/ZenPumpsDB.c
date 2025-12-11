@@ -91,7 +91,7 @@ class ZenPumpsDB
 	// Save reparied Pump state to json config
 	void SetPumpRepaired(int index, vector location, bool repaired, bool forceSave)
 	{
-		int ts = JMDate.Now(false).GetTimestamp() + GetZenPumpsConfig().TimeToBreak;
+		int ts = CF_Date.Now().GetTimestamp() + GetZenPumpsConfig().TimeToBreak;
 
 		if (index < 0 || index > RepairablePumps.Count())
 		{

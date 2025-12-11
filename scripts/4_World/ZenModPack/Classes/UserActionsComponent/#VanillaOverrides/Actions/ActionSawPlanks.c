@@ -2,7 +2,7 @@ modded class ActionSawPlanks
 {
 	override protected void SpawnNewPlankPile(SawPlanksActionData data, float quantity)
 	{
-		if (!ZenModEnabled("ZenWoodHealth") || !data.m_MainItem)
+		if (!ZenModEnabled("ZenWoodHealth") || !data.m_MainItem || !GetGame().IsDedicatedServer())
 		{
 			super.SpawnNewPlankPile(data, quantity);
 			return;

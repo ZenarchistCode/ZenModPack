@@ -1,14 +1,13 @@
 class Zen_DexBottle extends Edible_Base
 {
-    override void DeferredInit()
-    {
-        if (GetGame().IsDedicatedServer())
-        {
-            int min = 1;
-            int max = GetQuantityMax();
-            int qty = Math.RandomIntInclusive(min, max);
-            SetQuantity(qty);
-        }
+    override void EEOnCECreate()
+	{
+		super.EEOnCECreate();
+
+        int min = 1;
+        int max = GetQuantityMax();
+        int qty = Math.RandomIntInclusive(min, max);
+        SetQuantity(qty);
     }
 
     override void InitItemVariables()

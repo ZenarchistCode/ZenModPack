@@ -38,4 +38,4 @@ class Zen_TireRack extends ItemBase
 		AddAction(ActionTogglePlaceObject);
 		AddAction(ActionPlaceObject);
 	}
-};
+}

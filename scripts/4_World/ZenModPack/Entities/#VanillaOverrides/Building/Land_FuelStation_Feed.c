@@ -32,7 +32,7 @@ modded class Land_FuelStation_Feed
 	// Sets this Pump's repaired state.
 	void SetupZenRepairablePump()
 	{
-		int ts = JMDate.Now(false).GetTimestamp();
+		int ts = CF_Date.Now().GetTimestamp();
 		int idx = GetZenPumpsDB().GetRepairablePumpIndex(GetPosition());
 		ZenRepairablePump Pump = NULL;
 

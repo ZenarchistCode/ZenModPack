@@ -38,7 +38,7 @@ class ActionZenFillRainGround : ActionInteractBase
 			return false;
 
 		// Check the final conditions.
-		return player.IsAlive() && !bottle.IsCatchingRain() && !MiscGameplayFunctions.IsUnderRoof(target_entity);
+		return player.IsAlive() && !bottle.IsZenCatchingRain() && !MiscGameplayFunctions.IsUnderRoof(target_entity);
 	}
 
 	// Server-side - start filling water bottle if it's raining
@@ -52,6 +52,6 @@ class ActionZenFillRainGround : ActionInteractBase
 		if (!bottle)
 			return;
 
-		bottle.SetCatchingRain(true);
+		bottle.SetZenCatchingRain(true);
 	}
 }

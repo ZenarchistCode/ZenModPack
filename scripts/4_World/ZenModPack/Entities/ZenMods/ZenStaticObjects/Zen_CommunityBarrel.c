@@ -1,21 +1,21 @@
 class Zen_CommunityBarrel extends Barrel_ColorBase
 {
-	void Zen_CommunityBarrel()
-	{
-		if (GetGame().IsDedicatedServer())
-		{
-			SetAllowDamage(false);
-		}
-	}
-
 	override void DeferredInit()
 	{
 		super.DeferredInit();
+
+		if (!GetGame().IsDedicatedServer())
+			return;
 
 		if (GetOrientation() == "0 0 0")
 		{
 			ZenFunctions.AlignToTerrain(this);
 		}
+
+		SetAllowDamage(false);
+        SetLifetimeMax(999999);
+        SetLifetime(999999);
+        IncreaseLifetime();
 	}
 
 	override bool CanPutInCargo(EntityAI parent)
@@ -28,38 +28,35 @@ class Zen_CommunityBarrel extends Barrel_ColorBase
 		return false;
 	}
 
-	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
+	override bool IsTakeable()
 	{
-		return;
+        return false;
 	}
 
-	override void EOnInit(IEntity other, int extra)
+	override bool IsRefresherSignalingViable()
 	{
-		super.EOnInit(other, extra);
-
-		if (GetGame().IsDedicatedServer())
-			SetHealth(GetMaxHealth());
+		return false;
 	}
 }
 
 class Zen_CommunityBarrel_Holes extends BarrelHoles_ColorBase
 {
-	void Zen_CommunityBarrel_Holes()
-	{
-		if (GetGame().IsDedicatedServer())
-		{
-			SetAllowDamage(false);
-		}
-	}
-
 	override void DeferredInit()
 	{
 		super.DeferredInit();
+
+		if (!GetGame().IsDedicatedServer())
+			return;
 
 		if (GetOrientation() == "0 0 0")
 		{
 			ZenFunctions.AlignToTerrain(this);
 		}
+
+		SetAllowDamage(false);
+        SetLifetimeMax(999999);
+        SetLifetime(999999);
+        IncreaseLifetime();
 	}
 
 	override bool CanPutInCargo(EntityAI parent)
@@ -72,17 +69,14 @@ class Zen_CommunityBarrel_Holes extends BarrelHoles_ColorBase
 		return false;
 	}
 
-	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
+	override bool IsTakeable()
 	{
-		return;
+        return false;
 	}
 
-	override void EOnInit(IEntity other, int extra)
+	override bool IsRefresherSignalingViable()
 	{
-		super.EOnInit(other, extra);
-
-		if (GetGame().IsDedicatedServer())
-			SetHealth(GetMaxHealth());
+		return false;
 	}
 }
 
