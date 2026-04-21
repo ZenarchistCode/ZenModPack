@@ -1,39 +1,52 @@
-class ZenCarCompassConfig
-{
-	// Set actual config version (doesn't save to json)
-	private static const string CONFIG_VERSION = "1.29 v1";
-	
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZenCarCompassConfig.json";
+ref ZenCarCompassConfig g_ZenCarCompassConfig;
 
-	// Config data
-	string ConfigVersion = "";
+static ZenCarCompassConfig GetZenCarCompassConfig()
+{
+	if (!g_ZenCarCompassConfig) GetZenConfigRegister().RegisterConfig(ZenCarCompassConfig);
+	return g_ZenCarCompassConfig;
+}
+
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload();
+		RegisterType(ZenCarCompassConfig);
+	}
+}
+
+class ZenCarCompassConfig: ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenCarCompassConfig = this;
+	}
+	
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenCarCompassConfig>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenCarCompassConfig>.SaveFile(path, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
 	ref array<ref ZenCarCompassOffset> CarConfig;
 
 	// Load config file or create default file if config doesn't exsit
-	void Load()
+	override void SetDefaults()
 	{
-		if (!GetGame().IsDedicatedServer())
-			return;
-
-		if (FileExist(zenModFolder + zenConfigName))
-		{
-			// If config exists, load file
-			JsonFileLoader<ZenCarCompassConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-			
-			if (ConfigVersion != CONFIG_VERSION)
-			{
-				JsonFileLoader<ZenCarCompassConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
-				ConfigVersion = CONFIG_VERSION;
-				Save();
-			}
-			
-			return;
-		}
-
-		// Save config
-		ConfigVersion = CONFIG_VERSION;
 		CarConfig = new array<ref ZenCarCompassOffset>;
 
 		CarConfig.Insert(new ZenCarCompassOffset("Sedan_02", "0 0.97 0.765", "0 5 0"));
@@ -45,21 +58,6 @@ class ZenCarCompassConfig
 
 		// Expansion
 		CarConfig.Insert(new ZenCarCompassOffset("Expansion_Landrover_Base", "0.0 1.475 0.9", "0 10 0"));
-
-		Save();
-	}
-
-	// Save config
-	void Save()
-	{
-		if (!FileExist(zenModFolder))
-		{
-			// If config folder doesn't exist, create it.
-			MakeDirectory(zenModFolder);
-		}
-
-		// Save JSON config
-		JsonFileLoader<ZenCarCompassConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
 	}
 }
 
@@ -75,17 +73,4 @@ class ZenCarCompassOffset
 		Position = pos;
 		Orientation = ori;
 	}
-}
-
-ref ZenCarCompassConfig m_ZenCarCompassConfig;
-
-static ZenCarCompassConfig GetZenCarCompassConfig()
-{
-	if (!m_ZenCarCompassConfig)
-	{
-		m_ZenCarCompassConfig = new ZenCarCompassConfig();
-		m_ZenCarCompassConfig.Load();
-	}
-
-	return m_ZenCarCompassConfig;
 }

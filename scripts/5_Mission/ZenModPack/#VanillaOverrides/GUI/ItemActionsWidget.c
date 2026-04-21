@@ -2,7 +2,7 @@ modded class ItemActionsWidget
 {
 	override protected void SetWeaponQuantity(int chamber, int mag, string itemWidget, string quantityPBWidget, string quantityTextWidget, bool enabled)
 	{
-		if (!GetZenModPackClientConfig().MagObfuscation)
+		if (!ZenModEnabled("ZenMagObfuscation"))
 		{
 			super.SetWeaponQuantity(chamber, mag, itemWidget, quantityPBWidget, quantityTextWidget, enabled);
 			return;

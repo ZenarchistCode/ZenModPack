@@ -20,7 +20,7 @@ class ViewInventoryHandlerClient extends ViewInventoryHandlerBase
             return;
 
         // check if inventory open state changed
-        bool isViewingInventory = GetGame().IsInventoryOpen();
+        bool isViewingInventory = g_Game.IsInventoryOpen();
         if ( isViewingInventory != m_IsViewingInventory )
         {
             m_IsViewingInventory = isViewingInventory;
@@ -48,7 +48,7 @@ class ViewInventoryHandlerClient extends ViewInventoryHandlerBase
         {
             case ViewInventoryStates.WANTS_SYNC:
             {
-                if ( GetGame().IsClient() && GetGame().IsMultiplayer() )
+                if ( g_Game.IsClient() && g_Game.IsMultiplayer() )
                 {
                     if ( ScriptInputUserData.CanStoreInputUserData() )
                     {

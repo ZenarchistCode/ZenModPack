@@ -20,16 +20,16 @@ modded class UndergroundStash
 		
 		int liquidType;
 		string surfaceType;
-		GetGame().SurfaceUnderObject(this, surfaceType, liquidType);
+		g_Game.SurfaceUnderObject(this, surfaceType, liquidType);
 		
 		string undergroundStashType;
-		GetGame().GetSurfaceDigPile(surfaceType, undergroundStashType);
+		g_Game.GetSurfaceDigPile(surfaceType, undergroundStashType);
 		
 		if (GetType() == undergroundStashType)
 			return;
 	
 		Print("[ZenModPack] " + GetType() + " does not match .cpp type: " + undergroundStashType + " @ " + GetPosition() + " - shapeshifting.");
-		UndergroundStash stash = UndergroundStash.Cast(GetGame().CreateObjectEx(undergroundStashType, GetPosition(), ECE_PLACE_ON_SURFACE));  
+		UndergroundStash stash = UndergroundStash.Cast(g_Game.CreateObjectEx(undergroundStashType, GetPosition(), ECE_PLACE_ON_SURFACE));  
 		if (!stash)
 		{
 			Error("Failed to create stash " + undergroundStashType);

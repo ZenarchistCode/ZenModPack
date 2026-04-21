@@ -7,15 +7,15 @@ modded class MissionMainMenu
 	{
 		super.OnMissionStart();
 
-		if (!m_ServerDiverted && GetZenServerDiversionConfig().ServerIP != "")
+		if (!m_ServerDiverted && GetZenServerDiversionConfig() && GetZenServerDiversionConfig().ServerIP != "")
 		{
 			string currentServerIP;
 			int port;
-			GetGame().GetHostAddress(currentServerIP, port);
+			g_Game.GetHostAddress(currentServerIP, port);
 
 			if (currentServerIP != GetZenServerDiversionConfig().ServerIP)
 			{
-				GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(DoServerReconnect);
+				g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Call(DoServerReconnect);
 			}
 		}
 	}
@@ -23,6 +23,6 @@ modded class MissionMainMenu
 	void DoServerReconnect() 
 	{ 
 		m_ServerDiverted = true;
-		GetDayZGame().ZenServerRedirect(m_mainmenu);
+		g_Game.ZenServerRedirect(m_mainmenu);
 	}
 }

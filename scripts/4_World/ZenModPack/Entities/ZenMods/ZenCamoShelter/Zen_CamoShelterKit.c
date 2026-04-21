@@ -18,12 +18,21 @@ class Zen_CamoShelterKit extends KitBase
 	{
 		super.OnPlacementComplete(player, position, orientation);
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
-			GetGame().ObjectDelete(this); // Delete kit when shelter is placed.
-			SetIsDeploySound(true);
+			g_Game.ObjectDelete(this); // Delete kit when shelter is placed.
 		}
 	}
+
+	override void EEDelete(EntityAI parent)
+	{
+		super.EEDelete(parent);
+
+        if (g_Game.IsClient())
+        {
+            GetItemSoundHandler().StopItemSoundClient(SoundConstants.ITEM_DEPLOY_LOOP);
+        }
+    }
 
 	override bool CanPutInCargo(EntityAI parent)
 	{

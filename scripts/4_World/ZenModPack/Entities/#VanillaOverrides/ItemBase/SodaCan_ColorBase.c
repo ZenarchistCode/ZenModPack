@@ -160,10 +160,10 @@ modded class SodaCan_ColorBase
 	string GetEmptyingLoopSoundset()
 	{		
 		vector pos = GetPosition();
-		string surfaceType = GetGame().GetPlayer().GetSurfaceType();
+		string surfaceType = g_Game.GetPlayer().GetSurfaceType();
 		string soundSet = "";
 		
-		bool diggable = GetGame().IsSurfaceDigable(surfaceType);
+		bool diggable = g_Game.IsSurfaceDigable(surfaceType);
 		
 		if (!diggable)
 		{
@@ -173,7 +173,7 @@ modded class SodaCan_ColorBase
 		{
 			soundSet = GetEmptyingLoopSoundsetSoft();
 		}
-		else if (GetGame().SurfaceIsPond(pos[0], pos[2]) || GetGame().SurfaceIsSea(pos[0], pos[2]))
+		else if (g_Game.SurfaceIsPond(pos[0], pos[2]) || g_Game.SurfaceIsSea(pos[0], pos[2]))
 		{
 			soundSet = GetEmptyingLoopSoundsetWater();
 		}
@@ -184,10 +184,10 @@ modded class SodaCan_ColorBase
 	string GetEmptyingEndSoundset()
 	{		
 		vector pos = GetPosition();
-		string surfaceType = GetGame().GetPlayer().GetSurfaceType();
+		string surfaceType = g_Game.GetPlayer().GetSurfaceType();
 		string soundSet = "";
 		
-		bool diggable = GetGame().IsSurfaceDigable(surfaceType);
+		bool diggable = g_Game.IsSurfaceDigable(surfaceType);
 		
 		if (!diggable)
 		{
@@ -197,7 +197,7 @@ modded class SodaCan_ColorBase
 		{
 			soundSet = GetEmptyingEndSoundsetSoft();
 		}
-		else if (GetGame().SurfaceIsPond(pos[0], pos[2]) || GetGame().SurfaceIsSea(pos[0], pos[2]))
+		else if (g_Game.SurfaceIsPond(pos[0], pos[2]) || g_Game.SurfaceIsSea(pos[0], pos[2]))
 		{
 			soundSet = GetEmptyingEndSoundsetWater();
 		}

@@ -11,7 +11,7 @@ class Zen_ChessBoard extends ItemBase
 	{
 		super.EEHealthLevelChanged(oldLevel, newLevel, zone);
 
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (newLevel == GameConstants.STATE_RUINED)
@@ -41,10 +41,10 @@ class Zen_ChessBoard extends ItemBase
 	{
 		super.EEItemDetached(item, slot_name);
 
-		if (!item || !GetGame().IsDedicatedServer())
+		if (!item || !g_Game.IsDedicatedServer())
 			return;
 
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckKilledPiece, 1, false, item.GetType(), slot_name);
+		g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckKilledPiece, 1, false, item.GetType(), slot_name);
 	}
 
 	void CheckKilledPiece(string killerPiece, string slot_name)

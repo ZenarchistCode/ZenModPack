@@ -2,7 +2,7 @@ modded class VicinityItemManager
 {
 	override bool ExcludeFromContainer_Phase1(Object actor_in_radius)
 	{
-		if (ZenModEnabled("ZenGlovebox") || ZenModEnabled("ZenCarCompass") || ZenModEnabled("ZenMusic"))
+		if (ZenModEnabled("ZenCarGlovebox") || ZenModEnabled("ZenCarCompass") || ZenModEnabled("ZenMusic"))
 		{
 			if (ZenModPack_PlayerInCar())
 				return true;
@@ -13,7 +13,7 @@ modded class VicinityItemManager
 
 	override bool ExcludeFromContainer_Phase2(Object object_in_radius)
 	{
-		if (ZenModEnabled("ZenGlovebox") || ZenModEnabled("ZenCarCompass") || ZenModEnabled("ZenMusic"))
+		if (ZenModEnabled("ZenCarGlovebox") || ZenModEnabled("ZenCarCompass") || ZenModEnabled("ZenMusic"))
 		{
 			if (ZenModPack_PlayerInCar())
 				return true;
@@ -24,7 +24,7 @@ modded class VicinityItemManager
 
 	override bool ExcludeFromContainer_Phase3(Object object_in_cone)
 	{
-		if (ZenModEnabled("ZenGlovebox") || ZenModEnabled("ZenCarCompass") || ZenModEnabled("ZenMusic"))
+		if (ZenModEnabled("ZenCarGlovebox") || ZenModEnabled("ZenCarCompass") || ZenModEnabled("ZenMusic"))
 		{
 			if (ZenModPack_PlayerInCar() && object_in_cone != NULL && !object_in_cone.IsKindOf("CarScript"))
 				return true;
@@ -35,7 +35,7 @@ modded class VicinityItemManager
 
 	bool ZenModPack_PlayerInCar()
 	{
-		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		PlayerBase player = PlayerBase.Cast(g_Game.GetPlayer());
 		if (player && player.IsInVehicle())
 			return true;
 

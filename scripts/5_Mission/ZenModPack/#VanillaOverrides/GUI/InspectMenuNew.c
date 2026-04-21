@@ -19,10 +19,10 @@ modded class InspectMenuNew
 			return;
 
 		string zenLiquid = "CfgVehicles " + item.GetType() + " zenLiquidName";
-		if (GetGame().ConfigIsExisting(zenLiquid))
+		if (g_Game.ConfigIsExisting(zenLiquid))
 		{
 			string zenLiquidText = "";
-			GetGame().ConfigGetText(zenLiquid, zenLiquidText);
+			g_Game.ConfigGetText(zenLiquid, zenLiquidText);
 
 			if (zenLiquidText != "")
 				WidgetTrySetText(root_widget, "ItemLiquidTypeWidget", zenLiquidText, Colors.COLOR_LIQUID);
@@ -50,10 +50,8 @@ modded class InspectMenuNew
 
 	static void ZenUpdateAmmoInfo(Widget root_widget, EntityAI item)
 	{
-		if (!GetZenModPackClientConfig().MagObfuscation)
-		{
+		if (!ZenModEnabled("ZenMagObfuscation"))
 			return;
-		}
 
 		Magazine magazine_item = Magazine.Cast(item);
 		if (magazine_item)

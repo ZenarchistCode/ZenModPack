@@ -43,14 +43,14 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         m_LowestFPS = 99999999;
         m_ActionLowestFPS = 0;
         m_LastDrivingWarning = 0;
-        m_LastDrivingWarning = GetGame().GetTickTime();
+        m_LastDrivingWarning = g_Game.GetTickTime();
         m_MonitoringFPS = false;
         m_ActionLowestFPSClassName = "";
     }
 
     override void OnDestroy()
     {
-        if (GetGame().GetTickTime() >= MINIMUM_SECONDS_ONLINE)
+        if (g_Game.GetTickTime() >= MINIMUM_SECONDS_ONLINE)
         {
             string msg = GetPerformanceDump();
             Print(msg);
@@ -73,7 +73,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
     string GetPerformanceDump()
     {
         string msg = "\n\n[ZenModPack::DayZGame] Session Performance Breakdown:\n\n";
-        msg = msg + "\nRuntime: " + (GetGame().GetTickTime() / 60) + " minutes";
+        msg = msg + "\nRuntime: " + (g_Game.GetTickTime() / 60) + " minutes";
         msg = msg + "\nAverage FPS: " + GetZenAvgServerFPS();
 
         msg = msg + "\n\nLowest FPS: " + m_LowestFPS;
@@ -113,7 +113,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
     void ProcessUpdate()
     {
         if (!m_MonitoringFPS) // Don't monitor FPS til server has been up for 2 minutes minimum
-            m_MonitoringFPS = GetGame().GetTickTime() > MINIMUM_SECONDS_ONLINE;
+            m_MonitoringFPS = g_Game.GetTickTime() > MINIMUM_SECONDS_ONLINE;
 
         if (!m_MonitoringFPS)
             return;
@@ -126,12 +126,12 @@ class ZenPerformanceMonitorPlugin extends PluginBase
             Error("[ZenModPack::DayZGame] Server FPS low: " + fps + GetPerformanceDump());
 
             // Notify anyone driving of low FPS warning
-            if (GetGame().GetTickTime() - m_LastDrivingWarning >= 120)
+            if (g_Game.GetTickTime() - m_LastDrivingWarning >= 120)
             {
                 array<Man> players();
                 PlayerBase pb;
 
-                GetGame().GetPlayers(players);
+                g_Game.GetPlayers(players);
                 for (int i = 0; i < players.Count(); i++)
                 {
                     pb = PlayerBase.Cast(players.Get(i));
@@ -141,7 +141,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
                     }
                 }
 
-                m_LastDrivingWarning = GetGame().GetTickTime();
+                m_LastDrivingWarning = g_Game.GetTickTime();
             }
         }
 

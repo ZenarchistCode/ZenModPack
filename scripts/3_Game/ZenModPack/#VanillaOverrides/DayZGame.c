@@ -1,11 +1,16 @@
 modded class DayZGame
 {
+	void DayZGame()
+	{
+		GetZenModPackConfig();
+	}
+	
 	//! SERVER DIVERSION
 	void ZenServerRedirect(UIScriptedMenu menu)
 	{
 		SetConnecting(true);
 		DeleteTitleScreen();
-		GetGame().Connect(menu, GetZenServerDiversionConfig().ServerIP, GetZenServerDiversionConfig().ServerPort, GetZenServerDiversionConfig().ServerPass);
+		g_Game.Connect(menu, GetZenServerDiversionConfig().ServerIP, GetZenServerDiversionConfig().ServerPort, GetZenServerDiversionConfig().ServerPass);
 	}
 
 	override bool GetSurfaceDigPile(string surface, out string result)

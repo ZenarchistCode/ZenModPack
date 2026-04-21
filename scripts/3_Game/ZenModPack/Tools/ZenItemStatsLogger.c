@@ -17,8 +17,8 @@ class ZenItemStatsLogger
 			delete ITEM_STATS;
 			return;
 		}
-
-		ZenModLogger.Log("---", "item_stats");
+		
+		ZenLogger.Log("ItemStats", "item_stats", "---");
 
 		for (int i = 0; i < statsCount; i++)
 		{
@@ -26,11 +26,11 @@ class ZenItemStatsLogger
 			string key = ITEM_STATS.GetKey(i);
 			if (ITEM_STATS.Find(key, itemCount))
 			{
-				ZenModLogger.Log(key + " count=" + itemCount, "item_stats");
+				ZenLogger.Log("ItemStats", "item_stats", key + " count=" + itemCount);
 			}
 		}
 
-		ZenModLogger.Log("\n", "item_stats");
+		ZenLogger.Log("ItemStats", "item_stats", "\n");
 		delete ITEM_STATS;
 	}
 

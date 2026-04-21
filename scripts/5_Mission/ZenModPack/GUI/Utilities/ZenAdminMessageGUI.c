@@ -12,7 +12,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 		int screenWidth;
 		int screenHeight;
 		GetScreenSize( screenWidth, screenHeight );
-		layoutRoot = GetGame().GetWorkspace().CreateWidgets("ZenModPack/data/gui/layouts/utilities/ZenAdminMessageGUI.layout");
+		layoutRoot = g_Game.GetWorkspace().CreateWidgets("ZenModPack/data/gui/layouts/utilities/ZenAdminMessageGUI.layout");
 
 		// Load required widgets
 		m_ReplyText = MultilineTextWidget.Cast(layoutRoot.FindAnyWidget("reply_text"));
@@ -25,7 +25,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 		}
 
 		// Disable controls & hud
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DisableControls, 100, false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DisableControls, 100, false);
 
 		return layoutRoot;
 	}
@@ -64,7 +64,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", new Param1< bool >(true), true, NULL);
 			
 		// Close window
-		UIManager uiManager = GetGame().GetUIManager();
+		UIManager uiManager = g_Game.GetUIManager();
 
 		if (!uiManager)
 			return true;
@@ -93,6 +93,6 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 	// Used only for debugging
 	private void ZenInfo_DebugMsg(string msg)
 	{
-		GetGame().GetMission().OnEvent(ChatMessageEventTypeID, new ChatMessageEventParams(CCDirect, "", msg, ""));
+		g_Game.GetMission().OnEvent(ChatMessageEventTypeID, new ChatMessageEventParams(CCDirect, "", msg, ""));
 	}
 }

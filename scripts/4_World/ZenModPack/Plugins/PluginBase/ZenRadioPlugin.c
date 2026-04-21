@@ -11,15 +11,15 @@ class ZenRadioPlugin extends PluginBase
         m_NotificationSoundsets = new map<string, string>;
 
         // For some reason, I can't access NotificationUI's pre-cached soundsets, so just reload them here.
-        for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgSoundSets"); i++)
+        for (int i = 0; i < g_Game.ConfigGetChildrenCount("CfgSoundSets"); i++)
 		{
 			string soundset_name = "";
-			GetGame().ConfigGetChildName("CfgSoundSets", i, soundset_name);
+			g_Game.ConfigGetChildName("CfgSoundSets", i, soundset_name);
 			if (soundset_name == "")
 				continue;
 
 			string keywords = "";
-			GetGame().ConfigGetText("CfgSoundSets " + soundset_name + " soundKeywords", keywords);
+			g_Game.ConfigGetText("CfgSoundSets " + soundset_name + " soundKeywords", keywords);
 			if (keywords == "")
 				continue;
 
@@ -76,7 +76,7 @@ class ZenRadioPlugin extends PluginBase
         string soundset_name = GetZenSoundSetForKeywords(message);
 		if (soundset_name != "")
 		{
-			int playOnRadio = GetGame().ConfigGetInt("CfgSoundSets " + soundset_name + " playOnRadio");
+			int playOnRadio = g_Game.ConfigGetInt("CfgSoundSets " + soundset_name + " playOnRadio");
 			if (playOnRadio == 1)
 			{
 				PlaySoundset(soundset_name);
@@ -86,7 +86,7 @@ class ZenRadioPlugin extends PluginBase
 
     void PlaySoundset(string soundset_name)
     {
-        if (!GetGame().ConfigIsExisting("CfgSoundSets " + soundset_name))
+        if (!g_Game.ConfigIsExisting("CfgSoundSets " + soundset_name))
             return;
 
         Param1<string> data = new Param1<string>(soundset_name);
@@ -115,7 +115,7 @@ class ZenRadioPlugin extends PluginBase
 			if (keywords.Contains(key))
 			{
 				string soundset_name = m_NotificationSoundsets.GetElement(i);
-				if (GetGame().ConfigIsExisting("CfgSoundSets " + soundset_name))
+				if (g_Game.ConfigIsExisting("CfgSoundSets " + soundset_name))
 				{
 					return soundset_name;
 				}

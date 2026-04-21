@@ -1,76 +1,55 @@
-class ZenConcussionGrenadeConfig
+ref ZenConcussionGrenadeConfig g_ZenConcussionGrenadeConfig;
+
+static ZenConcussionGrenadeConfig GetZenConcussionGrenadeConfig()
 {
-	// Static constant config version (is NOT saved to json)
-	static const string CONFIG_VERSION = "1";
+	if (!g_ZenConcussionGrenadeConfig) GetZenConfigRegister().RegisterConfig(ZenConcussionGrenadeConfig);
+	return g_ZenConcussionGrenadeConfig;
+}
 
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZenConcussionGrenadeConfig.json";
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload();
+		RegisterType(ZenConcussionGrenadeConfig);
+	}
+}
 
-	// Main config data
-	string ConfigVersion = "";
+class ZenConcussionGrenadeConfig: ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenConcussionGrenadeConfig = this;
+	}
+	
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenConcussionGrenadeConfig>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenConcussionGrenadeConfig>.SaveFile(path, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
 	int UnconMinTime;
 	int UnconMaxTime;
 	int KillZombieRadius;
 
-	// Load config file or create default file if config doesn't exsit
-	void Load()
+	override void SetDefaults()
 	{
-		if (FileExist(zenModFolder + zenConfigName))
-		{	
-			// If config exists, load file
-			JsonFileLoader<ZenConcussionGrenadeConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-
-			// If version mismatch, backup old version of json before replacing it
-			if (ConfigVersion != CONFIG_VERSION)
-			{
-				JsonFileLoader<ZenConcussionGrenadeConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
-			}
-			else
-			{
-				// Config exists and version matches, stop here.
-				return;
-			}
-		}
-
-		// Set new config version
-		ConfigVersion = CONFIG_VERSION;
-
-		// Set default server config
 		UnconMinTime = 120;
 		UnconMaxTime = 120;
 		KillZombieRadius = 0;
-
-		// Save config
-		Save();
-	}
-
-	// Save config
-	void Save()
-	{
-		if (!FileExist(zenModFolder))
-		{	
-			// If config folder doesn't exist, create it.
-			MakeDirectory(zenModFolder);
-		}
-
-		// Save JSON config
-		JsonFileLoader<ZenConcussionGrenadeConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
 	}
 }
-
-// Save config data
-ref ZenConcussionGrenadeConfig m_ZenConcussionGrenadeConfig;
-
-// Helper function to return Config data storage object
-static ZenConcussionGrenadeConfig GetZenConcussionGrenadeConfig()
-{
-	if (!m_ZenConcussionGrenadeConfig && GetGame().IsDedicatedServer())
-	{
-		ZMPrint("[ZenConcussionGrenadeConfig] Init");
-		m_ZenConcussionGrenadeConfig = new ZenConcussionGrenadeConfig;
-		m_ZenConcussionGrenadeConfig.Load();
-	}
-
-	return m_ZenConcussionGrenadeConfig;
-};

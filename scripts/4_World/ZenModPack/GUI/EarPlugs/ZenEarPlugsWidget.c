@@ -12,7 +12,7 @@ class ZenEarPlugsWidget extends Managed // Extend Managed for auto-cleanup
 
 	void ZenEarPlugsWidget()
 	{
-		m_layout	= GetGame().GetWorkspace().CreateWidgets(LAYOUT_DIR + "earplugs.layout");
+		m_layout	= g_Game.GetWorkspace().CreateWidgets(LAYOUT_DIR + "earplugs.layout");
 		m_icon 		= ImageWidget.Cast(m_layout);
 		m_volume	= TextWidget.Cast(m_layout.FindAnyWidget("volume"));
 		m_fadeTimer = new WidgetFadeTimer();
@@ -25,7 +25,7 @@ class ZenEarPlugsWidget extends Managed // Extend Managed for auto-cleanup
 
 	void ~ZenEarPlugsWidget()
 	{
-		if (!GetGame())
+		if (!g_Game)
 			return;
 		
 		if (m_fadeTimer && m_fadeTimer.IsRunning())

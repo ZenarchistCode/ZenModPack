@@ -24,7 +24,7 @@ modded class AlarmClock_ColorBase
 	{
 		if (IsRinging() && m_ShouldExplode)
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(this.DropGrenade, 500, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(this.DropGrenade, 500, false);
 		}
 
 		super.TurnOff();
@@ -44,16 +44,16 @@ modded class AlarmClock_ColorBase
 
 				// Get the surface coordinates at the clock's position
 				vector pos = this.GetPosition();
-				pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + 0.1;
+				pos[1] = g_Game.SurfaceY(pos[0], pos[2]) + 0.1;
 
 				// Create a new grande
-				Grenade_Base clockGrenade = Grenade_Base.Cast(GetGame().CreateObject(grenade.GetType(), pos, false));
+				Grenade_Base clockGrenade = Grenade_Base.Cast(g_Game.CreateObject(grenade.GetType(), pos, false));
 
 				if (!clockGrenade)
 					return;
 
 				clockGrenade.PlaceOnSurface(); // Place the new grenade on the ground
-				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(this.ExplodeGrenade, 100, false, clockGrenade);
+				g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(this.ExplodeGrenade, 100, false, clockGrenade);
 			}
 		}
 	}

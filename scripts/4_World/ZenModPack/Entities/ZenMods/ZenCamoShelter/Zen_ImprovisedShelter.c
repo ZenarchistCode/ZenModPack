@@ -5,12 +5,6 @@ class Zen_ImprovisedShelter : DeployableContainer_Base
 	float m_RopeHealth = 0;
 	float m_CamoNetHealth = 0;
 
-	// Hide selections
-	//override void EOnInit(IEntity other, int extra)
-	//{
-	//	super.EOnInit(other, extra);
-	//}
-
 	void SetIngredientHealth(float hp1, float hp2)
 	{
 		m_RopeHealth = hp1;

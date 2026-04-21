@@ -33,7 +33,7 @@ modded class ContaminatedArea_Dynamic
 				Math3D.MatrixIdentity4(mat);
 				mat[3] = spawnPos;
 				il.SetGround(NULL, mat);
-				ItemBase item = ItemBase.Cast(GetGame().CreateObjectEx(lootCfg.ItemType, il.GetPos(), ECE_PLACE_ON_SURFACE));
+				ItemBase item = ItemBase.Cast(g_Game.CreateObjectEx(lootCfg.ItemType, il.GetPos(), ECE_PLACE_ON_SURFACE));
 
 				if (item)
 				{
@@ -69,7 +69,7 @@ modded class ContaminatedArea_Dynamic
 	{
 		super.EEDelete(parent);
 
-		if (!GetGame().IsDedicatedServer() || GetZenContaminatedZoneLootConfig().ItemLifetime > -1)
+		if (!g_Game.IsDedicatedServer() || GetZenContaminatedZoneLootConfig().ItemLifetime > -1)
 			return;
 
 		ZenContaminatedItemsPlugin zenPlugin = ZenContaminatedItemsPlugin.Cast(GetPlugin(ZenContaminatedItemsPlugin));

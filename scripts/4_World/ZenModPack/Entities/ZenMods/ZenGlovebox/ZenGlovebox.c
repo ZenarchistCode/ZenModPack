@@ -7,6 +7,9 @@ class ZenGlovebox : WoodenCrate
 
 	override bool CanPutInCargo(EntityAI parent)
 	{
+		if (!parent)
+			return super.CanPutInCargo(parent);
+
 		return parent.IsInherited(CarScript);
 	}
 

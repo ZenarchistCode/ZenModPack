@@ -1,5 +1,6 @@
 //! This is a lazy implementation of mod config that saves directly to JSON, but it does the trick.
 // My mod settings are not very complex so I don't see any reason to bother improving this further.
+/*
 class OptionsMenuZenModPack extends ScriptedWidgetEventHandler
 {
 	static const string	LAYOUT_FILE = "ZenModPack/data/gui/layouts/options/zen_tab.layout";
@@ -15,7 +16,7 @@ class OptionsMenuZenModPack extends ScriptedWidgetEventHandler
 	
 	void OptionsMenuZenModPack(Widget parent, Widget details_root, GameOptions options, OptionsMenu menu)
 	{
-		m_Root										= GetGame().GetWorkspace().CreateWidgets(GetLayoutFile(), parent);
+		m_Root										= g_Game.GetWorkspace().CreateWidgets(GetLayoutFile(), parent);
 		m_Menu										= menu;
 		
 		// Custom settings
@@ -127,3 +128,4 @@ class OptionsMenuZenModPack extends ScriptedWidgetEventHandler
 		GetZenModPackClientConfig().Save();
 	}
 }
+*/

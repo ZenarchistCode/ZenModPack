@@ -31,8 +31,10 @@ class ActionZenOpenCanEnv : ActionContinuousBase
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
 	{
+		#ifdef ZenModPack
 		if (!ZenModEnabled("ZenOpenCansRock"))
 			return false;
+		#endif
 
 		// Action not allowed if player has broken legs
 		if (player.GetBrokenLegs() == eBrokenLegs.BROKEN_LEGS)
@@ -74,7 +76,7 @@ class ActionZenOpenCanEnv : ActionContinuousBase
 	{
 		#ifdef SERVER
 		Param1<string> soundSet = new Param1<string>("minePickAxe_SoundSet");
-		GetGame().RPCSingleParam(action_data.m_MainItem, ZenRPCs.PLAY_SOUND, soundSet, true);
+		g_Game.RPCSingleParam(action_data.m_MainItem, ZenRPCs.PLAY_SOUND, soundSet, true);
 		#endif
 	}
 }

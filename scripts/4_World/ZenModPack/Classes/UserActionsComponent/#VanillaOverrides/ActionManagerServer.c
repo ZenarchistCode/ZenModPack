@@ -64,7 +64,7 @@ modded class ActionManagerServer
                     if ( !AdvancedCommunication.Cast(targetEntity) && !Building.Cast(targetEntity) && !Fireplace.Cast(targetEntity) )
                     {
                         //Lock target
-                        if ( !GetGame().AddActionJuncture(m_Player,targetEntity,10000) )
+                        if ( !g_Game.AddActionJuncture(m_Player,targetEntity,10000) )
                         {
                             accepted = false;
                         }
@@ -83,7 +83,7 @@ modded class ActionManagerServer
             if (picked_action.UseAcknowledgment())
             {
                         //Unlock target
-                        //GetGame().ClearJuncture(m_Player, oldTrgetItem);
+                        //g_Game.ClearJuncture(m_Player, oldTrgetItem);
                 m_CurrentActionData.m_State = UA_AM_PENDING;
                 DayZPlayerSyncJunctures.SendActionAcknowledgment(m_Player, m_PendingActionAcknowledgmentID, true);
             }

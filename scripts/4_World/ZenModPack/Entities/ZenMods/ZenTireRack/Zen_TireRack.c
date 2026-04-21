@@ -25,7 +25,7 @@ class Zen_TireRack extends ItemBase
 	{
 		super.EEHealthLevelChanged(oldLevel, newLevel, zone);
 
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (newLevel == GameConstants.STATE_RUINED)

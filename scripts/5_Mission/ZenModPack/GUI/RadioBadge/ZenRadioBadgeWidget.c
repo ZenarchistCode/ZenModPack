@@ -9,7 +9,7 @@ class ZenRadioBadgeWidget extends Managed
 
 	void ZenRadioBadgeWidget()
 	{
-		m_layout	= GetGame().GetWorkspace().CreateWidgets(LAYOUT_FILE);
+		m_layout	= g_Game.GetWorkspace().CreateWidgets(LAYOUT_FILE);
 		m_icon 		= ImageWidget.Cast(m_layout);
 		m_channel	= TextWidget.Cast(m_layout.FindAnyWidget("channel"));
 		m_fadeTimer = new WidgetFadeTimer();
@@ -21,7 +21,7 @@ class ZenRadioBadgeWidget extends Managed
 
 	void ~ZenRadioBadgeWidget()
 	{
-		if (!GetGame())
+		if (!g_Game)
 			return;
 		
 		if (m_fadeTimer && m_fadeTimer.IsRunning())

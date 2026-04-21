@@ -1,150 +1,149 @@
-class ZenModPackConfig
-{
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
-	private const static string zenConfigName = "ZenModPackConfig.json";
+static ref ZenModPackConfig g_ZenModPackConfig;
 
-	// Main config data
+static ZenModPackConfig GetZenModPackConfig()
+{
+	if (!g_ZenModPackConfig)
+	{
+		g_ZenModPackConfig = ZenModPackConfig.Cast(GetZenConfigRegister().RegisterConfig(ZenModPackConfig));
+	}
+	
+	return g_ZenModPackConfig;
+}
+
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload(); 
+		RegisterType(ZenModPackConfig);
+	}
+}
+
+class ZenModPackConfig: ZenConfigBase
+{
+	override string 	GetFolderName()       		{ return "Core"; }
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; } // Server-side config
+	override bool		ShouldLoadOnClient() 		{ return true; } // Cached to client
+	override bool		ShouldSyncToClient()		{ return true; } // Client is overridden by server config
+
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenModPackConfig = this;
+	}
+	
 	ref map<string, bool> ModEnabled;
 	ref map<string, bool> ServerSideModEnabled;
-	ref map<string, bool> PersistentModEnabled;
+	
+	// This is used to merge all mods into one map cache after load.
+	[NonSerialized()]
+	ref map<string, bool> m_RuntimeCache;
+	
+	[NonSerialized()]
+	ref array<string> m_TriggeredWarnings;
 
-	void Load()
+	override void SetDefaults()
 	{
-		SetDefaultValues();
-
-		// Load JSON on server only
-		if (!GetGame().IsDedicatedServer())
-		{
-			return;
-		}
-
-		if (FileExist(zenModFolder + zenConfigName))
-		{
-			ref ZenModPackConfig savedCfg;
-			JsonFileLoader<ZenModPackConfig>.JsonLoadFile(zenModFolder + zenConfigName, savedCfg);
-
-			// The following code allows me to easily add new mod config without needing to override any previously set configs.
-			// SetDefaultValues() will add any new cfg, while the following code will make sure to copy over the old cfg settings.
-			if (savedCfg)
-			{
-				int i;
-				for (i = 0; i < savedCfg.ModEnabled.Count(); i++)
-				{
-					ModEnabled.Set(savedCfg.ModEnabled.GetKey(i), savedCfg.ModEnabled.GetElement(i));
-				}
-
-				for (i = 0; i < savedCfg.ServerSideModEnabled.Count(); i++)
-				{
-					ServerSideModEnabled.Set(savedCfg.ServerSideModEnabled.GetKey(i), savedCfg.ServerSideModEnabled.GetElement(i));
-				}
-
-				for (i = 0; i < savedCfg.PersistentModEnabled.Count(); i++)
-				{
-					PersistentModEnabled.Set(savedCfg.PersistentModEnabled.GetKey(i), savedCfg.PersistentModEnabled.GetElement(i));
-				}
-
-				delete savedCfg;
-			}
-		}
-
-		// Call this after load, so that any new mods added to the config in SetDefaultValues() are added to the list and saved.
-		Save();
-	}
-
-	void SetDefaultValues()
-	{
+		m_RuntimeCache = new map<string, bool>;
+		m_TriggeredWarnings = new array<string>;
+		
 		ModEnabled = new map<string, bool>;
 		ServerSideModEnabled = new map<string, bool>;
-		PersistentModEnabled = new map<string, bool>;
 
 		// Client sync mods
-		ModEnabled.Insert("ZenFixCarAttachmentGUI", true);
-		ModEnabled.Insert("ZenBuildingDescription", true);
+		ModEnabled.Insert("ZenFixCarAttachmentGUI", false);
+		ModEnabled.Insert("ZenBuildingDescription", false);
 		ModEnabled.Insert("ZenBasebuildingConfig", false);
-		ModEnabled.Insert("ZenInventoryAnimation", true);
-		ModEnabled.Insert("ZenAntiCombatLogout", true);
-		ModEnabled.Insert("ZenAutoWinterDetect", false); // Disabled by default to avoid confusion
-		ModEnabled.Insert("ZenImmersiveChatHUD", false); // Disabled by default to avoid confusion
-		ModEnabled.Insert("ZenCarsCutDownTrees", true);
-		ModEnabled.Insert("ZenMagObfuscation", false); // Disabled by default to avoid confusion
-		ModEnabled.Insert("ZenImmersiveLogin", true);
-		ModEnabled.Insert("ZenCarAttachments", false); // Disabled by default to avoid confusion
-		ModEnabled.Insert("ZenHideGearInCars", true);
-		ModEnabled.Insert("ZenCraftingSounds", true);
-		ModEnabled.Insert("ZenGroundCleaning", true);
+		ModEnabled.Insert("ZenInventoryAnimation", false);
+		ModEnabled.Insert("ZenChristmasTreeCraft", false);
+		ModEnabled.Insert("ZenHologramControls", false);
+		ModEnabled.Insert("ZenAntiCombatLogout", false);
+		ModEnabled.Insert("ZenAutoWinterDetect", false);
+		ModEnabled.Insert("ZenImmersiveChatHUD", false);
+		ModEnabled.Insert("ZenCarsCutDownTrees", false);
+		ModEnabled.Insert("ZenAllowMapBagSlot", false);
+		ModEnabled.Insert("ZenMagObfuscation", false);
+		ModEnabled.Insert("ZenImmersiveLogin", false);
+		ModEnabled.Insert("ZenCarAttachments", false);
+		ModEnabled.Insert("ZenHideGearInCars", false);
+		ModEnabled.Insert("ZenCraftingSounds", false);
+		ModEnabled.Insert("ZenGroundCleaning", false);
 		ModEnabled.Insert("ZenBetterChatFont", false);
-		ModEnabled.Insert("ZenCanteenTablets", true);
-		ModEnabled.Insert("ZenFireplaceStick", true);
-		ModEnabled.Insert("ZenDoubleArmbands", true);
-		ModEnabled.Insert("ZenCarBatteryIcon", true);
-		ModEnabled.Insert("ZenBrokenGlasses", true);
-		ModEnabled.Insert("ZenCauseOfDeath", true);
-		ModEnabled.Insert("ZenOpenCansRock", true);
-		ModEnabled.Insert("ZenCarWorkbench", true);
-		ModEnabled.Insert("ZenBackwardsCaps", true);
-		ModEnabled.Insert("ZenKnifeGardens", true);
-		ModEnabled.Insert("ZenRepairPumps", true);
-		ModEnabled.Insert("ZenRepairWells", true);
-		ModEnabled.Insert("ZenTerritories", false); // Disabled by default in case people are using a different territory mod
-		ModEnabled.Insert("ZenLazyActions", true);
-		ModEnabled.Insert("ZenCarGlovebox", true);
-		ModEnabled.Insert("ZenCarCompass", true);
-		ModEnabled.Insert("ZenPimpMyRide", true);
-		ModEnabled.Insert("ZenServerGUI", false); // Disabled by default to avoid confusion
-		ModEnabled.Insert("ZenRaidAlarm", true);
-		ModEnabled.Insert("ZenCatchRain", true);
-		ModEnabled.Insert("ZenHologram", true);
-		ModEnabled.Insert("ZenEarPlugs", true);
-		ModEnabled.Insert("ZenPainting", false); // Disabled by default to avoid confusion
-		ModEnabled.Insert("ZenCamoCamp", true);
-		ModEnabled.Insert("ZenFireFuel", true);
-		ModEnabled.Insert("ZenTimeBomb", true);
-		ModEnabled.Insert("ZenTireRack", true);
-		ModEnabled.Insert("ZenGlovebox", true);
-		ModEnabled.Insert("ZenGhillie", true);
-		ModEnabled.Insert("ZenAutoRun", true);
-		ModEnabled.Insert("ZenSplitUI", true);
-		ModEnabled.Insert("ZenHints", true);
-		ModEnabled.Insert("ZenNotes", true);
-		ModEnabled.Insert("ZenChess", true);
-		ModEnabled.Insert("ZenMusic", true);
-		ModEnabled.Insert("ZenShove", true);
-		ModEnabled.Insert("ZenMap", false); // Disabled by default in case other map mods are preferred
+		ModEnabled.Insert("ZenCanteenTablets", false);
+		ModEnabled.Insert("ZenFireplaceStick", false);
+		ModEnabled.Insert("ZenDoubleArmbands", false);
+		ModEnabled.Insert("ZenCarBatteryIcon", false);
+		ModEnabled.Insert("ZenAutoStackItems", false);
+		ModEnabled.Insert("ZenWeaponEngrave", false);
+		ModEnabled.Insert("ZenNotifications", false);
+		ModEnabled.Insert("ZenBrokenGlasses", false);
+		ModEnabled.Insert("ZenBackwardsCaps", false);
+		ModEnabled.Insert("ZenCraftRagHands", false);
+		ModEnabled.Insert("ZenCauseOfDeath", false);
+		ModEnabled.Insert("ZenOpenCansRock", false);
+		ModEnabled.Insert("ZenCarWorkbench", false);
+		ModEnabled.Insert("ZenKnifeGardens", false);
+		ModEnabled.Insert("ZenRepairPumps", false);
+		ModEnabled.Insert("ZenRepairWells", false);
+		ModEnabled.Insert("ZenTerritories", false);
+		ModEnabled.Insert("ZenLazyActions", false);
+		ModEnabled.Insert("ZenCarGlovebox", false);
+		ModEnabled.Insert("ZenCombineJSON", false);
+		ModEnabled.Insert("ZenRepairJSON", false);
+		ModEnabled.Insert("ZenCarCompass", false);
+		ModEnabled.Insert("ZenComboLocks", false);
+		ModEnabled.Insert("ZenPimpMyRide", false);
+		ModEnabled.Insert("ZenServerGUI", false);
+		ModEnabled.Insert("ZenRaidAlarm", false);
+		ModEnabled.Insert("ZenCatchRain", false);
+		ModEnabled.Insert("ZenHologram", false);
+		ModEnabled.Insert("ZenEarPlugs", false);
+		ModEnabled.Insert("ZenPainting", false);
+		ModEnabled.Insert("ZenCamoCamp", false);
+		ModEnabled.Insert("ZenFireFuel", false);
+		ModEnabled.Insert("ZenTimeBomb", false);
+		ModEnabled.Insert("ZenTireRack", false);
+		ModEnabled.Insert("ZenGhillie", false);
+		ModEnabled.Insert("ZenAutoRun", false);
+		ModEnabled.Insert("ZenSplitUI", false);
+		ModEnabled.Insert("ZenHints", false);
+		ModEnabled.Insert("ZenNotes", false);
+		ModEnabled.Insert("ZenChess", false);
+		ModEnabled.Insert("ZenMusic", false);
+		ModEnabled.Insert("ZenShove", false);
+		ModEnabled.Insert("ZenSleep", false);
+		ModEnabled.Insert("ZenMap", false);
 
 		// No client sync required
-		ServerSideModEnabled.Insert("ZenEfficientVehiclePhysics", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenDropRuinedClothing", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenAutoConvertStash", true);
-		ServerSideModEnabled.Insert("ZenRebuildableWells", true);
-		ServerSideModEnabled.Insert("ZenPersistentTrees", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenStaticBarbedWire", false); // Disabled by default as not all servers may want this impact on server performance
-		ServerSideModEnabled.Insert("ZenZombieController", true);
-		ServerSideModEnabled.Insert("ZenDynamicZoneLoot", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenTreesplosions", true);
-		ServerSideModEnabled.Insert("ZenZombieConfig", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenChickenCoops", true);
-		ServerSideModEnabled.Insert("ZenShelterCargo", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenStaminaSlope", false); // Disabled by default to avoid confusion
-		ServerSideModEnabled.Insert("ZenZombieDoors", true);
-		ServerSideModEnabled.Insert("ZenRadioPlugin", true);
-		//ServerSideModEnabled.Insert("ZenFishingJunk", false); // Disabled by default as might be confusing for some server admins if they're not aware of it
-		ServerSideModEnabled.Insert("ZenNightConfig", false); // Disabled by default as might be confusing for some server admins if they're not aware of it
-		ServerSideModEnabled.Insert("ZenBloodDrips", false); // Disabled by default because this may negatively affect server performance on high pop servers without config adjustments
-		ServerSideModEnabled.Insert("ZenWoodHealth", true);
-		ServerSideModEnabled.Insert("ZenModLogger", false);
-		ServerSideModEnabled.Insert("ZenLeftovers", true);
-		ServerSideModEnabled.Insert("ZenCampSites", false); // Disabled because not all playable maps are accounted for in default config
-		ServerSideModEnabled.Insert("ZenFireWood", true);
-		ServerSideModEnabled.Insert("ZenTreasure", false); // Disabled by default as not all maps have config
-		ServerSideModEnabled.Insert("ZenGraves", false); // Disabled by default to avoid confusion
-
-		// Mods which ideally should be enabled/disabled only after a server wipe 
-		PersistentModEnabled.Insert("ZenItemTimestamp", false);
-		PersistentModEnabled.Insert("ZenWeaponEngrave", false);
-		PersistentModEnabled.Insert("ZenComboLocks", false);
-		PersistentModEnabled.Insert("ZenAlcohol", false);
-		PersistentModEnabled.Insert("ZenSleep", false);
+		ServerSideModEnabled.Insert("ZenBatteryPASPersistence", false);
+		ServerSideModEnabled.Insert("ZenInformWeaponStateBug", false);
+		ServerSideModEnabled.Insert("ZenDropRuinedClothing", false);
+		ServerSideModEnabled.Insert("ZenAutoConvertStash", false);
+		ServerSideModEnabled.Insert("ZenRebuildableWells", false);
+		ServerSideModEnabled.Insert("ZenZombieController", false);
+		ServerSideModEnabled.Insert("ZenPersistentTrees", false);
+		ServerSideModEnabled.Insert("ZenDynamicZoneLoot", false);
+		ServerSideModEnabled.Insert("ZenFishingConfig", false);
+		ServerSideModEnabled.Insert("ZenTreesplosions", false);
+		ServerSideModEnabled.Insert("ZenZombieConfig", false);
+		ServerSideModEnabled.Insert("ZenChickenCoops", false);
+		ServerSideModEnabled.Insert("ZenShelterCargo", false);
+		ServerSideModEnabled.Insert("ZenStaminaSlope", false);
+		ServerSideModEnabled.Insert("ZenZombieDoors", false);
+		ServerSideModEnabled.Insert("ZenRadioPlugin", false);
+		ServerSideModEnabled.Insert("ZenNightConfig", false);
+		ServerSideModEnabled.Insert("ZenBloodDrips", false);
+		ServerSideModEnabled.Insert("ZenWoodHealth", false);
+		ServerSideModEnabled.Insert("ZenLeftovers", false);
+		ServerSideModEnabled.Insert("ZenCampSites", false);
+		ServerSideModEnabled.Insert("ZenLogPiles", false);
+		ServerSideModEnabled.Insert("ZenFireWood", false);
+		ServerSideModEnabled.Insert("ZenTreasure", false);
+		ServerSideModEnabled.Insert("ZenAlcohol", false);
+		ServerSideModEnabled.Insert("ZenGraves", false);
 
 		// Disable all mods for DayZEditor
 #ifdef EDITOR
@@ -158,61 +157,126 @@ class ZenModPackConfig
 		{
 			ServerSideModEnabled.Set(ServerSideModEnabled.GetKey(i), false);
 		}
-
-		for (i = 0; i < PersistentModEnabled.Count(); i++)
-		{
-			PersistentModEnabled.Set(PersistentModEnabled.GetKey(i), false);
-		}
 #endif
+
+		BuildRuntimeCache();
+	}
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenModPackConfig>.LoadFile(path, this, err);
+	}
+	
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenModPackConfig>.SaveFile(path, this, err);		
+	}
+	
+	override protected bool BuildSyncPayload(out string payload, out string err)
+	{
+		return JsonFileLoader<ZenModPackConfig>.MakeData(this, payload, err, false);
 	}
 
-	void Save()
+	override protected bool ApplySyncPayload(string payload, out string err)
 	{
-		if (!FileExist("$profile:\\Zenarchist"))
-			MakeDirectory("$profile:\\Zenarchist");
+		return JsonFileLoader<ZenModPackConfig>.LoadData(payload, this, err);
+	}
 
-		if (!FileExist("$profile:\\Zenarchist\\Utilities"))
-			MakeDirectory("$profile:\\Zenarchist\\Utilities");
-
-		if (!FileExist(zenModFolder))
+	override void AfterLoad()
+	{
+		super.AfterLoad();
+		
+		if (!m_TriggeredWarnings)
+        	m_TriggeredWarnings = new array<string>;
+		
+		BuildRuntimeCache();
+	}
+	
+	void BuildRuntimeCache()
+	{
+		if (!m_RuntimeCache)
+			m_RuntimeCache = new map<string, bool>;
+		
+		m_RuntimeCache.Clear();
+	
+		if (ModEnabled)
+			CopyMapIntoCache(ModEnabled);
+	
+		if (ServerSideModEnabled)
+			CopyMapIntoCache(ServerSideModEnabled);
+	}
+	
+	override void AfterConfigReceived()
+	{
+		super.AfterConfigReceived();
+		
+		InternalDebugPrint();
+	}
+	
+	void CopyMapIntoCache(map<string, bool> src)
+	{
+		for (int i = 0; i < src.Count(); i++)
 		{
-			MakeDirectory(zenModFolder);
+			string k = src.GetKey(i);
+			bool v = src.GetElement(i);
+			m_RuntimeCache.Set(k, v);
 		}
-
-		JsonFileLoader<ZenModPackConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
 	}
-}
-
-ref ZenModPackConfig m_ZenModPackConfig;
-
-static ZenModPackConfig GetZenModPackConfig()
-{
-	if (!m_ZenModPackConfig)
+	
+	static void MergeMissingBoolMap(map<string, bool> dst, map<string, bool> src)
 	{
-		ZMPrint("[ZenModPackConfig] Init");
-		m_ZenModPackConfig = new ZenModPackConfig;
-		m_ZenModPackConfig.Load();
+		if (!dst || !src)
+			return;
+	
+		for (int i = 0; i < src.Count(); i++)
+		{
+			string k = src.GetKey(i);
+			bool v = src.GetElement(i);
+	
+			bool tmp;
+			if (!dst.Find(k, tmp))
+				dst.Set(k, v);
+		}
 	}
-
-	return m_ZenModPackConfig;
+	
+	static void RenameBoolKey(map<string, bool> keyMap, string oldKey, string newKey)
+	{
+	    if (!keyMap) 
+			return;
+	
+	    bool valueEntry;
+	    if (keyMap.Find(oldKey, valueEntry))
+	    {
+	        if (newKey != "" && !keyMap.Contains(newKey))
+	            keyMap.Set(newKey, valueEntry);
+	
+	        keyMap.Remove(oldKey);
+	    }
+	}
+	
+	void InternalDebugPrint()
+	{
+		//foreach (string key, bool element : m_RuntimeCache) Print("  " + key + "=" + element);
+	}
 }
 
 static bool ZenModEnabled(string mod)
 {
-	bool enabled = false;
+	ZenModPackConfig cfg = GetZenModPackConfig();
+	if (!cfg || !cfg.m_RuntimeCache)
+		return false;
 
-	#ifdef SERVER
-	if (GetZenModPackConfig().ServerSideModEnabled.Find(mod, enabled))
-		return enabled;
-	#endif
-
-	if (GetZenModPackConfig().PersistentModEnabled.Find(mod, enabled))
+	bool enabled;
+	if (cfg.m_RuntimeCache.Find(mod, enabled))
 		return enabled;
 
-	if (GetZenModPackConfig().ModEnabled.Find(mod, enabled))
-		return enabled;
-
-	Error("VERY BAD ERROR: ZenModEnabled(" + mod + ") - THAT MOD WASN'T FOUND! TYPO?"); // Print to Crash Logs
+	if (cfg.m_TriggeredWarnings.Find(mod) == -1)
+	{
+		// Only trigger warnings ONCE to prevent massive log spam
+		Error("VERY BAD ERROR - unknown mod key (typo?): " + mod);
+		cfg.m_TriggeredWarnings.Insert(mod);
+	}
+	
 	return false;
 }
 
@@ -222,11 +286,11 @@ static bool SetZenModEnabled(string mod, bool enabled)
 	for (i = 0; i < GetZenModPackConfig().ModEnabled.Count(); i++)
 	{
 		string clientKey = GetZenModPackConfig().ModEnabled.GetKey(i);
-		clientKey.ToLower();
 
 		if (mod == clientKey)
 		{
 			GetZenModPackConfig().ModEnabled.Set(GetZenModPackConfig().ModEnabled.GetKey(i), enabled);
+			GetZenModPackConfig().BuildRuntimeCache();
 			return true;
 		}
 	}
@@ -234,11 +298,11 @@ static bool SetZenModEnabled(string mod, bool enabled)
 	for (i = 0; i < GetZenModPackConfig().ServerSideModEnabled.Count(); i++)
 	{
 		string serverKey = GetZenModPackConfig().ServerSideModEnabled.GetKey(i);
-		serverKey.ToLower();
 
 		if (mod == serverKey)
 		{
 			GetZenModPackConfig().ServerSideModEnabled.Set(GetZenModPackConfig().ServerSideModEnabled.GetKey(i), enabled);
+			GetZenModPackConfig().BuildRuntimeCache();
 			return true;
 		}
 	}

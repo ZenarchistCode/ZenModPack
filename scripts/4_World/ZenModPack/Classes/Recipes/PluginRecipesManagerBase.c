@@ -18,15 +18,8 @@ modded class PluginRecipesManagerBase
         //! OPEN CANS ON ROCKS 
         RegisterRecipe(new OpenCanStoneRecipe);
 
-        //! LEFTOVERS 
-        RegisterRecipe(new CraftJunkHookRecipe);
-
         //! TIRE RACK 
         RegisterRecipe(new Zen_CraftTireRack);
-
-        //! WORKBENCH 
-        RegisterRecipe(new Zen_CraftCarWorkbenchKit);
-		RegisterRecipe(new Zen_DeCraftCarWorkbenchKit);
 
         //! CHESS 
         RegisterRecipe(new Zen_CraftChessBoard);

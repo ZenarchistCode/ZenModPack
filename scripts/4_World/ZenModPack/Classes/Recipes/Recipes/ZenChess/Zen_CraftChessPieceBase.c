@@ -96,6 +96,6 @@ class Zen_CraftChessPieceBase extends RecipeBase
 		else
 			pieceType = "Zen_ChessWhite" + GetPieceName();
 
-		GetGame().CreateObjectEx(pieceType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
+		g_Game.CreateObjectEx(pieceType, player.GetPosition(), ECE_PLACE_ON_SURFACE);
 	}
-};
+}

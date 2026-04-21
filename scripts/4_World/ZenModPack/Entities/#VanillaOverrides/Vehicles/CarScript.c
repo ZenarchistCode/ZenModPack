@@ -46,7 +46,7 @@ modded class CarScript
 
 	void UpdateZenBatteryEnergy(int percent)
 	{
-        if (!GetGame().IsDedicatedServer())
+        if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (!ZenModEnabled("ZenCarBatteryIcon"))
@@ -64,9 +64,9 @@ modded class CarScript
 	{
 		super.EEInit();
 
-		if (ZenModEnabled("ZenGlovebox"))
+		if (ZenModEnabled("ZenCarGlovebox"))
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SpawnZenGlovebox, 2500, false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SpawnZenGlovebox, 2500, false);
 		}
 	}
 
@@ -108,7 +108,7 @@ modded class CarScript
 	{
 		super.EEItemAttached(item, slot_name);
 
-		if (GetGame().IsClient())
+		if (g_Game.IsClient())
 		{
 			//! PIMP MY RIDE
 			if (slot_name == "ZenChemlight")
@@ -117,7 +117,7 @@ modded class CarScript
 			}
 		}
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			if (slot_name == "ZenJournal_Compass")
 			{
@@ -137,7 +137,7 @@ modded class CarScript
 	{
 		super.EEItemDetached(item, slot_name);
 
-		if (GetGame().IsClient())
+		if (g_Game.IsClient())
 		{
 			if (slot_name == "ZenChemlight")
 			{
@@ -145,7 +145,7 @@ modded class CarScript
 			}
 		}
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			if (slot_name == "ZenJournal_Compass")
 			{
@@ -230,10 +230,10 @@ modded class CarScript
 	//! GLOVEBOX / CLIENT-ONLY
 	static bool Zen_PlayerInFrontSeat()
 	{
-		if (!GetGame() || !GetGame().IsClient())
+		if (!g_Game || !g_Game.IsClient())
 			return false;
 
-		PlayerBase clientPlayer = PlayerBase.Cast(GetGame().GetPlayer());
+		PlayerBase clientPlayer = PlayerBase.Cast(g_Game.GetPlayer());
 		if (!clientPlayer)
 			return false;
 
@@ -255,10 +255,10 @@ modded class CarScript
 
 	static bool Zen_PlayerInCar()
 	{
-		if (!GetGame() || !GetGame().IsClient())
+		if (!g_Game || !g_Game.IsClient())
 			return false;
 
-		PlayerBase clientPlayer = PlayerBase.Cast(GetGame().GetPlayer());
+		PlayerBase clientPlayer = PlayerBase.Cast(g_Game.GetPlayer());
 		if (clientPlayer)
 		{
 			return clientPlayer.IsInVehicle();
@@ -277,7 +277,7 @@ modded class CarScript
 
 	void CreateZenCompass(Compass item)
 	{
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (!item || !item.IsInherited(ItemCompass))
@@ -323,7 +323,7 @@ modded class CarScript
 
 		if (!m_ZenCompassDashboard)
 		{
-			m_ZenCompassDashboard = ZenCarCompass.Cast(GetGame().CreateObject("ZenCarCompass", vector.Zero));
+			m_ZenCompassDashboard = ZenCarCompass.Cast(g_Game.CreateObject("ZenCarCompass", vector.Zero));
 
 			if (!m_ZenCompassDashboard)
 			{
@@ -479,12 +479,12 @@ modded class CarScript
             return;
         }
 
-        if (GetGame().IsDedicatedServer())
+        if (g_Game.IsDedicatedServer())
 		{
-            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(ZenCutTreeProcess, tree, driver); // actually knock the tree over (runs on script main thread, *not* the physics thread)
+            g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Call(ZenCutTreeProcess, tree, driver); // actually knock the tree over (runs on script main thread, *not* the physics thread)
         }
 
-        if (GetGame().IsClient() || !GetGame().IsMultiplayer())
+        if (g_Game.IsClient() || !g_Game.IsMultiplayer())
         {
             SoundHardTreeFallingPlay();
         }
@@ -495,6 +495,6 @@ modded class CarScript
         if (!tree || tree.IsDamageDestroyed())
             return;
 
-        tree.DecreaseHealth("", "", 100, tree.CanBeAutoDeleted());
+        tree.DecreaseHealth("", "", tree.GetMaxHealth("",""), tree.CanBeAutoDeleted());
     }
 }

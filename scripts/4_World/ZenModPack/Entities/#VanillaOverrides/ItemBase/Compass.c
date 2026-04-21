@@ -16,7 +16,7 @@ modded class Compass
 	{
 		super.EEDelete(parent);
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			if (m_ZenCompassDashboard)
 			{
@@ -29,7 +29,7 @@ modded class Compass
 	{
 		super.EEHealthLevelChanged(oldLevel, newLevel, zone);
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			if (m_ZenCompassDashboard)
 			{

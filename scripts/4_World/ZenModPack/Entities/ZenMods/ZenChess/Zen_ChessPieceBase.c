@@ -34,7 +34,7 @@ class Zen_ChessPieceBase extends ItemBase
 	{
 		super.OnItemLocationChanged(old_owner, new_owner);
 
-		if (old_owner == new_owner || !GetGame().IsDedicatedServer())
+		if (old_owner == new_owner || !g_Game.IsDedicatedServer())
 			return;
 
 		if (!old_owner || !old_owner.IsInherited(Zen_ChessBoard_Static))

@@ -4,7 +4,7 @@ modded class Clothing
 	{
 		super.EEHealthLevelChanged(oldLevel, newLevel, zone);
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			if (ZenModEnabled("ZenDropRuinedClothing"))
 			{
@@ -30,19 +30,5 @@ modded class Clothing
 			
 			GetInventory().DropEntity(InventoryMode.SERVER, pb, this);
 		}
-	}
-
-	override bool CanDisplayCargo()
-	{
-		if (GetHierarchyParent() != NULL)
-		{
-			CarScript car = CarScript.Cast(GetHierarchyParent());
-			if (car)
-			{
-				return false;
-			}
-		}
-
-		return super.CanDisplayCargo();
 	}
 }

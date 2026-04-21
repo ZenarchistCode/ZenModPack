@@ -10,8 +10,8 @@ class Zen_ChessBoard_Static extends Zen_ChessBoard
 		SetAllowDamage(false);
 
 		// Spawn pieces if required
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckAllPieces, 1000);
-		GetGame().CreateObjectEx("ClutterCutter2x2", GetPosition(), ECE_PLACE_ON_SURFACE);
+		g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckAllPieces, 1000);
+		g_Game.CreateObjectEx("ClutterCutter2x2", GetPosition(), ECE_PLACE_ON_SURFACE);
 	}
 
 	void CheckAllPieces()

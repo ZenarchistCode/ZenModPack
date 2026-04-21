@@ -2,7 +2,7 @@ modded class QuantityConversions
 {
 	override static int HasItemQuantity(notnull EntityAI item)
 	{
-		if (!GetZenModPackClientConfig().MagObfuscation)
+		if (!ZenModEnabled("ZenMagObfuscation"))
 		{
 			return Vanilla_HasItemQuantity(item);
 		}

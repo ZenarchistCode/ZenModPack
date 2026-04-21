@@ -25,7 +25,7 @@ class Zen_ConcussionGrenade : FlashGrenade
 			return;
 
 		array<Object> nearbyZombies = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(GetPosition(), GetZenConcussionGrenadeConfig().KillZombieRadius, nearbyZombies, NULL);
+		g_Game.GetObjectsAtPosition3D(GetPosition(), GetZenConcussionGrenadeConfig().KillZombieRadius, nearbyZombies, NULL);
 		EntityAI entity;
 
 		for (int i = 0; i < nearbyZombies.Count(); i++)

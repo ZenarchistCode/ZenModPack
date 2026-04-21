@@ -36,7 +36,7 @@ class ZenFlint extends ItemBase
 
 	override void OnIgnitedTarget(EntityAI target_item)
 	{
-		if (!HasValidZenIgniterItem() || !GetGame().IsDedicatedServer())
+		if (!HasValidZenIgniterItem() || !g_Game.IsDedicatedServer())
 			return;
 
 		AddQuantity(Math.RandomFloatInclusive(0.5, 1) * -1);
@@ -45,7 +45,7 @@ class ZenFlint extends ItemBase
 
 	override void OnIgnitedTargetFailed(EntityAI target_item)
 	{
-		if (!HasValidZenIgniterItem() || !GetGame().IsDedicatedServer())
+		if (!HasValidZenIgniterItem() || !g_Game.IsDedicatedServer())
 			return;
 
 		AddQuantity(Math.RandomFloatInclusive(0.5, 1) * -1);

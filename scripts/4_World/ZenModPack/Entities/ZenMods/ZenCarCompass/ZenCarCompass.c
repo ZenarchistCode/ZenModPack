@@ -45,4 +45,9 @@ class ZenCarCompass extends Compass
 	{
 		return true;
 	}
+
+	override bool CanBeActionTarget()
+	{
+        return false;
+    }
 }

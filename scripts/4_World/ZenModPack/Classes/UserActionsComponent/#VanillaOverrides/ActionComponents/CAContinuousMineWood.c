@@ -43,7 +43,7 @@ modded class CAContinuousMineWood
         super.CreatePrimaryItems(action_data);
 
         // Apply tool health ONLY to items that are new this tick
-        if (!GetGame().IsDedicatedServer())
+        if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (woodHealthEnabled && action_data && action_data.m_MainItem)

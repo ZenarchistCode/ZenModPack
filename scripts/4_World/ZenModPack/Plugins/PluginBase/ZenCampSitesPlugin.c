@@ -1,6 +1,7 @@
 class ZenCampSitesPlugin extends PluginBase
 {
 	protected float m_DeltaTime;
+	protected static float m_NextSpawnTime;
     protected vector m_LastCamp;
 
 	override void OnInit()
@@ -8,23 +9,30 @@ class ZenCampSitesPlugin extends PluginBase
 		ZMPrint("[ZenCampSitesPlugin] :: OnInit");
 		GetZenCampSitesConfig();
 		m_DeltaTime = 0;
+		SetNextSpawnTime();
 	}
 
 	override void OnUpdate(float delta_time)
 	{
 		m_DeltaTime += delta_time;
-		if (m_DeltaTime < GetZenCampSitesConfig().SpawnSecs)
+		if (m_DeltaTime < m_NextSpawnTime)
 			return;
 
 		m_DeltaTime = 0;
 		ManageCamps();
+		SetNextSpawnTime();
+	}
+
+	void SetNextSpawnTime()
+	{
+		m_NextSpawnTime = Math.RandomFloatInclusive(0.8, 1.2) * GetZenCampSitesConfig().SpawnSecs;
 	}
 
 	// Called every X minutes to spawn in a new camp
 	void ManageCamps()
 	{
 		// If game is not ready for whatever reason, stop
-		if (!GetGame() || !GetGame().GetWorld() || !GetZenCampSitesConfig())
+		if (!g_Game || !g_Game.GetWorld() || !GetZenCampSitesConfig())
 			return;
 
 		// Get new camp location
@@ -47,7 +55,6 @@ class ZenCampSitesPlugin extends PluginBase
 		if (!camp)
 		{
 			Error("ZenCampSites :: IMPORTANT ERROR: Failed to create camp from JSON!");
-			ZenCampSitesDebug("IMPORTANT ERROR: Failed to create camp from JSON!");
 			return;
 		}
 
@@ -57,7 +64,7 @@ class ZenCampSitesPlugin extends PluginBase
 		// If a player is too close (within PlayerDetectZone) then don't spawn new camp right in front of their eyes.
 		int x;
 		array<Man> players = new array<Man>;
-		GetGame().GetWorld().GetPlayerList(players);
+		g_Game.GetWorld().GetPlayerList(players);
 		PlayerBase selectedPlayer;
 		for (x = 0; x < players.Count(); x++)
 		{
@@ -77,51 +84,21 @@ class ZenCampSitesPlugin extends PluginBase
 		Object obj;
 
 		// Spawn fire
-		FireplaceBase campFire = FireplaceBase.Cast(GetGame().CreateObject("Fireplace", camp.Location));
+		FireplaceBase campFire = FireplaceBase.Cast(g_Game.CreateObject("Zen_EternalFireplace", camp.Location));
 		if (!campFire)
 		{
 			Error("ZenCampSites :: IMPORTANT ERROR: Failed to create fire at " + camp.Location);
-			ZenCampSitesDebug("IMPORTANT ERROR: Failed to create fire at " + camp.Location);
 			return;
 		}
 
-		campFire.PlaceOnSurface();
-
-		// Create firewood
-		ItemBase fireWood = ItemBase.Cast(campFire.GetInventory().CreateAttachment("Firewood"));
-		if (fireWood)
-			fireWood.SetQuantity(6);
-
-		// Create sticks
-		ItemBase fireSticks = ItemBase.Cast(campFire.GetInventory().CreateAttachment("WoodenStick"));
-		if (fireSticks)
-			fireSticks.SetQuantity(10);
-
-		// Create kindling
-		ItemBase fireRags = ItemBase.Cast(campFire.GetInventory().CreateAttachment("Rag"));
-		if (fireRags)
-			fireRags.SetQuantity(6);
-
-		// Create fuel 
-		if (ZenModEnabled("ZenFireFuel"))
-			ItemBase fuel = ItemBase.Cast(campFire.GetInventory().CreateAttachment("Zen_FireFuel"));
-
-		// Create stone circle 
-		ItemBase stones = ItemBase.Cast(campFire.GetInventory().CreateAttachment("Stone"));
-		if (stones)
-		{
-			stones.SetQuantity(8);
-			stones.LockToParent();
-			campFire.SetStoneCircleState(true);
-		}
-
 		// Create clutter cutter 
-		GetGame().CreateObjectEx("ClutterCutterFireplace", campFire.GetPosition(), ECE_PLACE_ON_SURFACE);
+		g_Game.CreateObjectEx("ClutterCutterFireplace", campFire.GetPosition(), ECE_PLACE_ON_SURFACE);
 
 		// Twisted fire starter
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StartFire, 250, false, campFire);
-		campFire.SetLifetimeMax(GetZenCampSitesConfig().SpawnSecs);
-		campFire.SetLifetime(GetZenCampSitesConfig().SpawnSecs);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StartFire, 250, false, campFire);
+		campFire.PlaceOnSurface();
+		campFire.SetLifetimeMax(m_NextSpawnTime);
+		campFire.SetLifetime(m_NextSpawnTime);
 		ZenFunctions.AlignToTerrain(campFire);
 
 		// Generate random tent location near fire
@@ -133,16 +110,15 @@ class ZenCampSitesPlugin extends PluginBase
 		if (!lootEAI)
 		{
 			Error("ZenCampSites :: IMPORTANT ERROR: Failed to create object: " + camp.TentType + " @ " + camp.Location);
-			ZenCampSitesDebug("IMPORTANT ERROR: Failed to create object: " + camp.TentType + " @ " + camp.Location);
 			return;
 		}
 
 		// Set orientation + persistence
-		ZenCampSitesDebug("Spawned " + camp.TentType + " @ " + tentPos);
+		ZMPrint("[ZenCampSites] Spawned " + camp.TentType + " @ " + tentPos);
 		ZenFunctions.OrientObjectToPosition(lootEAI, campFire.GetPosition(), "180 0 0");
 		ZenFunctions.AlignToTerrain(lootEAI);
-		lootEAI.SetLifetimeMax(GetZenCampSitesConfig().SpawnSecs);
-		lootEAI.SetLifetime(GetZenCampSitesConfig().SpawnSecs);
+		lootEAI.SetLifetimeMax(m_NextSpawnTime);
+		lootEAI.SetLifetime(m_NextSpawnTime);
 
 		// Shuffle loot array order so we get better random loot dispersion
 		GetZenCampSitesConfig().ShuffleLoot();
@@ -179,15 +155,15 @@ class ZenCampSitesPlugin extends PluginBase
 		// Spawn zombie trigger
 		if (zedCount > 0 && GetZenCampSitesConfig().ZombieTypes.Count() > 0)
 		{
-			ZenCampZombieTrigger zed_trigger = ZenCampZombieTrigger.Cast(GetGame().CreateObjectEx("ZenCampZombieTrigger", camp.Location, ECE_CREATEPHYSICS));
+			ZenCampZombieTrigger zed_trigger = ZenCampZombieTrigger.Cast(g_Game.CreateObjectEx("ZenCampZombieTrigger", camp.Location, ECE_CREATEPHYSICS));
 			zed_trigger.m_zombieCount = zedCount;
 			zed_trigger.SetCollisionSphere(150);
-			zed_trigger.SetLifetimeMax(GetZenCampSitesConfig().SpawnSecs);
-			zed_trigger.SetLifetime(GetZenCampSitesConfig().SpawnSecs);
+			zed_trigger.SetLifetimeMax(m_NextSpawnTime);
+			zed_trigger.SetLifetime(m_NextSpawnTime);
 		}
 
 		// Log it
-		ZenCampSitesDebug("Spawned camp @ " + camp.Location + " with " + zedCount + " zombies");
+		ZMPrint("[ZenCampSites] Spawned camp @ " + camp.Location + " with " + zedCount + " zombies");
 
 		// Debug it 
 		if (GetZenCampSitesConfig().DebugOn)
@@ -266,7 +242,7 @@ class ZenCampSitesPlugin extends PluginBase
 			}
 
 			// Log spawns
-			ZenModLogger.Log("Spawned: " + itemType + " x " + quantity, "ZenCampSites");
+			ZMPrint("[ZenCampSites] Spawned: " + itemType + " x " + quantity);
 		}
 	}
 
@@ -279,7 +255,7 @@ class ZenCampSitesPlugin extends PluginBase
 	// Spawn an object and apply appropriate flags/physics updates
 	static Object SpawnCampObject(string type, vector position, vector orientation, float scale = 1.0)
 	{
-		EntityAI obj = EntityAI.Cast(GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
+		EntityAI obj = EntityAI.Cast(g_Game.CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
 		if (!obj)
 		{
 			Error("Failed to create object " + type);
@@ -291,23 +267,14 @@ class ZenCampSitesPlugin extends PluginBase
 		obj.SetScale(scale);
 		obj.Update();
 		obj.SetAffectPathgraph(true, false);
-		obj.SetLifetimeMax(GetZenCampSitesConfig().SpawnSecs);
-		obj.SetLifetime(GetZenCampSitesConfig().SpawnSecs);
+		obj.SetLifetimeMax(m_NextSpawnTime);
+		obj.SetLifetime(m_NextSpawnTime);
 
 		if (obj.CanAffectPathgraph())
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, obj);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(g_Game.UpdatePathgraphRegionByObject, 100, false, obj);
 		}
 
 		return obj;
-	}
-
-	void ZenCampSitesDebug(string msg)
-	{
-		if (GetZenCampSitesConfig().LogsOn)
-			ZenModLogger.Log(msg, "ZenCampSites");
-
-		if (GetZenCampSitesConfig().DebugOn)
-			ZenFunctions.DebugMessage(msg);
 	}
 }

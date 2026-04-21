@@ -21,26 +21,26 @@ modded class AnimalBase
 	{
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
-		//! ARTILLERY
-		if (ammo.Contains("Zen_ArtilleryBomb_Ammo") && GetGame().IsDedicatedServer() && GetZenArtilleryConfig().Animal_Kill)
+		if (ZenWasAlive() && source && source.IsWeapon())
 		{
-			SetHealth(0);
+			Weapon_Base weapon = Weapon_Base.Cast(source);
+			if (weapon && weapon.IsZenEngraved())
+			{
+				weapon.UpdateZenLongestShot(vector.Distance(source.GetPosition(), GetPosition()));
+			}
 		}
 	}
 
-	override void EEKilled(Object killer)
+	override void EEKilledZen(notnull Object killer)
 	{
-		super.EEKilled(killer);
+		super.EEKilledZen(killer);
 
 		if (ZenModEnabled("ZenWeaponEngrave"))
 		{
-			if (killer)
+			Weapon_Base gun = Weapon_Base.Cast(killer);
+			if (gun && gun.GetZenEngravedPlayerName() != "")
 			{
-				Weapon_Base gun = Weapon_Base.Cast(killer);
-				if (gun && gun.GetZenEngravedPlayerName() != "")
-				{
-					gun.IncreaseZenAnimalKills();
-				}
+				gun.IncreaseZenAnimalKills();
 			}
 		}		
 	}

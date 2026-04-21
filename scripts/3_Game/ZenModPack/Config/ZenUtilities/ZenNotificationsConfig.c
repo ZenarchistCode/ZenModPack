@@ -1,62 +1,79 @@
-class ZenNotificationsConfig
+ref ZenNotificationsConfig g_ZenNotificationsConfig;
+
+static ZenNotificationsConfig GetZenNotificationsConfig()
 {
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
-	private const static string zenConfigName = "ZenNotificationsConfig.json";
+	if (!g_ZenNotificationsConfig) GetZenConfigRegister().RegisterConfig(ZenNotificationsConfig);
+	return g_ZenNotificationsConfig;
+}
+
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload(); 
+		RegisterType(ZenNotificationsConfig);
+	}
+}
+
+class ZenNotificationsConfig : ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenNotificationsConfig = this;
+	}
+	
+	override string 	GetFolderName()       		{ return "Utilities"; }
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool		ShouldLoadOnClient() 		{ return true; }
+	override bool		ShouldSyncToClient()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenNotificationsConfig>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenNotificationsConfig>.SaveFile(path, this, err);
+	}
+	
+	override protected bool BuildSyncPayload(out string payload, out string err)
+	{
+		return JsonFileLoader<ZenNotificationsConfig>.MakeData(this, payload, err, false);
+	}
+
+	override protected bool ApplySyncPayload(string payload, out string err)
+	{
+		return JsonFileLoader<ZenNotificationsConfig>.LoadData(payload, this, err);
+	}
 
 	// Define notification keywords
-	static bool HasReceivedServerConfig = false;
 	bool EnableServerNotifications;
+	bool DebugMode;
 	string ServerMessage;
 	string ServerIcon;
 	ref array<ref ZenNotification> Keywords;
 
-	// Load config file or create default file if config doesn't exist
-	void Load()
+	override void SetDefaults()
 	{
-		if (GetGame().IsDedicatedServer())
-		{
-			if (FileExist(zenModFolder + zenConfigName))
-			{	// If config exists, load file
-				JsonFileLoader<ZenNotificationsConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-			}
-			else // Config file does not exist, create default file
-			{
-				// Notification keywords
-				EnableServerNotifications = true;
-				ServerIcon = "ZenModPack/data/gui/Notifications/notify.edds";
-				ServerMessage = "Server Message";
-				Keywords = new array<ref ZenNotification>;
-				Keywords.Insert(new ZenNotification("[N]", "#servermessage", "#servericon", true));
-				Keywords.Insert(new ZenNotification("[Dart]", "#servermessage", "#servericon", true));
-				Keywords.Insert(new ZenNotification("(Private) Admin:", "Admin Private Message", "#servericon", true));
-				Keywords.Insert(new ZenNotification("(Global) Admin:", "Admin Global Message", "#servericon", true));
-				Keywords.Insert(new ZenNotification("Restart"));
-				Keywords.Insert(new ZenNotification("Shutdown"));
-				Keywords.Insert(new ZenNotification("Update:"));
-				Keywords.Insert(new ZenNotification("Quest:", "Quest Update:", "ZenModPack/data/gui/Notifications/quest.edds", true));
-				// Save config
-				Save();
-			}
-		}
-	}
-
-	// Save config
-	void Save()
-	{
-		// If config folder doesn't exist, create it.
-		if (!FileExist("$profile:\\Zenarchist"))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		if (!FileExist(zenModFolder))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		// Save JSON config
-		JsonFileLoader<ZenNotificationsConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
+		// Notification keywords
+		EnableServerNotifications = true;
+		DebugMode = false;
+		ServerIcon = "ZenModPack/data/gui/Notifications/notify.edds";
+		ServerMessage = "Server Message";
+		Keywords = new array<ref ZenNotification>;
+		Keywords.Insert(new ZenNotification("[N]", "#servermessage", "#servericon", true));
+		Keywords.Insert(new ZenNotification("[Dart]", "#servermessage", "#servericon", true));
+		Keywords.Insert(new ZenNotification("(Private) Admin:", "Admin Private Message", "#servericon", true));
+		Keywords.Insert(new ZenNotification("(Global) Admin:", "Admin Global Message", "#servericon", true));
+		Keywords.Insert(new ZenNotification("Restart"));
+		Keywords.Insert(new ZenNotification("Shutdown"));
+		Keywords.Insert(new ZenNotification("Update:"));
+		Keywords.Insert(new ZenNotification("Quest:", "Quest Update:", "ZenModPack/data/gui/Notifications/quest.edds", true));
 	}
 }
 
@@ -77,19 +94,4 @@ class ZenNotification
 		HideKeyword = hide;
 		PlaySound = playSound;
 	}
-}
-
-// Save config data
-static ref ZenNotificationsConfig m_ZenNotificationsConfig;
-
-// Helper function to return Config data storage object
-static ZenNotificationsConfig GetZenNotificationsConfig()
-{
-	if (!m_ZenNotificationsConfig)
-	{
-		m_ZenNotificationsConfig = new ZenNotificationsConfig;
-		m_ZenNotificationsConfig.Load();
-	}
-
-	return m_ZenNotificationsConfig;
 }

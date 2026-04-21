@@ -1,36 +1,46 @@
 modded class Chat
 {
-	private int LAST_MESSAGE;
-
-	static bool HasReceivedServerConfig;
-	static bool EnableServerNotifications;
-	static string ServerMessage;
-	static string ServerIcon;
+	private int ZEN_LAST_MESSAGE_TIME;
 
 	override void Add(ChatMessageEventParams params)
 	{
 		// If game hasn't loaded yet, stop here
-		if (!GetGame() || !GetGame().GetMission())
+		if (!g_Game || !g_Game.GetMission())
 			return;
+		
+		if (!ZenModEnabled("ZenNotifications"))
+		{
+			super.Add(params);
+			return;
+		}
 
 		// Get message parameters
 		int channel = params.param1;
 		string from = params.param2;
 		string text = params.param3;
+		
+		if (GetZenNotificationsConfig().DebugMode)
+		{
+			Print("chat_text=" + text);
+			ZenNotification notificationTest = FindZenKeyword(text);
+			if (notificationTest)
+			{
+				Print("Notification cfg found: PlaySound=" + notificationTest.PlaySound + " " + notificationTest.Title + " HasReceivedServerConfig=" + GetZenNotificationsConfig().HasReceivedSync() + " EnableServerNotifications=" + GetZenNotificationsConfig().EnableServerNotifications);
+			}
+		}
 
 		// Check if it's a server message
-		bool serverMessage = (channel & CCBattlEye) || (channel & CCAdmin) || (channel & CCSystem);
-		if (serverMessage && HasReceivedServerConfig && EnableServerNotifications)
+		bool serverMessage = GetZenNotificationsConfig().DebugMode || (channel & CCBattlEye) || (channel & CCAdmin) || (channel & CCSystem);
+		if (serverMessage && GetZenNotificationsConfig().HasReceivedSync() && GetZenNotificationsConfig().EnableServerNotifications)
 		{
-			int timeDiff = GetGame().GetTime() - LAST_MESSAGE;
+			int timeDiff = g_Game.GetTime() - ZEN_LAST_MESSAGE_TIME;
 			if (timeDiff < 1000)
 			{
 				super.Add(params);
 				return;
 			}
 
-			// TODO: This breaks private and global messaging
-			ZenNotification notification = FindKeyword(text);
+			ZenNotification notification = FindZenKeyword(text);
 			if (!notification)
 			{
 				super.Add(params);
@@ -43,17 +53,17 @@ modded class Chat
 
 			string title = notification.Title;
 			if (notification.Title == "#servermessage")
-				title = ServerMessage;
+				title = GetZenNotificationsConfig().ServerMessage;
 
 			string icon = notification.Icon;
 			if (notification.Icon == "#servericon")
-				icon = ServerIcon;
+				icon = GetZenNotificationsConfig().ServerIcon;
 
 			if (notification.HideKeyword)
-				text.Replace(GetKeyword(text), "");
+				text.Replace(GetZenKeyword(text), "");
 
 			ZenNotifications.NotifyLocal(title, text.Trim(), icon);
-			LAST_MESSAGE = GetGame().GetTime();
+			ZEN_LAST_MESSAGE_TIME = g_Game.GetTime();
 		}
 		else
 		{
@@ -62,13 +72,13 @@ modded class Chat
 	}
 
 	// Check if the given message contains a flagged keyword
-	private ZenNotification FindKeyword(string msg)
+	private ZenNotification FindZenKeyword(string msg)
 	{
 		if (msg.Contains("(Private) Admin:") || msg.Contains("(Global) Admin:") || msg.Contains("[N]") || msg.Contains("[DaRT]"))
 			return new ZenNotification("#servermessage");
 
 		msg.ToLower();
-		foreach (ZenNotification n : NotificationUI.ZenKeywords)
+		foreach (ZenNotification n : GetZenNotificationsConfig().Keywords)
 		{
 			string key = n.Keyword;
 			key.ToLower();
@@ -80,10 +90,10 @@ modded class Chat
 	}
 
 	// Returns the keyword that was found in the given text
-	private string GetKeyword(string msg)
+	private string GetZenKeyword(string msg)
 	{
 		msg.ToLower();
-		foreach (ZenNotification n : NotificationUI.ZenKeywords)
+		foreach (ZenNotification n : GetZenNotificationsConfig().Keywords)
 		{
 			string key = n.Keyword;
 			key.ToLower();

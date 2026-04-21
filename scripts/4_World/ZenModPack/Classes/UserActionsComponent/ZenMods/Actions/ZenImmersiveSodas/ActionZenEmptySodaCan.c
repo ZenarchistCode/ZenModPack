@@ -78,7 +78,9 @@ class ActionZenEmptySodaCan: ActionContinuousBase
 
 		if (action_data.m_MainItem.GetQuantity() <= 0.01)
 		{
-			action_data.m_Player.GetHumanInventory().ReplaceItemWithNew(InventoryMode.SERVER, new ReplaceJunkLambda(action_data.m_MainItem, "Empty_" + action_data.m_MainItem.GetType(), action_data.m_MainItem.GetHealth()));
+			#ifdef ZenLeftovers
+			action_data.m_Player.GetHumanInventory().ReplaceItemWithNew(InventoryMode.SERVER, new ReplaceItemWithNewLambda(action_data.m_MainItem, "Empty_" + action_data.m_MainItem.GetType(), action_data.m_Player));
+			#endif
 		}
 	}
 
@@ -91,7 +93,7 @@ class ActionZenEmptySodaCan: ActionContinuousBase
 			
 		SodaCan_ColorBase target_vessel = SodaCan_ColorBase.Cast(actionData.m_MainItem);
 		Param1<bool> play = new Param1<bool>(enable);
-		GetGame().RPCSingleParam(target_vessel, SoundTypeBottle.EMPTYING, play, true);
+		g_Game.RPCSingleParam(target_vessel, SoundTypeBottle.EMPTYING, play, true);
 		if (!enable)
 			comp.m_RPCStopAlreadySent = true;
 #endif

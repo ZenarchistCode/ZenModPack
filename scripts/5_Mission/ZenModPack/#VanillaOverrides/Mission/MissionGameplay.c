@@ -10,9 +10,6 @@ modded class MissionGameplay
     {
         super.OnInit();
 
-		//! LOAD CLIENT CONFIG 
-		GetZenModPackClientConfig();
-
 		//! AUTO RUN
         m_ZenAutoRunInterruptInputs = new array<string>;
         m_ZenAutoRunInterruptInputs.Insert("UAZenAutoRunToggle");
@@ -29,6 +26,14 @@ modded class MissionGameplay
 		m_ZenRadioWidget = new ZenRadioBadgeWidget;
 		m_ZenRadioTime = 0;
     }
+	
+	override void RegisterZenClientOptions()
+	{
+		super.RegisterZenClientOptions();
+		
+		ZenOptions.AddBoolSetting("ZEN", "ZenRadioBadge", "#STR_ZenGui_ShowRadioBadge", true, "#STR_ZenRadioSettings1");
+		ZenOptions.AddSetting("ZEN", "ZenAutoStack", "#STR_ZenGui_AutoStack0", { "#menu_disabled", "#STR_ZenGui_AutoStackSameDamage", "#STR_ZenGui_AutoStackAlways" }, 0, "#STR_ZenGui_AutoStack1");
+	}
 
 	override void OnUpdate(float timeslice)
 	{
@@ -77,16 +82,16 @@ modded class MissionGameplay
 
 	void UpdateZenRadioBadge(float timeslice)
 	{
-		if (!GetGame() || !m_ZenRadioWidget)
+		if (!g_Game || !m_ZenRadioWidget)
 			return;
 
-		if (!m_Hud || !GetZenModPackClientConfig().ShowRadioBadge)
+		if (!m_Hud || !ZenOptions.GetBool("ZEN.ZenRadioBadge", true))
 		{
 			m_ZenRadioWidget.HideAll();
 			return;
 		}
 
-		if (!GetGame().GetPlayer() || !GetGame().GetPlayer().IsAlive() || GetGame().GetPlayer().IsUnconscious())
+		if (!g_Game.GetPlayer() || !g_Game.GetPlayer().IsAlive() || g_Game.GetPlayer().IsUnconscious())
 		{
 			m_ZenRadioWidget.HideAll();
 			return;
@@ -98,7 +103,7 @@ modded class MissionGameplay
 			return;
 		}
 
-		if (GetGame().GetUIManager().GetMenu() != NULL && !GetGame().GetUIManager().FindMenu(MENU_INVENTORY) && !GetGame().GetUIManager().FindMenu(MENU_CHAT_INPUT))
+		if (g_Game.GetUIManager().GetMenu() != NULL && !g_Game.GetUIManager().FindMenu(MENU_INVENTORY) && !g_Game.GetUIManager().FindMenu(MENU_CHAT_INPUT))
 		{
 			m_ZenRadioWidget.HideAll();
 			return;
@@ -117,7 +122,7 @@ modded class MissionGameplay
 
 		m_ZenRadioTime = 0;
 
-		m_ZenRadio = Zen_GetRadio(GetGame().GetPlayer());
+		m_ZenRadio = Zen_GetRadio(g_Game.GetPlayer());
 		if (m_ZenRadio)
 		{
 			m_ZenRadioWidget.ShowIcon();
@@ -157,7 +162,7 @@ modded class MissionGameplay
 		if (!ZenModEnabled("ZenAutoRun"))
 			return;
 
-		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		PlayerBase player = PlayerBase.Cast(g_Game.GetPlayer());
         if (!player)
 			return;
 
@@ -213,7 +218,7 @@ modded class MissionGameplay
         }
 
         // Check for any menu other than inventory open (eg. map)
-        if (GetGame().GetUIManager().GetMenu() != NULL && GetGame().GetUIManager().FindMenu(MENU_INVENTORY) == NULL)
+        if (g_Game.GetUIManager().GetMenu() != NULL && g_Game.GetUIManager().FindMenu(MENU_INVENTORY) == NULL)
             return true;
 
         return false;
@@ -236,12 +241,12 @@ modded class MissionGameplay
 
     private int GetZenAutoRunUpdatedSpeed(PlayerBase player)
     {
-        if (!GetGame() || !player || !GetGame().GetUIManager())
+        if (!g_Game || !player || !g_Game.GetUIManager())
         {
             return DayZPlayerConstants.MOVEMENTIDX_IDLE;
         }
 
-        if (GetGame().IsInventoryOpen() || player.GetInputController().LimitsIsSprintDisabled() || player.GetStaminaHandler().GetStamina() <= 0)
+        if (g_Game.IsInventoryOpen() || player.GetInputController().LimitsIsSprintDisabled() || player.GetStaminaHandler().GetStamina() <= 0)
         {
             return DayZPlayerConstants.MOVEMENTIDX_RUN;
         }
@@ -273,7 +278,7 @@ modded class MissionGameplay
 
 	private void ZenAutoRunSync(bool isRunning, int movementIdx, int angle)
     {
-        PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+        PlayerBase player = PlayerBase.Cast(g_Game.GetPlayer());
 		if (!player)
 			return;
 
@@ -282,7 +287,7 @@ modded class MissionGameplay
         player.GetInputController().OverrideMovementAngle(isRunning, angle);
 
         auto params = new Param3<bool, int, int>(isRunning, movementIdx, angle);
-        GetGame().RPCSingleParam(player, ZenRPCs.AUTORUN, params, true);
+        g_Game.RPCSingleParam(player, ZenRPCs.AUTORUN, params, true);
     }
 
 	//! EAR PLUGS 
@@ -307,7 +312,7 @@ modded class MissionGameplay
 		}
 
 		// Player doesn't exist, died or went uncon. Reset ear plugs, stop here.
-		if (!GetGame().GetPlayer() || !GetGame().GetPlayer().IsAlive() || GetGame().GetPlayer().IsUnconscious())
+		if (!g_Game.GetPlayer() || !g_Game.GetPlayer().IsAlive() || g_Game.GetPlayer().IsUnconscious())
 		{
 			m_ZenEarPlugsWidget.HideAll();
 			m_ZenEarPlugsOn = false;
@@ -328,7 +333,7 @@ modded class MissionGameplay
 		}
 
 		// Hide ear plugs and don't allow ear plug input if a GUI menu is open.
-		if (GetGame().GetUIManager().GetMenu() != NULL) 
+		if (g_Game.GetUIManager().GetMenu() != NULL) 
 		{
 			if (m_ZenEarPlugsOn && !m_ZenHidEarPlugs)
 			{
@@ -350,19 +355,19 @@ modded class MissionGameplay
 		}
 
 		// Ear plugs toggle key
-		if (GetGame().GetInput().LocalPress("UAZenEarPlugsToggle"))
+		if (g_Game.GetInput().LocalPress("UAZenEarPlugsToggle"))
 		{
 			if (!m_ZenEarPlugsOn)
 			{
 				m_ZenEarPlugsOn = true;
-				GetGame().GetSoundScene().SetSoundVolume(m_ZenEarPlugsVolume / 100, 0.5); // Set volume to X% over X second delay.
+				g_Game.GetSoundScene().SetSoundVolume(m_ZenEarPlugsVolume / 100, 0.5); // Set volume to X% over X second delay.
 				m_ZenEarPlugsWidget.ShowIcon();
 				m_ZenEarPlugsWidget.SetVolume(m_ZenEarPlugsVolume);
 			}
 			else
 			{
 				m_ZenEarPlugsOn = false;
-				GetGame().GetSoundScene().SetSoundVolume(1, 0.5);
+				g_Game.GetSoundScene().SetSoundVolume(1, 0.5);
 				m_ZenEarPlugsWidget.HideIcon();
 			}
 		}
@@ -370,7 +375,7 @@ modded class MissionGameplay
 		// If ear plugs are on, check for increase/decrease in volume
 		if (m_ZenEarPlugsOn)
 		{
-			if (GetGame().GetInput().LocalPress("UAZenEarPlugsIncreaseVol")) // Increase volume key (+)
+			if (g_Game.GetInput().LocalPress("UAZenEarPlugsIncreaseVol")) // Increase volume key (+)
 			{
 				m_ZenEarPlugsVolume += 25;
 
@@ -379,11 +384,11 @@ modded class MissionGameplay
 					m_ZenEarPlugsVolume = 75;
 				}
 
-				GetGame().GetSoundScene().SetSoundVolume(m_ZenEarPlugsVolume / 100, 0.5);
+				g_Game.GetSoundScene().SetSoundVolume(m_ZenEarPlugsVolume / 100, 0.5);
 				m_ZenEarPlugsWidget.SetVolume(m_ZenEarPlugsVolume);
 			}
 
-			if (GetGame().GetInput().LocalPress("UAZenEarPlugsDecreaseVol")) // Decrease volume key (-)
+			if (g_Game.GetInput().LocalPress("UAZenEarPlugsDecreaseVol")) // Decrease volume key (-)
 			{
 				m_ZenEarPlugsVolume -= 25;
 
@@ -392,7 +397,7 @@ modded class MissionGameplay
 					m_ZenEarPlugsVolume = 0;
 				}
 
-				GetGame().GetSoundScene().SetSoundVolume(m_ZenEarPlugsVolume / 100, 0.5);
+				g_Game.GetSoundScene().SetSoundVolume(m_ZenEarPlugsVolume / 100, 0.5);
 				m_ZenEarPlugsWidget.SetVolume(m_ZenEarPlugsVolume);
 			}
 		}
@@ -415,13 +420,13 @@ modded class MissionGameplay
 			return;
 		}
 
-		if (!GetGame().GetPlayer() || !GetGame().GetPlayer().IsAlive() || GetGame().GetPlayer().IsUnconscious())
+		if (!g_Game.GetPlayer() || !g_Game.GetPlayer().IsAlive() || g_Game.GetPlayer().IsUnconscious())
 		{
 			brokenGlassesWidget.HideFX();
 			return;
 		}
 
-		if (GetGame().GetUIManager().GetMenu() != NULL && !GetGame().GetUIManager().FindMenu(MENU_INVENTORY) && !GetGame().GetUIManager().FindMenu(MENU_CHAT_INPUT))
+		if (g_Game.GetUIManager().GetMenu() != NULL && !g_Game.GetUIManager().FindMenu(MENU_INVENTORY) && !g_Game.GetUIManager().FindMenu(MENU_CHAT_INPUT))
 		{
 			brokenGlassesWidget.HideFX();
 			return;
@@ -436,7 +441,7 @@ modded class MissionGameplay
 	{
 		int damageLevel = -1;
 
-		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		PlayerBase player = PlayerBase.Cast(g_Game.GetPlayer());
 		if (!player)
 			return damageLevel;
 

@@ -67,4 +67,4 @@ class CraftZenCamoShelterKit extends RecipeBase
             rope.SetHealth(ingredients[1].GetHealth());
         }
     }
-};
+}

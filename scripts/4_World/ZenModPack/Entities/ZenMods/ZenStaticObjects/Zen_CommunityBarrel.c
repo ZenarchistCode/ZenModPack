@@ -4,7 +4,7 @@ class Zen_CommunityBarrel extends Barrel_ColorBase
 	{
 		super.DeferredInit();
 
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (GetOrientation() == "0 0 0")
@@ -45,7 +45,7 @@ class Zen_CommunityBarrel_Holes extends BarrelHoles_ColorBase
 	{
 		super.DeferredInit();
 
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		if (GetOrientation() == "0 0 0")
@@ -87,7 +87,7 @@ class Zen_CommunityBarrel_DebugPrinter extends Barrel_ColorBase
 	{
 		super.DeferredInit();
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			SetLifetime(3600); // to avoid them despawning when player leaves area
 			SetLifetimeMax(3600);

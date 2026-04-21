@@ -12,10 +12,6 @@ modded class Bottle_Base
 	{
 		super.SetActions();
 
-		//! FIRE FUEL
-		AddAction(ActionZenPourFuelOnFire);
-		AddAction(ActionZenPourFuelOnFirewood);
-
 		//! CATCH RAIN 
 		AddAction(ActionZenFillBottleRainBase);
 		AddAction(ActionZenFillRainGround);

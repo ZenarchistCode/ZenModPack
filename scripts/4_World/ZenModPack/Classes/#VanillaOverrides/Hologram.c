@@ -1,29 +1,5 @@
 modded class Hologram
 {
-    override void EvaluateCollision(ItemBase action_item = null)
-	{
-        if (!action_item)
-        {
-            super.EvaluateCollision(action_item);
-            return;
-        }
-
-		super.EvaluateCollision(action_item);
-	}
-
-    override void SetProjectionPosition(vector position)
-	{
-        //! KIT BOX
-        ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
-        if (zen_kit != NULL)
-        {
-            m_Projection.SetPosition(position + zen_kit.GetDeployPositionOffset());
-            return;
-        }
-
-		super.SetProjectionPosition( position );
-	}
-
     override string ProjectionBasedOnParent()
     {
         //! CAMO SHELTER
@@ -32,24 +8,6 @@ modded class Hologram
             Zen_CamoShelterKit camoShelterKit = Zen_CamoShelterKit.Cast(m_Parent);
             return camoShelterKit.GetHologram();
         }
-
-        //! CAR WORKBENCH 
-        Zen_CarWorkbenchKit kit = Zen_CarWorkbenchKit.Cast(m_Parent);
-		if (kit != NULL)
-			return kit.GetDeployedClassname();
-
-        //! SLEEPING BAGS 
-        if (m_Parent.IsKindOf("ZenSleepingBag_PackedBase"))
-        {
-            string newType = m_Parent.GetType();
-            newType.Replace("_Packed", "_Deployed");
-            return newType;
-        }
-
-        //! KIT BOX
-        ZenKitBoxBase zen_kit = ZenKitBoxBase.Cast(m_Parent);
-        if (zen_kit != NULL)
-            return zen_kit.GetDeployedClassname();
 
         return super.ProjectionBasedOnParent();
     }
@@ -63,7 +21,7 @@ modded class Hologram
             Zen_CamoShelterKit kit = Zen_CamoShelterKit.Cast(m_Parent);
 
             // Create shelter on the ground in location of hologram
-            Zen_ImprovisedShelter shelter = Zen_ImprovisedShelter.Cast(GetGame().CreateObjectEx("Zen_ImprovisedShelter", m_Projection.GetPosition(), ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
+            Zen_ImprovisedShelter shelter = Zen_ImprovisedShelter.Cast(g_Game.CreateObjectEx("Zen_ImprovisedShelter", m_Projection.GetPosition(), ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
 
             // Validate object existence
             if (!shelter)
@@ -90,23 +48,9 @@ modded class Hologram
         return super.PlaceEntity(entity_for_placing);
     }
 
-	override void RefreshVisual()
-    {
-        super.RefreshVisual();
-
-        if (!m_Parent)
-            return;
-
-        //! SHARED
-        if (m_Parent.ShouldZenHologram() && m_Player.IsPlacingLocal())
-        {
-            m_Parent.SetZenHologrammed(m_Projection != NULL);
-        }
-    }
-
     override bool IsBaseViable()
     {
-        if (!ZenModEnabled("ZenBasebuildingConfig") || GetGame().IsDedicatedServer())
+        if (!ZenModEnabled("ZenBasebuildingConfig") || g_Game.IsDedicatedServer())
             return super.IsBaseViable();
 
         if (!super.IsBaseViable())
@@ -128,7 +72,7 @@ modded class Hologram
         foreach (ZenBasebuildingLimits limitCfg : GetZenBasebuildingConfig().BasebuildingLimits)
         {
             nearest_objects.Clear();
-            GetGame().GetObjectsAtPosition3D(m_Projection.GetPosition(), limitCfg.MinSearchDistance, nearest_objects, NULL);
+            g_Game.GetObjectsAtPosition3D(m_Projection.GetPosition(), limitCfg.MinSearchDistance, nearest_objects, NULL);
 
             for (int i = 0; i < nearest_objects.Count(); i++)
             {
@@ -182,7 +126,7 @@ modded class Hologram
             float dist = GetZenBasebuildingConfig().CantPlaceInsideOfSelf.GetElement(i);
 
             array<Object> nearest_objects = new array<Object>;
-            GetGame().GetObjectsAtPosition3D(m_Projection.GetPosition(), dist, nearest_objects, NULL);
+            g_Game.GetObjectsAtPosition3D(m_Projection.GetPosition(), dist, nearest_objects, NULL);
 
             foreach (Object obj : nearest_objects)
             {
@@ -200,20 +144,5 @@ modded class Hologram
         }
 
         return true;
-    }
-
-	void ~Hologram()
-    {
-        if (!GetGame())
-            return;
-
-        if (!m_Parent)
-            return;
-
-        //! SHARED
-        if (m_Parent.IsZenHologrammed())
-        {
-            m_Parent.SetZenHologrammed(false);
-        }
     }
 }

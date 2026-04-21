@@ -39,7 +39,8 @@ modded class BaseBuildingBase
 				{
 					float damage = damageResult.GetDamage(dmgZone, "Health");
 					string identity = pb.GetIdentity().GetId() + " / " + pb.GetCachedID();
-					ZenModLogger.Log(pb.GetCachedName() + " (" + identity + ") @ " + pb.GetPosition() + " involved in raid @ " + GetPosition() + " Object=" + GetType() + " ammo=" + ammo + " dmg=" + dmgZone + "/" + damage, "baseraid");
+					
+					ZenLogger.Log("PVP", "base_raid", pb.GetCachedName() + " (" + identity + ") @ " + pb.GetPosition() + " involved in raid @ " + GetPosition() + " Object=" + GetType() + " ammo=" + ammo + " dmg=" + dmgZone + "/" + damage);
 				}
 			}
 

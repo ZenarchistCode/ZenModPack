@@ -1,45 +1,56 @@
-class ZenContaminatedZoneLootConfig
-{
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZenDynamicContaminatedZoneLootConfig.json";
+ref ZenContaminatedZoneLootConfig g_ZenContaminatedZoneLootConfig;
 
-	// Config data
-	int ItemLifetime = -1;
+static ZenContaminatedZoneLootConfig GetZenContaminatedZoneLootConfig()
+{
+	if (!g_ZenContaminatedZoneLootConfig) GetZenConfigRegister().RegisterConfig(ZenContaminatedZoneLootConfig);
+	return g_ZenContaminatedZoneLootConfig;
+}
+
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload();
+		RegisterType(ZenContaminatedZoneLootConfig);
+	}
+}
+
+class ZenContaminatedZoneLootConfig: ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenContaminatedZoneLootConfig = this;
+	}
+	
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenContaminatedZoneLootConfig>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenContaminatedZoneLootConfig>.SaveFile(path, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
+	int ItemLifetime;
 	ref array<ref ZenContaminatedZoneLootSpawn> LootSpawns;
 
 	// Load config file or create default file if config doesn't exsit
-	void Load()
+	override void SetDefaults()
 	{
-		if (!GetGame().IsDedicatedServer())
-			return;
-
-		if (FileExist(zenModFolder + zenConfigName))
-		{
-			// If config exists, load file
-			JsonFileLoader<ZenContaminatedZoneLootConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-			return;
-		}
-
-		// Default config (vanilla loot)
+		ItemLifetime = -1;
 		LootSpawns = new array<ref ZenContaminatedZoneLootSpawn>;
 		LootSpawns.Insert(new ZenContaminatedZoneLootSpawn("Grenade_ChemGas", 2, 5, 5, 15, 1.0));
-
-		// Save config
-		Save();
-	}
-
-	// Save config
-	void Save()
-	{
-		if (!FileExist(zenModFolder))
-		{
-			// If config folder doesn't exist, create it.
-			MakeDirectory(zenModFolder);
-		}
-
-		// Save JSON config
-		JsonFileLoader<ZenContaminatedZoneLootConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
 	}
 }
 
@@ -65,17 +76,4 @@ class ZenContaminatedZoneLootSpawn
 		ItemQuantityMinimum = 1.0;
 		ItemQuantityMaximum = 1.0;
 	}
-}
-
-ref ZenContaminatedZoneLootConfig m_ZenContaminatedZoneLootConfig;
-
-static ZenContaminatedZoneLootConfig GetZenContaminatedZoneLootConfig()
-{
-	if (!m_ZenContaminatedZoneLootConfig)
-	{
-		m_ZenContaminatedZoneLootConfig = new ZenContaminatedZoneLootConfig;
-		m_ZenContaminatedZoneLootConfig.Load();
-	}
-
-	return m_ZenContaminatedZoneLootConfig;
 }

@@ -65,6 +65,11 @@ class OpenCanStoneRecipe extends RecipeBase
 
 	override bool CanDo(ItemBase ingredients[], PlayerBase player)//final check for recipe's validity
 	{
+		#ifdef ZenModPack
+		if (!ZenModEnabled("ZenOpenCansRock"))
+			return false;
+		#endif
+		
 		if (player.IsPlacingLocal())
 			return false;
 		

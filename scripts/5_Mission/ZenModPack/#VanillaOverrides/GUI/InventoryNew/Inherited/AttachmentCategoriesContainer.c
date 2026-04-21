@@ -1,9 +1,8 @@
 /*
-Vanilla handling of GUIInventoryAttachmentsProps is more cooked than I was 15 years ago when I used to 
-smoke bongs all day. Whoever wrote this vanilla code was probably high at the time themselves.
+Vanilla handling of GUIInventoryAttachmentsProps is not very robust.
 
-Had to re-write it so that it doesn't crash log spam nullpointers and cause all kinds of in-game GUI
-issues when there's too many attachment categories added through .cpp's GUIInventoryAttachmentsProps.
+I had to re-write it so that it doesn't spam crash log nullpointers and cause all kinds of in-game GUI issues 
+when there's too many attachment categories added through .cpp's GUIInventoryAttachmentsProps.
 
 This is the error I'd get whenever an object with cargo had an incompatible number of attachment categories:
 
@@ -155,7 +154,7 @@ modded class AttachmentCategoriesContainer: CollapsibleContainer
 
 			string config = config_path_attachment_categories + " " + attachment_category + " name";
 			string name;
-			GetGame().ConfigGetText(config, name);
+			g_Game.ConfigGetText(config, name);
 			icon.SetSlotDisplayName(name);
 
 			AttachmentCategoriesRow ar = new AttachmentCategoriesRow(this, -1);

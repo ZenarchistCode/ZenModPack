@@ -1,58 +1,82 @@
-class ZenCampSitesConfig
+ref ZenCampSitesConfig g_ZenCampSitesConfig;
+
+static ZenCampSitesConfig GetZenCampSitesConfig()
 {
-	// Static constant config version (is NOT saved to json)
-	static const string CONFIG_VERSION = "1";
+	if (!g_ZenCampSitesConfig) GetZenConfigRegister().RegisterConfig(ZenCampSitesConfig);
+	return g_ZenCampSitesConfig;
+}
 
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZenCampSitesConfig.json";
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload();
+		RegisterType(ZenCampSitesConfig);
+	}
+}
 
-	// Main config data
-	string ConfigVersion = "";
-	bool LogsOn = false;
-	bool DebugOn = false;
-	int SpawnSecs = 2700; // 2700 = 45 mins
-	int PlayerDetectZone = 300; // 300m
-	int MinHealthPercent = 33;
-	int MaxHealthPercent = 100;
-	float MinFireDistance = 3;
-	float MaxFireDistance = 4;
-	int MinZombies = 0;
-	int MaxZombies = 2;
-	ref array<string> ZombieTypes = new array<string>;
-	ref array<ref PredefinedLootSpawn> PredefinedLoot = new array<ref PredefinedLootSpawn>;
-	ref array<ref CampSite> CampSites = new array<ref CampSite>;
+class ZenCampSitesConfig: ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenCampSitesConfig = this;
+	}
+	
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenCampSitesConfig>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenCampSitesConfig>.SaveFile(path, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
+	bool LogsOn;
+	bool DebugOn;
+	int SpawnSecs;
+	int PlayerDetectZone;
+	int MinHealthPercent;
+	int MaxHealthPercent;
+	float MinFireDistance;
+	float MaxFireDistance;
+	int MinZombies;
+	int MaxZombies;
+	ref array<string> ZombieTypes;
+	ref array<ref PredefinedLootSpawn> PredefinedLoot;
+	ref array<ref CampSite> CampSites;
 
 	// Load config file or create default file if config doesn't exsit
-	void Load()
+	override void SetDefaults()
 	{
-		if (FileExist(zenModFolder + zenConfigName))
-		{ 
-			// If config exists, load file
-			JsonFileLoader<ZenCampSitesConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-
-			// If version mismatch, backup old version of json before replacing it
-			if (ConfigVersion != CONFIG_VERSION)
-			{
-				JsonFileLoader<ZenCampSitesConfig>.JsonSaveFile(zenModFolder + zenConfigName + "_old", this);
-			}
-			else
-			{
-				// Config exists and version matches, stop here.
-				return;
-			}
-		}
-
-		ZombieTypes.Clear();
-		PredefinedLoot.Clear();
-		CampSites.Clear();
-
+		ZombieTypes = new array<string>;
+		PredefinedLoot = new array<ref PredefinedLootSpawn>;
+		CampSites = new array<ref CampSite>;
+		
+		LogsOn = false;
+		DebugOn = false;
+		SpawnSecs = 2700; // 2700 = 45 mins
+		PlayerDetectZone = 300; // 300m
+		MinHealthPercent = 33;
+		MaxHealthPercent = 100;
+		MinFireDistance = 3;
+		MaxFireDistance = 4;
+		MinZombies = 0;
+		MaxZombies = 2;
+		
 		// Get map name
-		string mapName = GetGame().GetWorldName();
+		string mapName = g_Game.GetWorldName();
 		mapName.ToLower();
-
-		// Set new config version
-		ConfigVersion = CONFIG_VERSION;
 
 		// Insert zombies
 		ZombieTypes.Insert("ZmbM_HunterOld_Autumn");
@@ -117,13 +141,30 @@ class ZenCampSitesConfig
 		}
 
 		PredefinedLoot.Insert(huntingLoot);
-
-		//! TODO: Add chernarus default config
-
+		
 		// Insert default camps based on map
 		if (mapName == "chernarusplus")
 		{
-
+			CampSites.Insert(new CampSite("ForestCamp", "8775.136719 141.857910 2908.579346", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "5326.476563 112.912178 3270.299805", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "1426.977905 10.655345 2544.770020", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "3946.322510 302.540527 4120.529785", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "6558.730469 256.604401 4444.684570", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "8940.428711 341.976624 4380.004395", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "10851.521484 276.028809 4129.451172", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "12323.814453 252.127396 4546.844727", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "11876.224609 242.351501 7474.438477", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "11477.991211 255.950272 8426.592773", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "12972.019531 31.243059 10891.533203", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "13154.230469 55.497616 11611.232422", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "13108.923828 119.622932 12438.246094", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "14805.938477 69.861931 13618.959961", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "14709.144531 154.945251 14400.768555", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "15206.536133 215.260895 15152.231445", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "13870.393555 174.959396 14704.408203", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "14148.518555 183.886978 15253.755859", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "11513.152344 335.710541 11302.207031", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("ForestCamp", "8314.142578 432.024963 7490.988281", "ZenCamps_ShelterLeather"));
 		} else
 		if (mapName == "enoch")
 		{
@@ -195,7 +236,25 @@ class ZenCampSitesConfig
 			CampSites.Insert(new CampSite("RiverHuntingCamp", "11275.781250 176.523697 11151.088867", "ZenCamps_ShelterLeather"));
 		}
 		else
-		if (GetGame().GetWorldName() == "namalsk")
+		if (g_Game.GetWorldName() == "sakhal")
+		{
+			CampSites.Insert(new CampSite("Camp", "13359.043945 209.024536 9073.543945", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "13845.658203 87.436523 9138.023438", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "13766.846680 165.758148 10022.158203", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "13828.410156 200.639114 11016.509766", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "13078.871094 106.047981 11279.164063", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "12394.852539 296.944611 10953.863281", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "12851.319336 57.697971 11963.924805", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "11152.327148 186.682846 12557.059570", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "10613.609375 170.491867 12674.092773", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "8968.478516 200.720032 13164.210938", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "7880.041992 205.396423 12782.224609", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "7028.190430 108.695831 12234.153320", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "6168.223633 92.952812 11606.327148", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "8176.450195 304.931427 11678.898438", "ZenCamps_ShelterLeather"));
+			CampSites.Insert(new CampSite("Camp", "11876.830078 398.374390 11263.222656", "ZenCamps_ShelterLeather"));
+		} else
+		if (g_Game.GetWorldName() == "namalsk")
 		{
 			CampSites.Insert(new CampSite("Camp", "4643.138184 147.140015 7466.028320", "ZenCamps_ShelterLeather"));
 			CampSites.Insert(new CampSite("Camp", "5322.959473 2.254150 10249.319336", "ZenCamps_ShelterLeather"));
@@ -261,21 +320,6 @@ class ZenCampSitesConfig
 			CampSites.Insert(new CampSite("Camp", "5883.850098 34.093315 9053.133789", "ZenCamps_ShelterLeather"));
 			CampSites.Insert(new CampSite("Camp", "6916.572266 104.595352 7318.408203", "ZenCamps_ShelterLeather"));
 		}
-
-		// Save config
-		Save();
-	}
-
-	// Save config
-	void Save()
-	{
-		if (!FileExist(zenModFolder))
-		{	// If config folder doesn't exist, create it.
-			MakeDirectory(zenModFolder);
-		}
-
-		// Save JSON config
-		JsonFileLoader<ZenCampSitesConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
 	}
 
 	// Shuffle the loot arrays so loot isn't always spawned in the same config order to get better dispersion/randomness
@@ -326,7 +370,7 @@ class CampSite
 		TentType = p_tentname;
 		PredefinedLoot = p_loot;
 	}
-};
+}
 
 // Define a loot spawn item
 class LootSpawn
@@ -343,7 +387,7 @@ class LootSpawn
 		this.MaxQuantity = p_max_quantity;
 		this.SpawnChance = p_chance;
 	}
-};
+}
 
 // Define default loot config
 class PredefinedLootSpawn
@@ -357,25 +401,4 @@ class PredefinedLootSpawn
 	{
 		ConfigName = name;
 	}
-};
-
-// Save config data
-ref ZenCampSitesConfig m_ZenCampSitesConfig;
-
-// Helper function to return Config data storage object
-static ZenCampSitesConfig GetZenCampSitesConfig()
-{
-	if (!m_ZenCampSitesConfig)
-	{
-		Print("[ZenCampSitesConfig] Init for map=" + GetGame().GetWorldName());
-		m_ZenCampSitesConfig = new ZenCampSitesConfig;
-
-		// Only load JSON config on the server
-		if (GetGame().IsDedicatedServer())
-		{
-			m_ZenCampSitesConfig.Load();
-		}
-	}
-
-	return m_ZenCampSitesConfig;
-};
+}

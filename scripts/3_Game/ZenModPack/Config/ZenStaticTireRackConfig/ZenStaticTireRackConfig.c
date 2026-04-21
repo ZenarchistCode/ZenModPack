@@ -1,22 +1,54 @@
-class ZenStaticTireRackConfig
+ref ZenStaticTireRackConfig g_ZenStaticTireRackConfig;
+
+static ZenStaticTireRackConfig GetZenStaticTireRackConfig()
 {
-	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZenStaticTireRackConfig.json";
+	if (!g_ZenStaticTireRackConfig) GetZenConfigRegister().RegisterConfig(ZenStaticTireRackConfig);
+	return g_ZenStaticTireRackConfig;
+}
 
-	int MaxAttachmentCount = 4;
-	ref map<string, float> AttachmentTypes = new map<string, float>;
-
-	void Load()
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
 	{
-		if (!GetGame().IsDedicatedServer())
-			return;
+		super.RegisterPreload();
+		RegisterType(ZenStaticTireRackConfig);
+	}
+}
 
-		if (FileExist(zenModFolder + zenConfigName))
-		{
-			JsonFileLoader<ZenStaticTireRackConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-			return;
-		}
+class ZenStaticTireRackConfig: ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenStaticTireRackConfig = this;
+	}
+	
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenStaticTireRackConfig>.LoadFile(path, this, err);
+	}
 
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenStaticTireRackConfig>.SaveFile(path, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
+	int MaxAttachmentCount;
+	ref map<string, float> AttachmentTypes;
+
+	override void SetDefaults()
+	{
+		MaxAttachmentCount = 4;
+		AttachmentTypes = new map<string, float>;
 		AttachmentTypes.Insert("HatchbackWheel", 0.1);
 		AttachmentTypes.Insert("CivSedanWheel", 0.1);
 		AttachmentTypes.Insert("Hatchback_02_Wheel", 0.1);
@@ -26,37 +58,5 @@ class ZenStaticTireRackConfig
 		AttachmentTypes.Insert("LugWrench", 0.1);
 		AttachmentTypes.Insert("CanisterGasoline", 0.01);
 		AttachmentTypes.Insert("TireRepairKit", 0.1);
-
-		Save();
 	}
-
-	void Save()
-	{
-		// If config folder doesn't exist, create it.
-		if (!FileExist("$profile:\\Zenarchist"))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		if (!FileExist(zenModFolder))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		JsonFileLoader<ZenStaticTireRackConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
-	}
-}
-
-ref ZenStaticTireRackConfig m_ZenStaticTireRackConfig;
-
-static ZenStaticTireRackConfig GetZenStaticTireRackConfig()
-{
-	if (!m_ZenStaticTireRackConfig)
-	{
-		ZMPrint("[ZenStaticTireRackConfig] Init");
-		m_ZenStaticTireRackConfig = new ZenStaticTireRackConfig;
-		m_ZenStaticTireRackConfig.Load();
-	}
-
-	return m_ZenStaticTireRackConfig;
 }

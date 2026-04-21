@@ -16,14 +16,14 @@ modded class TransmitterBase
     {
         super.OnRPC(sender, rpc_type, ctx);
 
-        if (GetGame().IsClient() && rpc_type == RPC_PLAY_ZEN_RADIO_SOUNDSET)
+        if (g_Game.IsClient() && rpc_type == RPC_PLAY_ZEN_RADIO_SOUNDSET)
         {
             Param1<string> data;
             if (ctx.Read(data))
             {
                 string soundset_name = data.param1;
 
-				if (soundset_name == "" || !GetGame().ConfigIsExisting("CfgSoundSets " + soundset_name))
+				if (soundset_name == "" || !g_Game.ConfigIsExisting("CfgSoundSets " + soundset_name))
 				{
 					Error("[ZenModPack] Tried to play non-existing soundset: '" + soundset_name + "'");
 					return;
@@ -44,8 +44,8 @@ modded class TransmitterBase
 						EffectSound staticEffect = ZenPlaySoundOnThisItem("tuneRadio_SoundSet", false);
 
 						// Schedule end of static loop
-						GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(StopZenStaticSoundLoop);
-						GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StopZenStaticSoundLoop, voiceAudioDuration * 1000, false, true);
+						g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(StopZenStaticSoundLoop);
+						g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(StopZenStaticSoundLoop, voiceAudioDuration * 1000, false, true);
 						//Print("[ZenModPack] " + GetType() + " - playing soundset " + soundset_name + " - stopping static in " + voiceAudioDuration + " seconds.");
 					}
 				}
@@ -71,7 +71,7 @@ modded class TransmitterBase
 	{
 		super.OnWorkStart();
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			ZenRadioPlugin plugin = ZenRadioPlugin.Cast(GetPlugin(ZenRadioPlugin));
 			if (plugin)
@@ -107,7 +107,7 @@ modded class TransmitterBase
 
 	void ZenRadioStopSounds(bool remove = true, bool playStaticSound = true)
 	{
-		if (GetGame().IsClient())
+		if (g_Game.IsClient())
 		{
 			if (m_ZenVoiceEffect)
 			{
@@ -117,7 +117,7 @@ modded class TransmitterBase
 			StopZenStaticSoundLoop(playStaticSound);
 		}
 
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 		{
 			if (remove)
 			{

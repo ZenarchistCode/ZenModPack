@@ -10,7 +10,7 @@ class Zen_InteriorLight extends Inventory_Base
 	{
 		super.EEKilled(killer);
 
-		if (GetGame().IsClient() || !GetGame().IsMultiplayer())
+		if (g_Game.IsClient() || !g_Game.IsMultiplayer())
 		{
 			Particle.Play(ParticleList.IMPACT_METAL_RICOCHET, GetPosition() + Vector(0, -0.3, 0)).SetOrientation("0.0 180.0 0.0");
 			Particle.Play(ParticleList.IMPACT_GLASS_EXIT, GetPosition() + Vector(0, -0.3, 0)).SetOrientation("0.0 180.0 0.0");
@@ -49,4 +49,11 @@ class Zen_InteriorLight extends Inventory_Base
 	{
         return false;
     }
+
+	override void AfterStoreLoad()
+	{
+		super.AfterStoreLoad();
+
+		DeleteSafe();
+	}
 }

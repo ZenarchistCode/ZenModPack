@@ -4,7 +4,7 @@ class Zen_TireRack_Static extends Zen_TireRack
     {
         super.DeferredInit();
 
-        if (!GetGame().IsDedicatedServer())
+        if (!g_Game.IsDedicatedServer())
             return;
 
         SetAllowDamage(false);
@@ -14,13 +14,13 @@ class Zen_TireRack_Static extends Zen_TireRack
 
         // Get objects within 1 meter of the spawn
         array<Object> objectsNearby = new array<Object>;
-        GetGame().GetObjectsAtPosition3D(GetPosition(), 0.1, objectsNearby, null);
+        g_Game.GetObjectsAtPosition3D(GetPosition(), 0.1, objectsNearby, null);
         
         foreach (Object z_obj : objectsNearby)
         {
             if (z_obj != this && z_obj.GetType() == GetType())
             {
-                GetGame().ObjectDelete(z_obj);
+                g_Game.ObjectDelete(z_obj);
                 Error("Duplicate " + GetType() + " found @ " + GetPosition() + " - this item should only be spawned ONCE! Comment out any spawn code and leave it uncommented until next server wipe.");
             }
         }
@@ -42,14 +42,17 @@ class Zen_TireRack_Static extends Zen_TireRack
             if (Math.RandomFloat01() > chance)
                 continue;
 
-            ItemBase wheel = ItemBase.Cast(GetInventory().CreateAttachment(className));
-            if (!wheel)
+            ItemBase newAttachment = ItemBase.Cast(GetInventory().CreateAttachment(className));
+            if (!newAttachment && !ZenFunctions.GetItemOnSlotByType(this, className))
             {
                 Error("[Zen_TireRack_Static] Failed to spawn item class - ensure it exists: " + className);
                 continue;
             }
 
-            wheel.SetHealth(wheel.GetMaxHealth() * (Math.RandomFloat01() + 0.01));
+            if (newAttachment)
+            {
+                newAttachment.SetHealth(newAttachment.GetMaxHealth() * (Math.RandomFloat01() + 0.01));
+            }
         }
     }
 

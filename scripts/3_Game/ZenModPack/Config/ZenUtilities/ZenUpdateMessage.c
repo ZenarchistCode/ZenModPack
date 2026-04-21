@@ -1,115 +1,134 @@
-class ZenUpdateMessage
+ref ZenUpdateMessage g_ZenUpdateMessage;
+
+static ZenUpdateMessage GetZenUpdateMessage()
 {
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
-	private const static string zenConfigName = "UpdateMessage.json";
+	if (!g_ZenUpdateMessage) GetZenConfigRegister().RegisterConfig(ZenUpdateMessage);
+	return g_ZenUpdateMessage;
+}
 
-	string UPDATE_VERSION = "-1";
-	string UPDATE_PREFIX = "Lastest Update: ";
-	string UPDATE_SUFFIX = " | For more information: HardcoreDayZ.com/changes";
-	string UPDATE_MESSAGE = "";
-	string LOGIN_MESSAGE = "";
-	bool PopupInGame = false;
-	bool NotifySurvivorOfNameChange = true;
-	string SurvivorNotification = "Please change your name to a custom name in the DayZ Launcher (tick Parameters -> Profile name)";
-
-	// Load config file or create default file if config doesn't exist
-	void Load()
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
 	{
-		if (!GetGame().IsDedicatedServer())
-			return;
-
-		if (FileExist(zenModFolder + zenConfigName))
-		{ 
-			// If config exists, load file
-			JsonFileLoader<ZenUpdateMessage>.JsonLoadFile(zenModFolder + zenConfigName, this);
-		}
-
-		// Config file does not exist, create default file
-		Save();
-	}
-
-	// Save config
-	void Save()
-	{
-		// If config folder doesn't exist, create it.
-		if (!FileExist("$profile:\\Zenarchist"))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		if (!FileExist(zenModFolder))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		autoptr ZenUpdateMessage OldFile;
-		JsonFileLoader<ZenUpdateMessage>.JsonLoadFile(zenModFolder + zenConfigName, OldFile);
-
-		// Save JSON config
-		if (OldFile)
-		{
-			UPDATE_VERSION = OldFile.UPDATE_VERSION;
-			UPDATE_MESSAGE = OldFile.UPDATE_MESSAGE; // This allows editing the message and ID between 'saves'
-		}
-
-		JsonFileLoader<ZenUpdateMessage>.JsonSaveFile(zenModFolder + zenConfigName, this);
+		super.RegisterPreload(); 
+		RegisterType(ZenUpdateMessage);
 	}
 }
 
-class ZenUpdateMessagePersistence
+class ZenUpdateMessage : ZenConfigBase
 {
-	// Config location
-	private const static string zenModFolder = "$mission:storage_%1\\zenarchist\\";
-	private const static string zenConfigName = "ZenUpdateMessages.json";
-
-	string GetDbFolder()
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
 	{
-		return string.Format(zenModFolder, GetGame().ServerConfigGetInt("instanceId"));
+		g_ZenUpdateMessage = this;
 	}
 
+	override string 	GetFolderName()       		{ return "Utilities"; }
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenUpdateMessage>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenUpdateMessage>.SaveFile(path, this, err);
+	}
+
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
+	string UPDATE_VERSION;
+	string UPDATE_PREFIX;
+	string UPDATE_SUFFIX;
+	string UPDATE_MESSAGE;
+	string LOGIN_MESSAGE;
+	bool PopupInGame;
+	bool NotifySurvivorOfNameChange;
+	string SurvivorNotification;
+	
+	override void SetDefaults()
+	{
+		UPDATE_VERSION = "-1";
+		UPDATE_PREFIX = "Lastest Update: ";
+		UPDATE_SUFFIX = " | For more information: HardcoreDayZ.com/changes";
+		UPDATE_MESSAGE = "";
+		LOGIN_MESSAGE = "";
+		PopupInGame = false;
+		NotifySurvivorOfNameChange = true;
+		SurvivorNotification = "Please change your name to a custom name in the DayZ Launcher (tick Parameters -> Profile name)";
+	}
+}
+
+ref ZenUpdateMessagePersistence g_ZenUpdateMessagePersistence;
+
+static ZenUpdateMessagePersistence GetZenUpdateMessagePersistence()
+{
+	if (!g_ZenUpdateMessagePersistence) GetZenConfigRegister().RegisterConfig(ZenUpdateMessagePersistence);
+	return g_ZenUpdateMessagePersistence;
+}
+
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload(); 
+		RegisterType(ZenUpdateMessagePersistence);
+	}
+}
+
+class ZenUpdateMessagePersistence : ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenUpdateMessagePersistence = this;
+	}
+
+	override string 	GetRootFolder() 			{ return ZenConstants.GetDbFolder(); }
+	override string    	GetCurrentVersion()   		{ return "1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenUpdateMessagePersistence>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenUpdateMessagePersistence>.SaveFile(path, this, err);
+	}
+	
 	ref map<string, ref ZenPlayerUpdateMsg> PlayerUpdates = new map<string, ref ZenPlayerUpdateMsg>;
 
 	// Load config file or create default file if config doesn't exist
-	void Load()
+	override void AfterLoad()
 	{
-		if (!GetGame().IsDedicatedServer())
-			return;
+		super.AfterLoad();
+		
+		int oldCount = PlayerUpdates.Count();
 
-		if (FileExist(GetDbFolder() + zenConfigName))
-		{ 
-			// If config exists, load file
-			JsonFileLoader<ZenUpdateMessagePersistence>.JsonLoadFile(GetDbFolder() + zenConfigName, this);
-
-			int oldCount = PlayerUpdates.Count();
-
-			// Scan player data and remove any that are out of date by 1 month or longer 
-			int timestamp = CF_Date.Now().GetTimestamp();
-			for (int i = PlayerUpdates.Count(); i >= 0; i--)
-			{
-				ZenPlayerUpdateMsg msg = PlayerUpdates.GetElement(i);
-				if (msg != NULL)
-				{
-					if (timestamp - msg.lastLoginTimestamp >= 604800) // Keep records for 1 week
-						PlayerUpdates.Remove(PlayerUpdates.GetKey(i));
-				}
-			}
-
-			ZMPrint("[ZenUpdateMessagePersistence] Loaded " + PlayerUpdates.Count() + "/" + oldCount + " player update messages data from " + GetDbFolder() + zenConfigName);
-		}
-	}
-
-	// Save config
-	void Save()
-	{
-		ZMPrint("[ZenUpdateMessagePersistence] Saving " + PlayerUpdates.Count() + " player update messages data to " + GetDbFolder() + zenConfigName);
-
-		if (!FileExist(GetDbFolder()))
+		// Scan player data and remove any that are out of date by 1 month or longer 
+		int timestamp = CF_Date.Now().GetTimestamp();
+		for (int i = PlayerUpdates.Count(); i >= 0; i--)
 		{
-			MakeDirectory(GetDbFolder());
+			ZenPlayerUpdateMsg msg = PlayerUpdates.GetElement(i);
+			if (msg != NULL)
+			{
+				if (timestamp - msg.lastLoginTimestamp >= 604800) // Keep records for 1 week
+					PlayerUpdates.Remove(PlayerUpdates.GetKey(i));
+			}
 		}
 
-		JsonFileLoader<ZenUpdateMessagePersistence>.JsonSaveFile(GetDbFolder() + zenConfigName, this);
+		ZMPrint("[ZenUpdateMessagePersistence] Loaded " + PlayerUpdates.Count() + "/" + oldCount + " player update messages from DB file.");
 	}
 }
 
@@ -125,30 +144,4 @@ class ZenPlayerUpdateMsg
 		updateID = p_updateID;
 		lastLoginTimestamp = p_lastLoginTimestamp;
 	}
-}
-
-static ref ZenUpdateMessage m_ZenUpdateMessage;
-
-static ZenUpdateMessage GetZenUpdateMessage()
-{
-	if (!m_ZenUpdateMessage)
-	{
-		m_ZenUpdateMessage = new ZenUpdateMessage;
-		m_ZenUpdateMessage.Load();
-	}
-
-	return m_ZenUpdateMessage;
-}
-
-static ref ZenUpdateMessagePersistence m_ZenUpdateMessagePersistence;
-
-static ZenUpdateMessagePersistence GetZenUpdateMessagePersistence()
-{
-	if (!m_ZenUpdateMessagePersistence)
-	{
-		m_ZenUpdateMessagePersistence = new ZenUpdateMessagePersistence;
-		m_ZenUpdateMessagePersistence.Load();
-	}
-
-	return m_ZenUpdateMessagePersistence;
 }

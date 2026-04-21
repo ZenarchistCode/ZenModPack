@@ -36,7 +36,7 @@ class ActionZenDumpNearbyObjects: ActionContinuousBase
 	override void OnFinishProgressServer(ActionData action_data)
 	{
 		array<Object> objectsOnMap = new array<Object>;
-		GetGame().GetObjectsAtPosition3D(action_data.m_Player.GetPosition(), 5, objectsOnMap, null);
+		g_Game.GetObjectsAtPosition3D(action_data.m_Player.GetPosition(), 5, objectsOnMap, null);
 
 		// Cycle through all map objects
 		for (int x = 0; x < objectsOnMap.Count(); x++)

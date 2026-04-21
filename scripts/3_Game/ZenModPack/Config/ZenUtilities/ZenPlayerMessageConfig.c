@@ -1,54 +1,59 @@
-class ZenPlayerMessageConfig
+ref ZenPlayerMessageConfig g_ZenPlayerMessageConfig;
+
+static ZenPlayerMessageConfig GetZenPlayerMessageConfig()
 {
-	// Config location
-	private const static string zenModFolder = "$profile:\\Zenarchist\\Utilities\\";
-	private const static string zenConfigName = "PlayerMessageConfig.json";
+	if (!g_ZenPlayerMessageConfig) GetZenConfigRegister().RegisterConfig(ZenPlayerMessageConfig);
+	return g_ZenPlayerMessageConfig;
+}
 
-	ref array<ref ZenPlayerMessage> PlayerReplies = new array<ref ZenPlayerMessage>;
-
-	// Load config file or create default file if config doesn't exsit
-	void Load()
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
 	{
-		if (!GetGame().IsDedicatedServer())
-			return;
+		super.RegisterPreload();
+		RegisterType(ZenPlayerMessageConfig);
+	}
+}
 
-		if (FileExist(zenModFolder + zenConfigName))
-		{ 
-			// If config exists, load file
-			JsonFileLoader<ZenPlayerMessageConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-		}
-		else // Config file does not exist, create default file
-		{
-			SetupDefaultCfg();
-		}
-
-		Save();
+class ZenPlayerMessageConfig : ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenPlayerMessageConfig = this;
+	}
+	
+	override string 	GetFolderName()       		{ return "Utilities"; }
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool 		IsServerOnlyConfig()		{ return true; }
+	
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenPlayerMessageConfig>.LoadFile(path, this, err);
 	}
 
-	// Set up default config 
-	void SetupDefaultCfg()
+	override bool WriteJson(string path, out string err)
 	{
+		return JsonFileLoader<ZenPlayerMessageConfig>.SaveFile(path, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
+	ref array<ref ZenPlayerMessage> PlayerReplies;
+
+	// Set up default config 
+	override void SetDefaults()
+	{
+		PlayerReplies = new array<ref ZenPlayerMessage>;
 		ZenPlayerMessage exampleReply = new ZenPlayerMessage("bohemiaUID", "exampleMsg");
 		exampleReply.SpawnItems.Insert("exampleItem1(quantity)");
 		exampleReply.SpawnItems.Insert("exampleItem2(quantity/health)");
 		exampleReply.SpawnItems.Insert("Matchbox(23/1)");
 		PlayerReplies.Insert(exampleReply);
-	}
-
-	// Save config
-	void Save()
-	{
-		if (!FileExist("$profile:\\Zenarchist"))
-			MakeDirectory("$profile:\\Zenarchist");
-
-		if (!FileExist("$profile:\\Zenarchist\\Utilities"))
-			MakeDirectory("$profile:\\Zenarchist\\Utilities");
-
-		if (!FileExist(zenModFolder))
-			MakeDirectory(zenModFolder);
-
-		// Save JSON config
-		JsonFileLoader<ZenPlayerMessageConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
 	}
 
 	// Removes the given report from the list and re-saves config
@@ -94,33 +99,20 @@ class ZenPlayerMessageConfig
 
 		return NULL;
 	}
-};
+}
 
 class ZenPlayerMessage
 {
 	string BohemiaID = ""; // Player Bohemia ID
 	string Message = ""; // Reply message
 	ref array<string> SpawnItems = new array<string>;
+	vector TeleportLocation = vector.Zero;
 
 	void ZenPlayerMessage(string p_BohemiaID, string p_message)
 	{
 		BohemiaID = p_BohemiaID;
 		Message = p_message;
 		SpawnItems.Clear();
+		TeleportLocation = vector.Zero;
 	}
-};
-
-// Save config data
-static ref ZenPlayerMessageConfig m_ZenPlayerMessageConfig;
-
-// Helper function to return Config data storage object
-static ZenPlayerMessageConfig GetZenPlayerMessageConfig()
-{
-	if (!m_ZenPlayerMessageConfig)
-	{
-		m_ZenPlayerMessageConfig = new ZenPlayerMessageConfig;
-		m_ZenPlayerMessageConfig.Load();
-	}
-
-	return m_ZenPlayerMessageConfig;
-};
+}

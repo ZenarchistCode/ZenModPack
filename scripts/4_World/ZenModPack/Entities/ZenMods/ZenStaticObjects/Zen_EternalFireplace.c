@@ -15,7 +15,7 @@ class Zen_EternalFireplace extends Fireplace
 	{
 		super.DeferredInit();
 
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		PlaceOnSurface();
@@ -43,14 +43,14 @@ class Zen_EternalFireplace extends Fireplace
 
 	void ~Zen_EternalFireplace()
 	{
-		if (GetGame() && m_ClutterCutter)
-			GetGame().ObjectDelete(m_ClutterCutter);
+		if (g_Game && m_ClutterCutter)
+			g_Game.ObjectDelete(m_ClutterCutter);
 	}
 
 	// Relight / unstick and keep minimal fuel+kindling present
 	void EnsureZenLit()
 	{
-		if (!GetGame().IsDedicatedServer())
+		if (!g_Game.IsDedicatedServer())
 			return;
 
 		// Kindling always present
@@ -84,12 +84,6 @@ class Zen_EternalFireplace extends Fireplace
 		}
 		if (stick && stick.GetQuantity() < 10)
 			stick.SetQuantity(10);
-
-		if (!FindAttachmentBySlotName("ZenFuel"))
-		{
-			GetInventory().SetSlotLock(InventorySlots.GetSlotIdFromString("ZenFuel"), false);
-			GetInventory().CreateAttachment("Zen_FireFuel");
-		}
 
 		RebuildZenConsumables();
 		SetWet(0);
@@ -192,13 +186,6 @@ class Zen_EternalFireplace extends Fireplace
 			bark = ItemBase.Cast(GetInventory().CreateAttachment("Bark_Oak"));
 		}
 
-		ItemBase fuel = ItemBase.Cast(FindAttachmentBySlotName("ZenFuel"));
-		if (!fuel)
-		{
-			GetInventory().SetSlotLock(InventorySlots.GetSlotIdFromString("ZenFuel"), false);
-			fuel = ItemBase.Cast(GetInventory().CreateAttachment("Zen_FireFuel"));
-		}
-
 		// Quantities
 		if (wood)  wood.SetQuantity(6);
 		if (bark)  bark.SetQuantity(8);
@@ -206,7 +193,7 @@ class Zen_EternalFireplace extends Fireplace
 
 		// Clutter cutter
 		if (!m_ClutterCutter)
-			m_ClutterCutter = GetGame().CreateObjectEx("ClutterCutterFireplace", GetPosition(), ECE_PLACE_ON_SURFACE);
+			m_ClutterCutter = g_Game.CreateObjectEx("ClutterCutterFireplace", GetPosition(), ECE_PLACE_ON_SURFACE);
 
 		RebuildZenConsumables();
 		SetWet(0);

@@ -84,7 +84,7 @@ class ActionPackZenCamoShelter : ActionContinuousBase
 			return;
 
 		// Spawn kit
-		Zen_CamoShelterKit kit = Zen_CamoShelterKit.Cast(GetGame().CreateObjectEx("Zen_CamoShelterKit", shelter.GetPosition(), ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
+		Zen_CamoShelterKit kit = Zen_CamoShelterKit.Cast(g_Game.CreateObjectEx("Zen_CamoShelterKit", shelter.GetPosition(), ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS));
 
 		// Create attachments
 		EntityAI rope = EntityAI.Cast(kit.GetInventory().CreateInInventory("Rope"));
@@ -102,6 +102,6 @@ class ActionPackZenCamoShelter : ActionContinuousBase
 			stick.SetHealth(Math.RandomIntInclusive(0, 1));
 
 		// Delete shelter and drop kit
-		GetGame().ObjectDelete(shelter);
+		g_Game.ObjectDelete(shelter);
 	}
 };

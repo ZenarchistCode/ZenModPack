@@ -1,8 +1,60 @@
-class ZenBasebuildingConfig
-{
-	private const static string zenModFolder = "$profile:\\Zenarchist\\";
-	private const static string zenConfigName = "ZenBasebuildingConfig.json";
+ref ZenBasebuildingConfig g_ZenBasebuildingConfig;
 
+static ZenBasebuildingConfig GetZenBasebuildingConfig()
+{
+	if (!g_ZenBasebuildingConfig) GetZenConfigRegister().RegisterConfig(ZenBasebuildingConfig);
+	return g_ZenBasebuildingConfig;
+}
+
+modded class ZenConfigRegister
+{
+	override void RegisterPreload()
+	{
+		super.RegisterPreload();
+		RegisterType(ZenBasebuildingConfig);
+	}
+}
+
+class ZenBasebuildingConfig: ZenConfigBase
+{
+	// -------------------------
+	// CONFIG SETTINGS
+	// -------------------------
+	override void OnRegistered()
+	{
+		g_ZenBasebuildingConfig = this;
+	}
+	
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override bool		ShouldLoadOnServer() 		{ return true; }
+	override bool		ShouldSyncToClient() 		
+	{
+		return ZenModEnabled("ZenBasebuildingConfig"); 
+	}
+
+	override bool ReadJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenBasebuildingConfig>.LoadFile(path, this, err);
+	}
+
+	override bool WriteJson(string path, out string err)
+	{
+		return JsonFileLoader<ZenBasebuildingConfig>.SaveFile(path, this, err);
+	}
+	
+	override protected bool BuildSyncPayload(out string payload, out string err)
+	{
+		return JsonFileLoader<ZenBasebuildingConfig>.MakeData(this, payload, err, false);
+	}
+
+	override protected bool ApplySyncPayload(string payload, out string err)
+	{
+		return JsonFileLoader<ZenBasebuildingConfig>.LoadData(payload, this, err);
+	}
+	
+	// -------------------------
+	// CONFIG VARS
+	// -------------------------
 	bool DebugOn;
 	bool PackTentsAnywhere;
 	ref map<string, float> CantPlaceInsideOfSelf;
@@ -12,22 +64,7 @@ class ZenBasebuildingConfig
 	ref array<ref ZenNoBuildZone> NoBuildZones;
 	ref array<string> Whitelist;
 
-	void Load()
-	{
-		if (!GetGame().IsDedicatedServer())
-			return;
-
-		SetDefaultValues();
-
-		if (FileExist(zenModFolder + zenConfigName))
-		{
-			JsonFileLoader<ZenBasebuildingConfig>.JsonLoadFile(zenModFolder + zenConfigName, this);
-		}
-
-		Save();
-	}
-
-	void SetDefaultValues()
+	override void SetDefaults()
 	{
 		DebugOn = false;
 
@@ -55,27 +92,6 @@ class ZenBasebuildingConfig
 		Whitelist.Insert("Zen_ChessBoard");
 		Whitelist.Insert("Zen_BoomBox");
 		Whitelist.Insert("Zen_TireRack");
-	}
-
-	void Save()
-	{
-		// If config folder doesn't exist, create it.
-		if (!FileExist("$profile:\\Zenarchist"))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		if (!FileExist(zenModFolder))
-		{
-			MakeDirectory(zenModFolder);
-		}
-
-		JsonFileLoader<ZenBasebuildingConfig>.JsonSaveFile(zenModFolder + zenConfigName, this);
-	}
-
-	void SetConfig(ZenBasebuildingConfig cfg)
-	{
-		m_ZenBasebuildingConfig = cfg;
 	}
 }
 
@@ -112,18 +128,4 @@ class ZenNoBuildZone
 		MinimumDistance = dist;
 		IgnoreHeight = ignoreHeight;
 	}
-}
-
-ref ZenBasebuildingConfig m_ZenBasebuildingConfig;
-
-static ZenBasebuildingConfig GetZenBasebuildingConfig()
-{
-	if (!m_ZenBasebuildingConfig)
-	{
-		ZMPrint("[ZenBasebuildingConfig] Init");
-		m_ZenBasebuildingConfig = new ZenBasebuildingConfig;
-		m_ZenBasebuildingConfig.Load();
-	}
-
-	return m_ZenBasebuildingConfig;
 }

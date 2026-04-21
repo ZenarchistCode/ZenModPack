@@ -17,7 +17,7 @@ class ZenCampZombieTrigger extends ManTrigger
 		{
 			string zedType = GetZenCampSitesConfig().ZombieTypes.GetRandomElement();
 			spawnPos = ZenFunctions.GetRandomPointInCircle(GetPosition(), 1, 6);
-			ZombieBase zed = ZombieBase.Cast(GetGame().CreateObjectEx(zedType, spawnPos, ECE_PLACE_ON_SURFACE|ECE_INITAI|ECE_EQUIP_ATTACHMENTS));
+			ZombieBase zed = ZombieBase.Cast(g_Game.CreateObjectEx(zedType, spawnPos, ECE_PLACE_ON_SURFACE|ECE_INITAI|ECE_EQUIP_ATTACHMENTS));
 			if (zed)
 			{
 				zed.SetLifetimeMax(GetZenCampSitesConfig().SpawnSecs);
@@ -30,6 +30,6 @@ class ZenCampZombieTrigger extends ManTrigger
 		}
 
 		// Delete this trigger
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeleteSafe, 1, false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeleteSafe, 1, false);
 	}
 }

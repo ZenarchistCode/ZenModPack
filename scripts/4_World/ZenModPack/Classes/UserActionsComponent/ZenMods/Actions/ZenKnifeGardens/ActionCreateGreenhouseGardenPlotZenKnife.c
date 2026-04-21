@@ -49,7 +49,7 @@ class ActionCreateGreenhouseGardenPlotZenKnife extends ActionCreateGreenhouseGar
 			ref array<CargoBase> proxy_cargos = new array<CargoBase>;
 			vector pos = target_object.GetPosition();
 			pos[1] = pos[1] - 1; //Lower by one meter for check if plot already present
-			GetGame().GetObjectsAtPosition3D( pos, 2, nearest_objects, proxy_cargos );
+			g_Game.GetObjectsAtPosition3D( pos, 2, nearest_objects, proxy_cargos );
 	
 			for ( int i = 0; i < nearest_objects.Count(); ++i )
 			{

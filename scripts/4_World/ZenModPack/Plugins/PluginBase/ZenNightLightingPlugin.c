@@ -26,7 +26,7 @@ class ZenNightLightingPlugin extends PluginBase
         // Update sync to all clients
         array<Man> players();
         PlayerBase pb;
-        GetGame().GetPlayers(players);
+        g_Game.GetPlayers(players);
         Param1<int> lightID = new Param1<int>(GetLightingConfigID());
 
         for (int i = 0; i < players.Count(); i++)
@@ -34,7 +34,7 @@ class ZenNightLightingPlugin extends PluginBase
             pb = PlayerBase.Cast(players.Get(i));
             if (pb && pb.GetZenNightConfigID() != GetLightingConfigID())
             {
-                GetGame().RPCSingleParam(pb, ERPCs.RPC_SEND_LIGHTING_SETUP, lightID, true, pb.GetIdentity());
+                g_Game.RPCSingleParam(pb, ERPCs.RPC_SEND_LIGHTING_SETUP, lightID, true, pb.GetIdentity());
                 pb.SetZenNightConfigID(GetLightingConfigID());
             }
         }
@@ -53,7 +53,7 @@ class ZenNightLightingPlugin extends PluginBase
 
         m_DeltaTime = 0;
 
-        m_IsNight = GetGame().GetWorld().IsNight();
+        m_IsNight = g_Game.GetWorld().IsNight();
 
         if (m_IsNight && (GetZenNightConfig().UpdateOvercastLightingAnyTime || m_IsNight != m_IsNightLast))
         {
@@ -66,12 +66,12 @@ class ZenNightLightingPlugin extends PluginBase
     void ProcessNightTimeShift()
     {
         // Only go dark if overcast exceeds threshold
-        if (GetGame().GetWeather().GetOvercast().GetActual() > GetZenNightConfig().OvercastToTriggerDarkNights)
+        if (g_Game.GetWeather().GetOvercast().GetActual() > GetZenNightConfig().OvercastToTriggerDarkNights)
         {
             if (GetLightingConfigID() != GetZenNightConfig().DarkNightLightingConfigID)
             {
                 SetLightingConfigID(GetZenNightConfig().DarkNightLightingConfigID); // dark
-                ZMPrint("[ZenNightLightingPlugin] Overcast " + GetGame().GetWeather().GetOvercast().GetActual() + " > " + GetZenNightConfig().OvercastToTriggerDarkNights + ", setting light config id=" + GetLightingConfigID());
+                ZMPrint("[ZenNightLightingPlugin] Overcast " + g_Game.GetWeather().GetOvercast().GetActual() + " > " + GetZenNightConfig().OvercastToTriggerDarkNights + ", setting light config id=" + GetLightingConfigID());
             }
         }
         else 
@@ -79,7 +79,7 @@ class ZenNightLightingPlugin extends PluginBase
             if (GetLightingConfigID() != GetZenNightConfig().BrightNightLightingConfigID)
             {
                 SetLightingConfigID(GetZenNightConfig().BrightNightLightingConfigID); // light
-                ZMPrint("[ZenNightLightingPlugin] Overcast " + GetGame().GetWeather().GetOvercast().GetActual() + " < " + GetZenNightConfig().OvercastToTriggerDarkNights + ", setting light config id=" + GetLightingConfigID());
+                ZMPrint("[ZenNightLightingPlugin] Overcast " + g_Game.GetWeather().GetOvercast().GetActual() + " < " + GetZenNightConfig().OvercastToTriggerDarkNights + ", setting light config id=" + GetLightingConfigID());
             }
         }
     }

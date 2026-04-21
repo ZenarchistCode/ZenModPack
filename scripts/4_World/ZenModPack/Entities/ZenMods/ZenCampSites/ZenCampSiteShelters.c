@@ -4,11 +4,11 @@ class ZenCamps_ShelterStick extends ShelterStick
     {
         super.EEInit();
 
-        if (GetGame().IsDedicatedServer()) 
+        if (g_Game.IsDedicatedServer()) 
         {
 			SetAllowDamage(false);
 
-#ifdef GAMELABS 
+#ifdef GameLabs
 			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterStick", "heart", this);
 			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
@@ -21,7 +21,7 @@ class ZenCamps_ShelterStick extends ShelterStick
 		RemoveAction(ActionDeconstructShelter);
 	}
 
-#ifdef GAMELABS 
+#ifdef GameLabs
 	ref _Event _registeredInstanceZenGL;
 
 	override void EEDelete(EntityAI parent)
@@ -53,11 +53,11 @@ class ZenCamps_ShelterFabric extends ShelterStick
     {
         super.EEInit();
 
-        if (GetGame().IsDedicatedServer()) 
+        if (g_Game.IsDedicatedServer()) 
         {
 			SetAllowDamage(false);
 
-#ifdef GAMELABS 
+#ifdef GameLabs
 			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterFabric", "heart", this);
 			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
@@ -70,7 +70,7 @@ class ZenCamps_ShelterFabric extends ShelterStick
 		RemoveAction(ActionDeconstructShelter);
 	}
 
-#ifdef GAMELABS 
+#ifdef GameLabs
 	ref _Event _registeredInstanceZenGL;
 
 	override void EEDelete(EntityAI parent)
@@ -102,11 +102,11 @@ class ZenCamps_ShelterLeather extends ShelterStick
     {
         super.EEInit();
 
-        if (GetGame().IsDedicatedServer()) 
+        if (g_Game.IsDedicatedServer()) 
         {
 			SetAllowDamage(false);
 
-#ifdef GAMELABS 
+#ifdef GameLabs
 			_registeredInstanceZenGL = new _Event("ZenCamps_ShelterLeather", "heart", this);
 			GetGameLabs().RegisterEvent(_registeredInstanceZenGL);
 #endif
@@ -119,7 +119,7 @@ class ZenCamps_ShelterLeather extends ShelterStick
 		RemoveAction(ActionDeconstructShelter);
 	}
 
-#ifdef GAMELABS 
+#ifdef GameLabs
 	ref _Event _registeredInstanceZenGL;
 
 	override void EEDelete(EntityAI parent)

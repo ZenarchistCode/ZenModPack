@@ -3,82 +3,191 @@ modded class MissionBase
 	//! SHARED 
 	void MissionBase()
 	{
-        ZenGameFunctions.PrintMods();
-        
-		#ifdef SERVER
 		// SERVER RECEIVE RPC
 
 		//! UTILITIES
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingeplayerExecutionType.Server);
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", this, SingeplayerExecutionType.Server);
-		#else
-		// CLIENT RECEIVE RPC
-
-		//! GENERAL CONFIG
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenModPackConfig", this, SingeplayerExecutionType.Client);
-
-		//! ARTILLERY
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveAirstrikeData", this, SingeplayerExecutionType.Client);
-
-		//! UTILITIES 
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", this, SingeplayerExecutionType.Client);
-		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenNotificationConfigOnClient", this, SingeplayerExecutionType.Client);
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenServerDiversionConfigOnClient", this, SingeplayerExecutionType.Client);
-
-        //! BASEBUILDING CONFIG 
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenBasebuildingCfgClient", this, SingeplayerExecutionType.Client);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingleplayerExecutionType.Server);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", this, SingleplayerExecutionType.Server);
+	}
+	
+	// NOTE: This is triggered in 3_game. It passes the ZenConfigBase param which was received on the CLIENT to 3_game's script invoker.
+	// The script invoker then triggers any class which "subscribes" to this trigger via ZenConfigRegister.AfterSyncReceived.Insert()
+	// OnZenCfgSynced() is triggered by ZenModCore - and any mods which override this function can perform post-received cfg adjustments.
+	override void OnZenCfgSynced(notnull ZenConfigBase cfg)
+	{
+		super.OnZenCfgSynced(cfg);
+		
+		#ifdef SERVER 
+		return;
 		#endif
+		
+		// Fishing junk config received!
+		// Note: Fishing is one of the only actions in-game where the Random Number Generator is sync'ed to the server, so they both
+		// generate the same catch dicerolls etc -> so if there is a mismatch between client/server you get bugged AF when fishing if you
+		// catch an item on the client which doesn't match the server's chances. So once cfg is received -> remap it on client too.
+		ZenFishingConfig fishCfg = ZenFishingConfig.Cast(cfg);
+	    if (!fishCfg)
+	        return;
+
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(DeferredApplyZenFishingYieldClient);
+    	g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeferredApplyZenFishingYieldClient, 0, false);
+		//ZenModInitWorldYield(g_Game.GetMission().GetWorldData().GetCatchYieldBank());
+	}
+	
+	// Make sure game is ready before applying fishing yield config
+	void DeferredApplyZenFishingYieldClient()
+	{
+		ZenFishingConfig cfg = GetZenFishingConfig();
+		if (!cfg || !cfg.HasReceivedSync())
+		{
+		    g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeferredApplyZenFishingYieldClient, 100, false);
+		    return;
+		}
+		
+	    Mission mission = g_Game.GetMission();
+	    if (!mission)
+	    {
+	        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeferredApplyZenFishingYieldClient, 100, false);
+	        return;
+	    }
+	
+	    WorldData worldData = mission.GetWorldData();
+	    if (!worldData)
+	    {
+	        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeferredApplyZenFishingYieldClient, 100, false);
+	        return;
+	    }
+	
+	    CatchYieldBank bank = worldData.GetCatchYieldBank();
+	    if (!bank)
+	    {
+	        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DeferredApplyZenFishingYieldClient, 100, false);
+	        return;
+	    }
+	
+		ZMPrint("[ZenModPack] DeferredApplyZenFishingYieldClient::ZenModInitWorldYield()");
+	    ZenModInitWorldYield(bank);
 	}
 
-    /*
-	//!!!!!! TODO: FIX THIS! It needs to be sync'ed to client or the player bugs out sometimes due to the fact the fishing action simulates on both sides and the server-side junk doesn't match client-side.
+	// Server sets it junk yields here - client sets it once received from server ^
 	override void InitWorldYieldDataDefaults(CatchYieldBank bank)
 	{
         super.InitWorldYieldDataDefaults(bank);
 
+		// Client remaps fish yields upon receiving config from the server - only the server needs to do it here.
         if (!g_Game.IsDedicatedServer())
             return;
-
-        if (!ZenModEnabled("ZenFishingJunk"))
-            return;
-
-        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenModInitWorldYieldExtraJunk);
-        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenModInitWorldYieldExtraJunk, 34, false, bank);
+		
+		if (!ZenModEnabled("ZenFishingConfig")) 
+			return; // If this is disabled, the config will also not sync, so client never fires this code either.
+		
+		// Call my injection after a brief delay to allow vanilla and other mods to interact with the yieldbank first.
+        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ZenModInitWorldYield);
+        g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(ZenModInitWorldYield, 34, false, bank);
 	}
-	*/
-
-    void ZenModInitWorldYieldExtraJunk(CatchYieldBank bank)
-    {
-        if (!bank)
-            return;
-
-        GetZenFishingJunkConfig();
-
-        Print("[ZenModPack] Fish junk - total yield count BEFORE=" + bank.GetYieldsMap().Count());
-
-        for (int i = bank.GetYieldsMap().Count(); i >= 0; i--)
-        {
-            if (YieldItemJunk.Cast(bank.GetYieldsMap().GetElement(i)) != null)
-            {
-                Print("[ZenModPack] Fish junk: Removing " + bank.GetYieldsMap().GetElement(i).GetType());
-                bank.GetYieldsMap().RemoveElement(i);
-            }
-        }
-
-        foreach (string itemName, int itemWeight : GetZenFishingJunkConfig().FishingJunk)
-        {
-            bank.RegisterYieldItem(new YieldItemJunk(itemWeight, itemName));
-            Print("[ZenModPack] Fish junk: Adding " + itemName);
-        }
-
-        foreach (string itemName2, int itemWeight2 : GetZenFishingJunkConfig().FishingJunkEmpty)
-        {
-            bank.RegisterYieldItem(new YieldItemJunkEmpty(itemWeight2, itemName2));
-            Print("[ZenModPack] Fish junk: Adding " + itemName2);
-        }
-
-        Print("[ZenModPack] Fish junk - total yield count AFTER=" + bank.GetYieldsMap().Count());
-    }
+	
+	void ZenModInitWorldYield(CatchYieldBank bank)
+	{
+		if (!bank) 
+			return;
+	
+		ZenFishingConfig cfg = GetZenFishingConfig();
+	
+		// Build a fast lookup of types we override (fish + junk)
+		ref map<string, bool> overrideTypes = new map<string, bool>;
+	
+		// junk keys
+		foreach (string jk, int jw : cfg.FishingJunk) 
+		{      
+			overrideTypes.Set(jk, true); 
+		}
+		
+		foreach (string ek, int ew : cfg.FishingJunkEmpty) 
+		{
+			overrideTypes.Set(ek, true);
+		}
+	
+		// fish keys
+		foreach (ZenFishingFishEntry fe : cfg.Fish)
+		{
+			if (fe && fe.Type != "")
+			{
+				overrideTypes.Set(fe.Type, true);
+			}
+		}
+		
+		//==================================================================================
+	
+		// Step 1) Remove *any* existing yield whose spawn type matches ours (vanilla or modded)
+		for (int i = bank.GetYieldsMap().Count() - 1; i >= 0; i--)
+		{
+			YieldItemBase yi = bank.GetYieldsMap().GetElement(i);
+			if (!yi) 
+				continue;
+	
+			// YieldItemBase.GetType() returns m_Type (spawn class), not script classname 
+			if (overrideTypes.Contains(yi.GetType()))
+			{
+				bank.GetYieldsMap().RemoveElement(i);
+			}
+		}
+	
+		// Step 2) Re-register ours in deterministic order (sorting avoids any map-order weirdness)
+		TStringArray keys;
+		int weight;
+	
+		// junk
+		keys = cfg.FishingJunk.GetKeyArray();
+		keys.Sort();
+		foreach (string k1 : keys)
+		{
+			weight = cfg.FishingJunk.Get(k1);
+			if (weight <= 0)
+				continue;
+			
+			//Print("[ZenModPack] Registering fishing junk: " + k1 + "=" + weight);
+			bank.RegisterYieldItem(new YieldItemJunk(weight, k1));
+		}
+	
+		// empty junk
+		keys = cfg.FishingJunkEmpty.GetKeyArray();
+		keys.Sort();
+		foreach (string k2 : keys)
+		{
+			weight = cfg.FishingJunkEmpty.Get(k2);
+			if (weight <= 0)
+				continue;
+			
+			//Print("[ZenModPack] Registering empty fishing junk: " + k2 + "=" + weight);
+			bank.RegisterYieldItem(new YieldItemJunkEmpty(weight, k2));
+		}
+	
+		// fish
+		// sort by Type for deterministic registration order
+		map<string, ref ZenFishingFishEntry> fishByType = new map<string, ref ZenFishingFishEntry>;
+		foreach (ZenFishingFishEntry e : cfg.Fish)
+		{
+			if (e && e.Type != "")
+				fishByType.Set(e.Type, e); // last wins if duplicates
+		}
+	
+		keys = fishByType.GetKeyArray();
+		keys.Sort();
+	
+		foreach (string ft : keys)
+		{
+			ZenFishingFishEntry entry = fishByType.Get(ft);
+			if (!entry) 
+				continue;
+	
+			// allow "disable" by weight <= 0 (still removes duplicates, but won't add ours)
+			if (entry.Weight <= 0) 
+				continue;
+	
+			//Print("[ZenModPack] Registering fish: " + entry.Type + "=" + entry.Weight);
+			bank.RegisterYieldItem(new ZenYieldItemFishConfigurable(entry.Weight, entry, cfg.DefaultFishHourlyCycleCoefs, cfg.DefaultFishQualityBase));
+		}
+	}
 
 	override UIScriptedMenu CreateScriptedMenu(int id)
     {
@@ -94,134 +203,22 @@ modded class MissionBase
                     menu = new ZenAdminMessageGUI;
                     break;
                 }
-
-				//! SPLIT GUI
-                case ZenMenus.SPLIT_GUI:
-                {
-                    menu = new ZenSplitItemUI;
-                    break;
-                }
             }
         }
 
         return menu;
     }
 
-	//! ARTILLERY
-	private ref EffectSound m_ZenArtySound;
-
-	// SERVER->CLIENT RPCS /////////////////////////////////////////////////////////////////////////////
-	void RPC_ReceiveAirstrikeData(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-	{
-		Param1<vector> data;
-		if (!ctx.Read(data))
-		{
-			Error("[ZenModPack] RPC_ReceiveAirstrikeData: sync data read error");
-			return;
-		}
-
-		vector soundPosition = data.param1;
-
-		if (soundPosition)
-		{
-			m_ZenArtySound = SEffectManager.PlaySound("Artillery_Distant_Barrage_SoundSet", soundPosition, 0.1, 0.1);
-			m_ZenArtySound.SetAutodestroy(true);
-		}
-	}
-
-	//! GENERAL CONFIG
-	void RPC_ReceiveZenModPackConfig(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-	{
-		Param2<map<string, bool>, map<string, bool>> data;
-		if (!ctx.Read(data))
-		{
-			Error("[ZenModPack] RPC_ReceiveZenModPackConfig: sync data read error");
-			return;
-		}
-
-        int i;
-
-		GetZenModPackConfig().ModEnabled.Clear();
-		for (i = 0; i < data.param1.Count(); i++)
-		{
-			GetZenModPackConfig().ModEnabled.Insert(data.param1.GetKey(i), data.param1.GetElement(i));
-		}
-
-        GetZenModPackConfig().PersistentModEnabled.Clear();
-		for (i = 0; i < data.param2.Count(); i++)
-		{
-			GetZenModPackConfig().PersistentModEnabled.Insert(data.param2.GetKey(i), data.param2.GetElement(i));
-		}
-
-        GetZenModPackClientConfig().BetterChatFont = ZenModEnabled("ZenBetterChatFont");
-        GetZenModPackClientConfig().ImmersiveLogin = ZenModEnabled("ZenImmersiveLogin");
-        GetZenModPackClientConfig().MagObfuscation = ZenModEnabled("ZenMagObfuscation");
-        GetZenModPackClientConfig().Save();
-
-        AfterZenModPackConfigReceived();
-	}
-
     void AfterZenModPackConfigReceived()
     {
     }
 
-    //! BASEBUILDING CONFIG 
-	void RPC_ReceiveZenBasebuildingCfgClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        Param1<ref ZenBasebuildingConfig> data;
-        if (!ctx.Read(data))
-        {
-            Error("[ZenMod] Error sync'ing server-side data to client - RPC_ReceiveZenBasebuildingCfgClient");
-            return;
-        }
-
-        GetZenBasebuildingConfig(); // Create config class before setting its client values
-		GetZenBasebuildingConfig().SetConfig(data.param1);
-    }
-
 	//! UTILITIES 
-
-	// (Server -> Client, runs on client)
-    void RPC_ReceiveZenNotificationConfigOnClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
-    {
-        if (type == CallType.Client && !GetGame().IsDedicatedServer())
-        {
-            Param1<ZenNotificationsConfig> data;
-
-            // If data fails to read, stop here.
-            if (!ctx.Read(data) || !data.param1)
-            {
-                Error("IMPORTANT ERROR: RPC_ReceiveZenNotificationConfigOnClient failed to be read on client! Please tell Zenarchist he fucked up!");
-                return;
-            }
-
-            // Data received - sync to client config
-            Chat.EnableServerNotifications = data.param1.EnableServerNotifications;
-            Chat.ServerMessage = data.param1.ServerMessage;
-            Chat.ServerIcon = data.param1.ServerIcon;
-			
-			if (!NotificationUI.ZenKeywords)
-			{
-				NotificationUI.ZenKeywords = new array<ref ZenNotification>;
-			}
-            else 
-            {
-                NotificationUI.ZenKeywords.Clear();
-            }
-			
-            foreach (ZenNotification n : data.param1.Keywords)
-			{
-                NotificationUI.ZenKeywords.Insert(n);
-			}
-			
-            Chat.HasReceivedServerConfig = true;
-        }
-    }
 
 	// Client -> server :: confirm that the player has clicked OK and read the admin message
 	void RPC_SendZenPlayerMessageConfirmRead(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
-        if (type == CallType.Server && GetGame().IsDedicatedServer())
+        if (type == CallType.Server && g_Game.IsDedicatedServer())
         {
             Param1<bool> data;
             if (!ctx.Read(data))
@@ -240,7 +237,7 @@ modded class MissionBase
 					return;
 				}
 
-                ZenModLogger.Log("Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your admin message.");
+                ZMPrint("[ZenUtilities] Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your admin message.");
                 player.SpawnZenAdminMessageItems();
             }
         }
@@ -249,7 +246,7 @@ modded class MissionBase
     // Client -> server :: confirm that the player has clicked OK and read the admin update message
     void RPC_SendZenPlayerUpdateMessageConfirmRead(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
-        if (type == CallType.Server && GetGame().IsDedicatedServer())
+        if (type == CallType.Server && g_Game.IsDedicatedServer())
         {
             Param1<bool> data;
             if (!ctx.Read(data))
@@ -268,7 +265,7 @@ modded class MissionBase
                     return;
                 }
 
-                ZenModLogger.Log("Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your update message.");
+                ZMPrint("[ZenUtilities] Player " + player.GetCachedName() + " (" + player.GetCachedID() + ") has confirmed they read your update message.");
                 player.MarkReadZenUpdateMessage();
             }
         }
@@ -286,7 +283,7 @@ modded class MissionBase
                 return;
             }
 			
-			MissionGameplay mission = MissionGameplay.Cast(GetGame().GetMission());
+			MissionGameplay mission = MissionGameplay.Cast(g_Game.GetMission());
 			if (mission)
 			{
 				mission.SHOW_ZEN_ADMIN_DIALOG = true;
@@ -299,7 +296,7 @@ modded class MissionBase
     //! SERVER DIVERSION
     void RPC_ReceiveZenServerDiversionConfigOnClient(CallType type, ParamsReadContext ctx, PlayerIdentity sender, Object target)
     {
-        if (type != CallType.Client || !GetGame().IsClient())
+        if (type != CallType.Client || !g_Game.IsClient())
             return;
 
         Param3<string, int, string> data;
@@ -312,11 +309,11 @@ modded class MissionBase
 
         string currentServerIP;
         int port;
-        GetGame().GetHostAddress(currentServerIP, port);
+        g_Game.GetHostAddress(currentServerIP, port);
 
         if (currentServerIP != GetZenServerDiversionConfig().ServerIP)
         {
-            GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(GetGame().DisconnectSessionForce);
+            g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Call(g_Game.DisconnectSessionForce);
         }
     }
 }

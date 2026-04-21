@@ -1,3 +1,4 @@
+/*
 class ZenModPackClientConfig
 {
 	// Config location
@@ -18,7 +19,7 @@ class ZenModPackClientConfig
 	void Load()
 	{
 		// Only load on client
-		if (GetGame().IsDedicatedServer())
+		if (g_Game.IsDedicatedServer())
 			return;
 
 		string serverPath;
@@ -75,3 +76,4 @@ static ZenModPackClientConfig GetZenModPackClientConfig()
 
 	return m_ZenModPackClientConfig;
 };
+*/

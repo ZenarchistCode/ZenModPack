@@ -4,7 +4,7 @@ modded class CarHud
 	{
 		super.RefreshVehicleHud(timeslice);
 
-		Mission mission = GetGame().GetMission();
+		Mission mission = g_Game.GetMission();
 		IngameHud hud = IngameHud.Cast(mission.GetHud());
 
 		if (hud && hud.GetHudVisibility().IsContextFlagActive(EHudContextFlags.INVENTORY_OPEN))

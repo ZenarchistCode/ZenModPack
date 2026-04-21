@@ -1,3 +1,4 @@
+/*
 modded class OptionsMenu
 {
 	protected int m_ZenModPackTabIndex;
@@ -54,3 +55,4 @@ modded class OptionsMenu
 		return false;
 	}
 }
+*/

@@ -23,7 +23,7 @@ class ZenBrokenGlassesWidget extends Managed
 
 	void ZenBrokenGlassesWidget()
 	{
-		m_layout = GetGame().GetWorkspace().CreateWidgets(MOD_DIRECTORY + "brokenglasses.layout");
+		m_layout = g_Game.GetWorkspace().CreateWidgets(MOD_DIRECTORY + "brokenglasses.layout");
 
 		m_glass1 = ImageWidget.Cast(m_layout.FindAnyWidget("brokenglass1"));
 		m_glass2 = ImageWidget.Cast(m_layout.FindAnyWidget("brokenglass2"));
