@@ -1,12 +1,12 @@
 modded class AlarmClock_ColorBase
 {
 	//! TIME BOMB
-	override bool CanDisplayAttachmentSlot(string slot_name)
+	override bool CanDisplayAttachmentSlot(int slot_id)
 	{
-		if (slot_name == "VestGrenadeA")
+		if (slot_id == InventorySlots.GetSlotIdFromString("VestGrenadeA"))
 			return ZenModEnabled("ZenTimeBomb");
 
-		return super.CanDisplayAttachmentSlot(slot_name);
+		return super.CanDisplayAttachmentSlot(slot_id);
 	}
 
 	// This bool flag is used for allowing the player to safely turn off the alarm clock without exploding their face

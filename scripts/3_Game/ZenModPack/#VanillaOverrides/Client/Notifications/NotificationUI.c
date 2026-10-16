@@ -9,6 +9,12 @@ modded class NotificationUI
 		LoadZenNotificationSoundsets();
 	}
 
+	void ~NotificationUI()
+	{
+		if (g_Game)
+			g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(StopStaticSoundLoop);
+	}
+
 	// There are 6000+ soundsets to cycle through, so we should 
 	// pre-load the few that we need on game startup to save 
 	// cycling though all of them each time a notification plays
@@ -100,6 +106,9 @@ modded class NotificationUI
 
 	static bool CheckPlayZenNotificationSoundset(string keywords)
 	{
+		if (!g_Game || !g_Game.GetPlayer())
+			return false;
+			
 		if (!ZenModEnabled("ZenNotifications"))
 		{
 			return false;
@@ -120,10 +129,15 @@ modded class NotificationUI
 		string soundset_name = GetZenSoundSetForZenKeywords(keywords);
 		if (soundset_name == "")
 			return false;
+		
+		if (GetZenNotificationsConfig().DebugMode)
+		{
+			Print("[ZenNotifications] Checking soundset_name: " + soundset_name);
+		}
 
 		int playOnRadio = g_Game.ConfigGetInt("CfgSoundSets " + soundset_name + " playOnRadio");
 		if (playOnRadio == 1)
-			return true; // Don't play soundset OR notification osund here - use ZenRadioPlugin to play it on the radios.
+			return true; // Don't play soundset OR notification sound here - use ZenRadioPlugin to play it on the radios.
 
 		// Play voice effect
 		EffectSound voiceEffect = SEffectManager.PlaySoundOnObject(soundset_name, g_Game.GetPlayer(), 0, 0.15, false);
@@ -142,7 +156,9 @@ modded class NotificationUI
 			g_Game.GetPlayer().PlaySoundSetLoop(m_ZenStaticLoop, "personalradio_staticnoise_SoundSet", 0, 0);
 			EffectSound staticEffect = SEffectManager.PlaySoundOnObject("tuneRadio_SoundSet", g_Game.GetPlayer(), 0, 0.15, false);
 			if (staticEffect)
+			{
 				staticEffect.SetAutodestroy(true);
+			}
 
 			// Schedule end of static loop
 			g_Game.GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(StopStaticSoundLoop, voiceAudioDuration * 1000, false);

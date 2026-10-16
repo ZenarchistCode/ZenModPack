@@ -5,7 +5,6 @@ class Zen_ConcussionGrenade : FlashGrenade
 		SetAmmoType("Zen_ConcussionGrenade_Ammo");
 		SetFuseDelay(4);
 		SetGrenadeType(EGrenadeType.ILLUMINATING);
-		SetParticleExplosion(ParticleList.GRENADE_M84);
 
 		// Load concussion config if it hasn't been loaded already.
 		// I put this here so if a server doesn't have this grenade in their types.xml the config is not loaded since it's not needed.

@@ -77,11 +77,14 @@ class ZenModPackConfig: ZenConfigBase
 		ModEnabled.Insert("ZenDoubleArmbands", false);
 		ModEnabled.Insert("ZenCarBatteryIcon", false);
 		ModEnabled.Insert("ZenAutoStackItems", false);
+		ModEnabled.Insert("ZenRearViewCamera", false);
+		ModEnabled.Insert("ZenCompatibleGuns", false);
 		ModEnabled.Insert("ZenWeaponEngrave", false);
 		ModEnabled.Insert("ZenNotifications", false);
 		ModEnabled.Insert("ZenBrokenGlasses", false);
 		ModEnabled.Insert("ZenBackwardsCaps", false);
 		ModEnabled.Insert("ZenCraftRagHands", false);
+		ModEnabled.Insert("ZenGPSWatchChat", false);
 		ModEnabled.Insert("ZenCauseOfDeath", false);
 		ModEnabled.Insert("ZenOpenCansRock", false);
 		ModEnabled.Insert("ZenCarWorkbench", false);
@@ -99,6 +102,7 @@ class ZenModPackConfig: ZenConfigBase
 		ModEnabled.Insert("ZenServerGUI", false);
 		ModEnabled.Insert("ZenRaidAlarm", false);
 		ModEnabled.Insert("ZenCatchRain", false);
+		ModEnabled.Insert("ZenBookshelf", false);
 		ModEnabled.Insert("ZenHologram", false);
 		ModEnabled.Insert("ZenEarPlugs", false);
 		ModEnabled.Insert("ZenPainting", false);
@@ -115,17 +119,20 @@ class ZenModPackConfig: ZenConfigBase
 		ModEnabled.Insert("ZenMusic", false);
 		ModEnabled.Insert("ZenShove", false);
 		ModEnabled.Insert("ZenSleep", false);
+		ModEnabled.Insert("ZenDirty", false);
 		ModEnabled.Insert("ZenMap", false);
 
 		// No client sync required
 		ServerSideModEnabled.Insert("ZenBatteryPASPersistence", false);
 		ServerSideModEnabled.Insert("ZenInformWeaponStateBug", false);
+		ServerSideModEnabled.Insert("ZenLootCyclingDetection", false);
 		ServerSideModEnabled.Insert("ZenDropRuinedClothing", false);
 		ServerSideModEnabled.Insert("ZenAutoConvertStash", false);
 		ServerSideModEnabled.Insert("ZenRebuildableWells", false);
 		ServerSideModEnabled.Insert("ZenZombieController", false);
 		ServerSideModEnabled.Insert("ZenPersistentTrees", false);
 		ServerSideModEnabled.Insert("ZenDynamicZoneLoot", false);
+		ServerSideModEnabled.Insert("ZenShootingStars", false);
 		ServerSideModEnabled.Insert("ZenFishingConfig", false);
 		ServerSideModEnabled.Insert("ZenTreesplosions", false);
 		ServerSideModEnabled.Insert("ZenZombieConfig", false);
@@ -188,8 +195,28 @@ class ZenModPackConfig: ZenConfigBase
 		
 		if (!m_TriggeredWarnings)
         	m_TriggeredWarnings = new array<string>;
+
+		ZenModPackConfig defaults = new ZenModPackConfig();
+		defaults.SetDefaults();
+
+		if (!ModEnabled)
+		{
+			ModEnabled = new map<string, bool>;
+		}
+
+		if (!ServerSideModEnabled)
+		{
+			ServerSideModEnabled = new map<string, bool>;
+		}
+
+		MergeMissingBoolMap(ModEnabled, defaults.ModEnabled);
+		MergeMissingBoolMap(ServerSideModEnabled, defaults.ServerSideModEnabled);
 		
 		BuildRuntimeCache();
+
+		#ifdef SERVER 
+		Save();
+		#endif
 	}
 	
 	void BuildRuntimeCache()

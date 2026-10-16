@@ -43,8 +43,18 @@ class Zen_EternalFireplace extends Fireplace
 
 	void ~Zen_EternalFireplace()
 	{
+		if (m_ZenWatchdog)
+		{
+			m_ZenWatchdog.Stop();
+			delete m_ZenWatchdog;
+			m_ZenWatchdog = NULL;
+		}
+
 		if (g_Game && m_ClutterCutter)
+		{
 			g_Game.ObjectDelete(m_ClutterCutter);
+			m_ClutterCutter = NULL;
+		}
 	}
 
 	// Relight / unstick and keep minimal fuel+kindling present

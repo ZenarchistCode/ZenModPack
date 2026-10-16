@@ -23,20 +23,6 @@ class ZenEarPlugsWidget extends Managed // Extend Managed for auto-cleanup
 		m_volume.Show(false);
 	}
 
-	void ~ZenEarPlugsWidget()
-	{
-		if (!g_Game)
-			return;
-		
-		if (m_fadeTimer && m_fadeTimer.IsRunning())
-			m_fadeTimer.Stop();
-
-		delete m_icon;
-		delete m_volume;
-		delete m_fadeTimer;
-		delete m_layout;
-	}
-
 	// Called whenever a menu is opened or HUD is hidden (inventory, maps, admin tools, ~ key etc)
 	void HideAll()
 	{

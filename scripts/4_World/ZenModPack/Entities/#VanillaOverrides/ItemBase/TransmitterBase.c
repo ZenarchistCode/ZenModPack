@@ -8,6 +8,9 @@ modded class TransmitterBase
 
 	void ~TransmitterBase()
 	{
+		if (g_Game && g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM))
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(StopZenStaticSoundLoop);
+
 		SEffectManager.DestroyEffect(m_ZenVoiceEffect);
 		SEffectManager.DestroyEffect(m_ZenStaticLoopEffect);
 	}
@@ -55,6 +58,9 @@ modded class TransmitterBase
 
 	void StopZenStaticSoundLoop(bool playStatic = true)
 	{
+		if (!g_Game)
+			return;
+			
 		if (m_ZenStaticLoopEffect)
 		{
 			if (playStatic)

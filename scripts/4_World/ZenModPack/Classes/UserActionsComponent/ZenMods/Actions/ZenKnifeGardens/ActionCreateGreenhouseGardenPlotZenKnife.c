@@ -29,8 +29,8 @@ class ActionCreateGreenhouseGardenPlotZenKnife extends ActionCreateGreenhouseGar
 		if ( player.IsPlacingLocal() )
 			return false;
 		
-		if (!CfgGameplayHandler.GetDisableColdAreaPlacementCheck() && player.GetInColdArea())
-			return false;
+		//if (!CfgGameplayHandler.GetDisableColdAreaPlacementCheck() && player.GetInColdArea())
+		//	return false;
 
 		Object target_object = target.GetObject();
 		

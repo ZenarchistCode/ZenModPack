@@ -16,6 +16,16 @@ modded class PlayerBase
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Zen_SendMessage);
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(CheckZenPlayerMsgConfig);
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SendZenPlayerMessageReply);
+
+		if (m_ZenBanKickTimer)
+		{
+			m_ZenBanKickTimer.Stop();
+		}
+
+		if (m_ZenAlcoholUpdateTimer)
+		{
+			m_ZenAlcoholUpdateTimer.Stop();
+		}
 	}
 	
 	override bool GetInColdArea()
@@ -36,7 +46,7 @@ modded class PlayerBase
 		//! UTILITIES
 		if (g_Game.IsDedicatedServer())
 		{
-			ZenModPack_OnPlayerLoaded();
+			ZenModPack_OnPlayerLoadedServer();
 		}
 	}
 
@@ -311,7 +321,7 @@ modded class PlayerBase
     {
         super.CommandHandler(pDt, pCurrentCommandID, pCurrentCommandFinished);
 
-        if ( m_ViewInventoryHandler )
+        if (m_ViewInventoryHandler)
         {
             m_ViewInventoryHandler.OnUpdate(pCurrentCommandID, pDt);
         }
@@ -334,7 +344,8 @@ modded class PlayerBase
 
 	//! UTILITIES
 	protected ref ZenPlayerMessage m_CachedZenPlayerMessage; // Cached admin message, allows admin to spawn items on player via JSON
-
+	protected ref Timer m_ZenBanKickTimer;
+	
 	void Zen_PutItemInHandsAway()
 	{
 		//if (g_Game.IsDedicatedServer())
@@ -355,12 +366,21 @@ modded class PlayerBase
 	{
 		super.EEKilledZen(killer);
 
+		#ifdef TerjeStartScreen
+		if (HasActiveTerjeStartScreen())
+			return;
+		#endif
+
 		// Expansion & Syberia compatibility
 		if (GetType().Contains("eAI") || GetType().Contains("_Ghost"))
 			return;
 
 		if (!GetIdentity())
 			return;
+
+		// Always log player inventory on death.
+		// ZenLogItems handles null/invalid killers internally.
+		ZenLogItems(killer);
 
 		EntityAI killerAI = EntityAI.Cast(killer);
 		if (!killerAI)
@@ -371,28 +391,24 @@ modded class PlayerBase
 
 		if (ZenModEnabled("ZenWeaponEngrave"))
 		{
-			if (killer)
+			Weapon_Base gun = Weapon_Base.Cast(killer);
+			if (gun && gun.GetZenEngravedPlayerName() != "")
 			{
-				Weapon_Base gun = Weapon_Base.Cast(killer);
-				if (gun && gun.GetZenEngravedPlayerName() != "")
-				{
-					gun.IncreaseZenPlayerKills();
-				}
+				gun.IncreaseZenPlayerKills();
 			}
 		}
-
-		ZenLogItems(killer);
 	}
 
 	// Log player's items on death
 	void ZenLogItems(Object killer)
 	{
-		if (!GetZenUtilitiesConfig().ShouldLogDeathGear || !killer)
-			return;
+		// Always log death gear if enabled, regardless of killer.
+		if (GetZenUtilitiesConfig().ShouldLogDeathGear)
+		{
+			LogPlayerDeathItems(this);
+		}
 
-		LogPlayerDeathItems(this);
-
-		// Check if log PVP is enabled
+		// Stop here if PVP death logging is disabled.
 		if (!GetZenUtilitiesConfig().ShouldLogPVP)
 			return;
 
@@ -409,8 +425,7 @@ modded class PlayerBase
 			ZenLogger.Log("PVP", "pvp", "PLAYER PVP KILL: " + player.GetCachedName() + " (" + player.GetCachedID() + ") killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos=" + GetPosition() + ") (killerHealth=" + player.GetHealth().ToString() + ")");
 			return;
 		}
-		else
-		if (player && player.GetType().Contains("eAI")) // For Expansion AI compatibility
+		else if (player && player.GetType().Contains("eAI"))
 		{
 			ZenLogger.Log("PVP", "pvp", "PLAYER AI KILL: " + player.GetType() + " killed " + GetCachedName() + " (" + GetCachedID() + ") pos=" + GetPosition() + " (killerHealth=" + player.GetHealth().ToString() + ")");
 			return;
@@ -418,37 +433,31 @@ modded class PlayerBase
 
 		EntityAI killerAI = EntityAI.Cast(killer);
 		string identity = "UnknownIdentity";
+
 		if (killerAI)
 		{
 			if (killerAI.IsZombie())
+			{
 				identity = "Zombie";
+			}
 
 			Man man = killerAI.GetHierarchyRootPlayer();
 
 			if (!man)
 			{
-				if (player && player.GetIdentity())
-				{
-					identity = GetCachedName() + " (" + player.GetCachedID() + ")";
-				}
-
-				ZenLogger.Log("PVP", "pvp", "Player death: " + identity + " killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos = " + GetPosition() + ") (killerHealth = " + killer.GetHealth().ToString() + ")");
+				ZenLogger.Log("PVP", "pvp", "Player death: " + identity + " killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos=" + GetPosition() + ") (killerHealth=" + killer.GetHealth().ToString() + ")");
 				return;
 			}
 
 			player = PlayerBase.Cast(man);
 			if (player && player.GetIdentity())
 			{
-				if (player.GetIdentity())
-				{
-					identity = player.GetCachedName() + " (" + player.GetCachedID() + ")";
-				}
+				identity = player.GetCachedName() + " (" + player.GetCachedID() + ")";
 
 				ZenLogger.Log("PVP", "pvp", "PLAYER PVP KILL: " + identity + " killed " + GetCachedName() + " (" + GetCachedID() + ") with " + killer.GetType() + " (pos=" + GetPosition() + ") (killerHealth=" + player.GetHealth().ToString() + ")");
 				return;
 			}
-			else
-			if (player && player.GetType().Contains("eAI")) // For Expansion AI compatibility
+			else if (player && player.GetType().Contains("eAI"))
 			{
 				ZenLogger.Log("PVP", "pvp", "PLAYER AI KILL: " + player.GetType() + " killed " + GetCachedName() + " (" + GetCachedID() + ") pos=" + GetPosition() + " (killerHealth=" + killer.GetHealth().ToString() + ")");
 				return;
@@ -524,10 +533,13 @@ modded class PlayerBase
 		}
 	}
 
-	void ZenModPack_OnPlayerLoaded()
+	void ZenModPack_OnPlayerLoadedServer()
 	{
 		// Reload admin->player msg JSON in case it has changed during session
 		GetZenPlayerMessageConfig().Load();
+		
+		// Reload soft ban config in case it has updated
+		GetZenPlayerBanConfig().Load();
 
 		// Reset player message
 		m_CachedZenPlayerMessage = NULL;
@@ -539,18 +551,70 @@ modded class PlayerBase
 	// Check player message cfg
 	protected void CheckZenPlayerMsgConfig()
 	{
-		if (!GetIdentity() || GetType().Contains("_Ghost"))
+		PlayerIdentity identity = GetIdentity();
+		
+		if (!identity || GetType().Contains("_Ghost"))
 			return;
+		
+		string cachedID = GetCachedID();
+		
+		// Check for bans
+		ZenPlayerBan ban = GetZenPlayerBanConfig().GetPlayerBan(identity);
+		if (ban)
+		{
+			ZMPrint("[ZenModPack::SoftBanManager] Found existing softban for " + cachedID + " unbanned=" + ban.Unbanned);
+			
+			if (!ban.Unbanned)
+			{
+				int serverYear = 0;
+				int serverMonth = 0;
+				int serverDay = 0;
+
+				GetYearMonthDay(serverYear, serverMonth, serverDay);
+
+				int banYear = ban.UnbanYear;
+				int banMonth = ban.UnbanMonth;
+				int banDay = ban.UnbanDay;
+
+				// Server year needs to be equal to ban year or higher
+				// Server month needs to be equal to ban month AND ban day needs to be > banDay OR
+				// Server month needs to be greater than ban month
+
+				bool unban = false;
+
+				if (serverYear >= banYear)
+				{
+					if ((serverMonth == banMonth && serverDay >= banDay) || serverMonth > banMonth || serverYear > banYear)
+					{
+						unban = true;
+					}
+				}
+
+				if (unban)
+				{
+					// Unban player
+					if (!ban.Unbanned)
+					{
+						g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(HandleZenPlayerUnban, 1000, false, ban);
+					}
+				}
+				else
+				{
+					ZMPrint("[ZenModPack::SoftBanManager] Player " + cachedID + " still banned. Sending message.");
+					HandleZenPlayerBan(ban);
+				}
+
+				return;
+			}
+		}
 
 		if (GetZenUpdateMessage().NotifySurvivorOfNameChange && GetCachedName() == "Survivor")
 		{
 			Zen_SendMessageDelayed(GetZenUpdateMessage().SurvivorNotification, 10000);
 		}
 
-		string cachedID = GetCachedID();
-
 		// Check for admin -> player replies
-		ZenPlayerMessage playerMsg = GetZenPlayerMessageConfig().GetPlayerMessage(cachedID);
+		ZenPlayerMessage playerMsg = GetZenPlayerMessageConfig().GetPlayerMessage(identity);
 
 		if (playerMsg && playerMsg.Message != "")
 		{
@@ -573,7 +637,7 @@ modded class PlayerBase
 
 		if (loginMsg.Contains("#restarttime#"))
 		{
-			const int RESTART_EVERY_MS = 4 * 60 * 60 * 1000; // 4h
+			int RESTART_EVERY_MS = GetZenUpdateMessage().RestartHours * 60 * 60 * 1000; // 4h
 
 			int uptimeMs 		= g_Game.GetTime(); // server uptime in ms
 			int remMs    		= uptimeMs % RESTART_EVERY_MS;
@@ -604,11 +668,11 @@ modded class PlayerBase
 		ZenFunctions.SendPlayerMessage(this, loginMsg);
 
 		// Load last update ID 
-		int timestamp = CF_Date.Now().GetTimestamp();
+		int nowTimestamp = CF_Date.Now().GetTimestamp();
 		ZenPlayerUpdateMsg updateConfig;
 		GetZenUpdateMessagePersistence().PlayerUpdates.Find(cachedID, updateConfig);
 		if (!updateConfig)
-			updateConfig = new ZenPlayerUpdateMsg(cachedID, "-1", timestamp);
+			updateConfig = new ZenPlayerUpdateMsg(cachedID, "-1", nowTimestamp);
 
 		// Send latest update message
 		if (GetZenUpdateMessage().UPDATE_MESSAGE != "" && updateConfig.updateID != GetZenUpdateMessage().UPDATE_VERSION)
@@ -619,7 +683,7 @@ modded class PlayerBase
 			if (GetZenUpdateMessage().PopupInGame)
 			{
 				// Popup confirm dialog
-				GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param2<string, bool>(updateMsg + GetZenUpdateMessage().UPDATE_SUFFIX, true), true, GetIdentity());
+				GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param3<string, bool, bool>(updateMsg + GetZenUpdateMessage().UPDATE_SUFFIX, true, true), true, GetIdentity());
 				return;
 			}
 			else
@@ -631,27 +695,130 @@ modded class PlayerBase
 			if (!GetZenUpdateMessage().PopupInGame)
 			{
 				updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
-				updateConfig.lastLoginTimestamp = timestamp;
+				updateConfig.lastLoginTimestamp = nowTimestamp;
 				GetZenUpdateMessagePersistence().PlayerUpdates.Set(cachedID, updateConfig);
 			}
 		}
+	}
+	
+	void HandleZenPlayerBan(notnull ZenPlayerBan ban)
+	{
+		if (!GetIdentity())
+			return;
+
+		ZMPrint("[ZenModPack::SoftBanManager] Player " + GetCachedName() + " (" + GetIdentity().GetId() + ") is banned!");
+
+		string msg = ban.Message;
+
+		if (ban.UnbanYear < 9999)
+			msg = msg + "<br/><br/><color rgba='220,10,10,255'>" + GetZenPlayerBanConfig().BanExpiresText + " <br/>" + GetZenPlayerBanConfig().BanYearText + " " + ban.UnbanYear + " " + GetZenPlayerBanConfig().BanMonthText + " " + ban.UnbanMonth + " " + GetZenPlayerBanConfig().BanDayText + " " + ban.UnbanDay + "</color>";
+
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param3<string, bool, bool>(msg, true, false), true, GetIdentity());
+
+		// Teleport player and schedule kick timer
+		vector telePos = "0 0 0";
+		
+		if (ban.BanTeleportX >= 0 && ban.BanTeleportZ >= 0)
+		{
+			telePos[0] = ban.BanTeleportX;
+			telePos[1] = ban.BanTeleportY;
+			if (telePos[1] <= 0)
+				telePos[1] = g_Game.SurfaceY(telePos[0], telePos[2]);
+			telePos[2] = ban.BanTeleportZ;
+		}
+		else
+		if (GetZenPlayerBanConfig().BanTeleportX >= 0 && GetZenPlayerBanConfig().BanTeleportZ >= 0)
+		{
+			telePos[0] = GetZenPlayerBanConfig().BanTeleportX;
+			telePos[1] = GetZenPlayerBanConfig().BanTeleportY;
+			if (telePos[1] <= 0)
+				telePos[1] = g_Game.SurfaceY(telePos[0], telePos[2]);
+			telePos[2] = GetZenPlayerBanConfig().BanTeleportZ;
+		}
+		else 
+		{
+			ZMPrint("[ZenSoftBanManager] Player was not teleported to ban location as no valid ban location was found.");
+		}
+
+		DeveloperTeleport.SetPlayerPosition(this, telePos);
+
+		if (GetZenPlayerBanConfig().KickBannedPlayerSecs > 0)
+		{
+			ZMPrint("[ZenSoftBanManager] Kicking player " + GetCachedID() + " in " + GetZenPlayerBanConfig().KickBannedPlayerSecs + " seconds...");
+			
+			// Schedule kick timer
+			m_ZenBanKickTimer = new Timer();
+			m_ZenBanKickTimer.Run(GetZenPlayerBanConfig().KickBannedPlayerSecs, this, "ZenBanKickPlayer");
+		}
+	}
+
+	void HandleZenPlayerUnban(ZenPlayerBan ban)
+	{
+		vector telePos = "0 0 0";
+
+		if (ban.UnbanTeleportX >= 0 && ban.UnbanTeleportZ >= 0)
+		{
+			telePos[0] = ban.UnbanTeleportX;
+			telePos[1] = ban.UnbanTeleportY;
+			if (telePos[1] <= 0)
+				telePos[1] = g_Game.SurfaceY(telePos[0], telePos[2]);
+			telePos[2] = ban.UnbanTeleportZ;
+		}
+		else
+		if (GetZenPlayerBanConfig().UnbanTeleportX >= 0 && GetZenPlayerBanConfig().UnbanTeleportZ >= 0)
+		{
+			telePos[0] = GetZenPlayerBanConfig().UnbanTeleportX;
+			telePos[1] = GetZenPlayerBanConfig().UnbanTeleportY;
+			if (telePos[1] <= 0)
+				telePos[1] = g_Game.SurfaceY(telePos[0], telePos[2]);
+			telePos[2] = GetZenPlayerBanConfig().UnbanTeleportZ;
+		}
+		else 
+		{
+			ZMPrint("[ZenSoftBanManager] Player was not teleported to unban location as no valid unban location was found.");
+		}
+		
+		DeveloperTeleport.SetPlayerPosition(this, telePos);
+
+		string unbanMessage = GetZenPlayerBanConfig().UnbanMessage;
+
+		if (ban.UnbanMessage != "")
+			unbanMessage = ban.UnbanMessage;
+		
+		// Send message to player
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param3<string, bool, bool>(unbanMessage, true, true), true, GetIdentity());
+
+		if (ban.KillOnUnban)
+		{
+			SetPosition(GetPosition() + "0 5000 0");
+			SetHealth(0);
+		}
+		
+		// Unban in json file
+		ban.Unbanned = true;
+		GetZenPlayerBanConfig().Save(); // Update json
+	}
+
+	void ZenBanKickPlayer()
+	{
+		if (g_Game) g_Game.DisconnectPlayer(GetIdentity());
 	}
 
 	// Marks the update message pop-up as read
 	void MarkReadZenUpdateMessage()
 	{
 		// Load last update ID 
-		int timestamp = CF_Date.Now().GetTimestamp();
+		int nowTimestamp = CF_Date.Now().GetTimestamp();
 
 		ZenPlayerUpdateMsg updateConfig;
 		GetZenUpdateMessagePersistence().PlayerUpdates.Find(GetCachedID(), updateConfig);
 		if (!updateConfig)
-			updateConfig = new ZenPlayerUpdateMsg(GetCachedID(), "-1", timestamp);
+			updateConfig = new ZenPlayerUpdateMsg(GetCachedID(), "-1", nowTimestamp);
 
 		if (GetZenUpdateMessage().PopupInGame && updateConfig)
 		{
 			updateConfig.updateID = GetZenUpdateMessage().UPDATE_VERSION;
-			updateConfig.lastLoginTimestamp = timestamp;
+			updateConfig.lastLoginTimestamp = nowTimestamp;
 			GetZenUpdateMessagePersistence().PlayerUpdates.Set(GetCachedID(), updateConfig);
 		}
 	}
@@ -665,14 +832,13 @@ modded class PlayerBase
 		if (IsPlayerDisconnected() || GetIdentity() == NULL)
 			return;
 
-		
 		ZMPrint("[ZenUtilities] Player " + GetCachedName() + " (" + GetCachedID() + ") has received your admin message:");
 		ZMPrint(message.Message);
 
 		// Cache message
 		m_CachedZenPlayerMessage = message;
 
-		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param2<string, bool>(message.Message, false), true, GetIdentity());
+		GetRPCManager().SendRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", new Param3<string, bool, bool>(message.Message, false, true), true, GetIdentity());
 	}
 
 	// Called only when player confirms they read the admin text message (via RPC MissionBase)
@@ -762,9 +928,7 @@ modded class PlayerBase
 			}
 		}
 
-		if (!GetZenPlayerMessageConfig().DeleteMessage(GetCachedID()))
-			GetZenPlayerMessageConfig().GetPlayerMessage(GetIdentity().GetPlainId());
-
+		GetZenPlayerMessageConfig().DeleteMessage(GetIdentity());
 		m_CachedZenPlayerMessage.SpawnItems.Clear();
 		m_CachedZenPlayerMessage = NULL;
 	}

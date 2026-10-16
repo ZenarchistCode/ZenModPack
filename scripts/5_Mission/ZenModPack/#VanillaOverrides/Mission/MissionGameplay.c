@@ -4,6 +4,7 @@ modded class MissionGameplay
 	static bool SHOW_ZEN_ADMIN_DIALOG = false; 
 	static string SHOW_ZEN_ADMIN_DIALOG_TEXT = "";
 	static bool SHOW_ZEN_ADMIN_DIALOG_ISPOPUP = false;
+	static bool SHOW_ZEN_ADMIN_DIALOG_OKBTN = true;
 	
 	//! SHARED
 	override void OnInit()
@@ -69,7 +70,7 @@ modded class MissionGameplay
             ZenAdminMessageGUI gui = ZenAdminMessageGUI.Cast(g_Game.GetUIManager().EnterScriptedMenu(ZenMenus.PLAYER_MESSAGE, NULL));
             if (gui)
 			{
-                gui.SetAdminMessage(SHOW_ZEN_ADMIN_DIALOG_TEXT, SHOW_ZEN_ADMIN_DIALOG_ISPOPUP);
+                gui.SetAdminMessage(SHOW_ZEN_ADMIN_DIALOG_TEXT, SHOW_ZEN_ADMIN_DIALOG_ISPOPUP, SHOW_ZEN_ADMIN_DIALOG_OKBTN);
 				SHOW_ZEN_ADMIN_DIALOG = false;
 			}
         }

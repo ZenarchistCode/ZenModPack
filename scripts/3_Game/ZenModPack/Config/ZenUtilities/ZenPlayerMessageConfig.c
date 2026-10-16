@@ -57,14 +57,14 @@ class ZenPlayerMessageConfig : ZenConfigBase
 	}
 
 	// Removes the given report from the list and re-saves config
-	bool DeleteMessage(string uid)
+	bool DeleteMessage(notnull PlayerIdentity id)
 	{
 		bool deletedCfg = false;
 
 		for (int i = 0; i < PlayerReplies.Count(); i++)
 		{
 			ZenPlayerMessage msg = PlayerReplies.Get(i);
-			if (msg.BohemiaID == uid)
+			if (msg.BohemiaID == id.GetId() || msg.BohemiaID == id.GetPlainId())
 			{
 				PlayerReplies.Remove(i);
 				deletedCfg = true;
@@ -85,13 +85,13 @@ class ZenPlayerMessageConfig : ZenConfigBase
 	}
 
 	// Get an item from config list
-	ZenPlayerMessage GetPlayerMessage(string BohemiaID)
+	ZenPlayerMessage GetPlayerMessage(notnull PlayerIdentity id)
 	{
 		for (int i = 0; i < PlayerReplies.Count(); i++)
 		{
 			string toFind = PlayerReplies.Get(i).BohemiaID;
 
-			if (BohemiaID == toFind)
+			if (id.GetId() == toFind || id.GetPlainId() == toFind)
 			{
 				return PlayerReplies.Get(i);
 			}

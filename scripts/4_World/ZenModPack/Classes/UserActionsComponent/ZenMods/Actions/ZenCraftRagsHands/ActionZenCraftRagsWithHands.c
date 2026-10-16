@@ -20,8 +20,8 @@ class ActionZenCraftRagsWithHands : ActionContinuousBase
 
 	override void CreateConditionComponents()
 	{
-		m_ConditionTarget = new CCTNonRuined;
-		m_ConditionItem = new CCINone;
+		m_ConditionTarget = new CCTNonRuined();
+		m_ConditionItem = new CCINone();
 	}
 
 	override bool ActionCondition(PlayerBase player, ActionTarget target, ItemBase item)
@@ -33,7 +33,7 @@ class ActionZenCraftRagsWithHands : ActionContinuousBase
 
 		ItemBase targetItem = ItemBase.Cast(target.GetObject());
 
-		if (!targetItem || item)
+		if (!targetItem || item != null || player.GetItemInHands() != null)
 			return false;
 
 		return targetItem.ConfigGetFloat("ragQuantity") > 0 && targetItem.IsEmpty();

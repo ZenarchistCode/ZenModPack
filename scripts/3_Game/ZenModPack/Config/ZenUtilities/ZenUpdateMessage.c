@@ -26,7 +26,7 @@ class ZenUpdateMessage : ZenConfigBase
 	}
 
 	override string 	GetFolderName()       		{ return "Utilities"; }
-	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
+	override string    	GetCurrentVersion()   		{ return "1.29.2"; }
 	override bool		ShouldLoadOnServer() 		{ return true; }
 	override bool 		IsServerOnlyConfig()		{ return true; }
 	
@@ -51,6 +51,7 @@ class ZenUpdateMessage : ZenConfigBase
 	bool PopupInGame;
 	bool NotifySurvivorOfNameChange;
 	string SurvivorNotification;
+	int RestartHours;
 	
 	override void SetDefaults()
 	{
@@ -62,6 +63,7 @@ class ZenUpdateMessage : ZenConfigBase
 		PopupInGame = false;
 		NotifySurvivorOfNameChange = true;
 		SurvivorNotification = "Please change your name to a custom name in the DayZ Launcher (tick Parameters -> Profile name)";
+		RestartHours = 4;
 	}
 }
 
@@ -93,7 +95,7 @@ class ZenUpdateMessagePersistence : ZenConfigBase
 	}
 
 	override string 	GetRootFolder() 			{ return ZenConstants.GetDbFolder(); }
-	override string    	GetCurrentVersion()   		{ return "1"; }
+	override string    	GetCurrentVersion()   		{ return "1.29.1"; }
 	override bool		ShouldLoadOnServer() 		{ return true; }
 	override bool 		IsServerOnlyConfig()		{ return true; }
 	

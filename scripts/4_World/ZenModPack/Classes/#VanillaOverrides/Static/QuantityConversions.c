@@ -45,38 +45,35 @@ modded class QuantityConversions
 		return QUANTITY_HIDDEN;
 	}
 
-	// Last copied from vanilla scripts on 8th July 2025
-	static int Vanilla_HasItemQuantity( notnull EntityAI item )
+	// Last copied from 1.30 vanilla scripts on 18th September 2026
+	static int Vanilla_HasItemQuantity(notnull EntityAI item)
 	{
-		ItemBase ib;
-		if ( Class.CastTo(ib, item) )
+		ItemBase itemBase;
+		if (Class.CastTo(itemBase, item))
 		{
-			if ( item.IsMagazine() )
+			if (item.IsMagazine())
 				return QUANTITY_COUNT;
-			
-			if ( !ib.m_CanShowQuantity )
+
+			ItemBaseType itemBaseType = ItemBaseType.Cast(itemBase.GetEntityType());
+
+			if (!itemBaseType.m_CanShowQuantity)
 				return QUANTITY_HIDDEN;
-			
-			int max = item.GetQuantityMax();
-			if ( max > 0 )
+
+			int maxQuantity = item.GetQuantityMax();
+			if (maxQuantity > 0)
 			{
-				if ( ib.m_HasQuantityBar )
+				if (itemBaseType.m_HasQuantityBar)
 				{
 					return QUANTITY_PROGRESS;
 				}
-				else
-				{
-					if (max == 1)
-					{
-						return QUANTITY_HIDDEN;
-					}
-					else
-					{
-						return QUANTITY_COUNT;
-					}
-				}
+
+				if (maxQuantity == 1)
+					return QUANTITY_HIDDEN;
+
+				return QUANTITY_COUNT;
 			}
 		}
+
 		return QUANTITY_HIDDEN;
 	}
 }

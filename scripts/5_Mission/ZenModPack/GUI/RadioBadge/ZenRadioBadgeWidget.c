@@ -19,20 +19,6 @@ class ZenRadioBadgeWidget extends Managed
 		m_channel.Show(false);
 	}
 
-	void ~ZenRadioBadgeWidget()
-	{
-		if (!g_Game)
-			return;
-		
-		if (m_fadeTimer && m_fadeTimer.IsRunning())
-			m_fadeTimer.Stop();
-
-		delete m_icon;
-		delete m_channel;
-		delete m_fadeTimer;
-		delete m_layout;
-	}
-
 	void HideAll()
 	{
 		if (m_icon)

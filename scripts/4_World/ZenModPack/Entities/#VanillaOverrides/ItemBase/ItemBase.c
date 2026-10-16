@@ -45,7 +45,11 @@ modded class ItemBase
 
 		if (GetZenUtilitiesConfig().FindItemLog(type))
 		{
-			ZenItemStatsLogger.IncreaseItemCount(type, GetQuantity());
+			float qty = GetQuantity();
+			if (GetType().Contains("HDSN_BreachingCharge"))
+				qty = 1;
+
+			ZenItemStatsLogger.IncreaseItemCount(type, qty);
 		}
 	}
 

@@ -2,6 +2,7 @@ modded class CarScript
 {
 	//! CAR BATTERY ICON 
 	protected int m_ZenBatteryEnergy;
+	protected static bool s_ZenShouldUpdateBatteryEnergy;
 
 	//! PIMP
 	Chemlight_ColorBase		m_ZenChemlightAttached;
@@ -10,10 +11,16 @@ modded class CarScript
 	void CarScript()
 	{
 		RegisterNetSyncVariableInt("m_ZenBatteryEnergy");
-	}
 
-	void ~CarScript()
-	{
+		#ifdef SERVER 
+		s_ZenShouldUpdateBatteryEnergy = false;
+
+		if (ZenModEnabled("ZenCarBatteryIcon"))
+		{
+			// Cache this var instead of checking it on every OnUpdate() tick
+			s_ZenShouldUpdateBatteryEnergy = true;
+		}
+		#endif
 	}
 
 	//! CAR BATTERY ICON 
@@ -22,22 +29,24 @@ modded class CarScript
         super.OnUpdate(dt);
 
 		#ifdef SERVER 
-		if (ZenModEnabled("ZenCarBatteryIcon"))
-		{
-			ItemBase battery;
-
-			if (EngineIsOn() || IsScriptedLightsOn())
-			{
-				battery = GetBattery();
-
-				if (battery)
-				{
-					UpdateZenBatteryEnergy(battery.GetCompEM().GetEnergy0To100());
-				}
-			}
-		}
+		CheckZenBatteryEnergy();
 		#endif
     }
+
+	protected void CheckZenBatteryEnergy()
+	{
+		if (!s_ZenShouldUpdateBatteryEnergy)
+			return;
+
+		if (!EngineIsOn() && !LightIsOn())
+			return;
+
+		ItemBase battery = GetBattery();
+		if (!battery)
+			return;
+
+		UpdateZenBatteryEnergy(battery.GetCompEM().GetEnergy0To100());
+	}
 
 	int GetZenBatteryEnergy0To100()
 	{
@@ -46,12 +55,6 @@ modded class CarScript
 
 	void UpdateZenBatteryEnergy(int percent)
 	{
-        if (!g_Game.IsDedicatedServer())
-			return;
-
-		if (!ZenModEnabled("ZenCarBatteryIcon"))
-			return;
-
 		if (m_ZenBatteryEnergy == percent)
 		    return;
 

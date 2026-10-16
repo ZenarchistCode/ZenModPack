@@ -6,8 +6,10 @@ modded class MissionBase
 		// SERVER RECEIVE RPC
 
 		//! UTILITIES
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingleplayerExecutionType.Server);
-        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", this, SingleplayerExecutionType.Server);
+		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenAdminMessage", this, SingleplayerExecutionType.Both);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", this, SingleplayerExecutionType.Both);
+        GetRPCManager().AddRPC("ZenMod_RPC", "RPC_SendZenPlayerUpdateMessageConfirmRead", this, SingleplayerExecutionType.Both);
+		GetRPCManager().AddRPC("ZenMod_RPC", "RPC_ReceiveZenServerDiversionConfigOnClient", this, SingleplayerExecutionType.Both);
 	}
 	
 	// NOTE: This is triggered in 3_game. It passes the ZenConfigBase param which was received on the CLIENT to 3_game's script invoker.
@@ -200,7 +202,8 @@ modded class MissionBase
 				//! UTILITIES 
 				case ZenMenus.PLAYER_MESSAGE:
                 {
-                    menu = new ZenAdminMessageGUI;
+                    menu = new ZenAdminMessageGUI();
+					menu.SetID(ZenMenus.PLAYER_MESSAGE);
                     break;
                 }
             }
@@ -276,7 +279,7 @@ modded class MissionBase
     {
         if (type == CallType.Client && g_Game.IsClient())
         {
-            Param2<string, bool> data;
+            Param3<string, bool, bool> data;
             if (!ctx.Read(data))
             {
                 Error("Error sync'ing server-side data to client - RPC_ReceiveZenAdminMessage");
@@ -289,6 +292,7 @@ modded class MissionBase
 				mission.SHOW_ZEN_ADMIN_DIALOG = true;
 				mission.SHOW_ZEN_ADMIN_DIALOG_TEXT = data.param1;
 				mission.SHOW_ZEN_ADMIN_DIALOG_ISPOPUP = data.param2;
+				mission.SHOW_ZEN_ADMIN_DIALOG_OKBTN = data.param3;
 			}
         }
     }

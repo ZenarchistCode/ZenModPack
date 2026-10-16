@@ -101,7 +101,7 @@ class ZenRadioPlugin extends PluginBase
             }
         }
 
-        Print("[ZenRadioPlugin] Played " + soundset_name + " on " + sentSounds + " working radios.");
+        ZMPrint("[ZenRadioPlugin] Played " + soundset_name + " on " + sentSounds + " working radios.");
     }
 
     string GetZenSoundSetForKeywords(string keywords)

@@ -1,7 +1,7 @@
 class ZenAdminMessageGUI extends UIScriptedMenu
 {
 	// Title widgets
-	private ref MultilineTextWidget m_ReplyText;
+	private ref RichTextWidget m_ReplyText;
 	private ref ButtonWidget m_BtnOK;
 	private bool m_PopupUpdateMsg;
 
@@ -15,7 +15,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 		layoutRoot = g_Game.GetWorkspace().CreateWidgets("ZenModPack/data/gui/layouts/utilities/ZenAdminMessageGUI.layout");
 
 		// Load required widgets
-		m_ReplyText = MultilineTextWidget.Cast(layoutRoot.FindAnyWidget("reply_text"));
+		m_ReplyText = RichTextWidget.Cast(layoutRoot.FindAnyWidget("reply_text"));
 		m_BtnOK = ButtonWidget.Cast(layoutRoot.FindAnyWidget("ok_button"));
 
 		if (!m_ReplyText || !m_BtnOK)
@@ -24,23 +24,38 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 			return NULL;
 		}
 
-		// Disable controls & hud
-		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(DisableControls, 100, false);
-
 		return layoutRoot;
 	}
 
-	void SetAdminMessage(string msg, bool updateMsg)
+	void SetAdminMessage(string msg, bool updateMsg, bool showOK)
 	{
 		m_ReplyText.SetText(msg);
 		m_ReplyText.Update();
 		m_PopupUpdateMsg = updateMsg;
+		
+		if (!showOK)
+			m_BtnOK.Show(false);
+	}
+	
+	override void Update(float timeslice)
+	{
+		super.Update(timeslice);
+
+		ZenMissionFunctions.FreezePlayerControls();
+	}
+	
+	override void OnShow()
+	{
+		super.OnShow();
+
+		ZenMissionFunctions.FreezePlayerControls();
 	}
 
-	// Diable controls & hud
-	void DisableControls()
+	override void OnHide()
 	{
-		ZenFunctions.SetPlayerControl(false, true);
+		super.OnHide();
+
+		ZenMissionFunctions.UnfreezePlayerControls();
 	}
 
 	// Handles clicks on button widgets
@@ -63,22 +78,7 @@ class ZenAdminMessageGUI extends UIScriptedMenu
 		else
 			GetRPCManager().SendRPC("ZenMod_RPC", "RPC_SendZenPlayerMessageConfirmRead", new Param1< bool >(true), true, NULL);
 			
-		// Close window
-		UIManager uiManager = g_Game.GetUIManager();
-
-		if (!uiManager)
-			return true;
-
-		UIScriptedMenu menu = uiManager.GetMenu();
-		if (menu)
-		{
-			ZenAdminMessageGUI replyMenu = ZenAdminMessageGUI.Cast(menu);
-			if (replyMenu)
-			{
-				uiManager.HideScriptedMenu(replyMenu);
-				ZenFunctions.SetPlayerControl(true, true);
-			}
-		}
+		Close();
 
 		return true;
 	}

@@ -8,7 +8,7 @@ class ZenItemStatsLogger
 	{
 		ALREADY_PRINTED = true;
 
-		if (!GetZenUtilitiesConfig().ShouldLogItemCount)
+		if (!GetZenUtilitiesConfig().ShouldLogItemCount || !ITEM_STATS)
 			return;
 
 		int statsCount = ITEM_STATS.Count();

@@ -1,5 +1,5 @@
 /*
-#ifdef EXPANSIONMODAI
+#ifdef DZ_Expansion_AI
 modded class eAIBase
 {
 	static int ZENMOD_AI_COUNT = 0;

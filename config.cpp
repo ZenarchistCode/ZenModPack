@@ -219,6 +219,12 @@ class CfgMods
 		inputs = "ZenModPack/data/inputs.xml";
 		version = "1.0";
 		storageVersion = 1;
+		dependencies[]=
+		{
+			"Game",
+			"World",
+			"Mission"
+		};
 		class defs
 		{
 			class imageSets
@@ -280,14 +286,11 @@ class CfgVehicles
 	class Barrel_ColorBase;
 	class UndergroundStash;
 	class BaseBuildingBase;
-	class Barrel_ColorBase;
 	class HouseNoDestruct;
 	class Container_Base;
 	class ShelterLeather;
 	class Inventory_Base;
-	class FireplaceBase;
 	class ShelterFabric;
-	class FireplaceBase;
 	class KitchenKnife;
 	class Grenade_Base;
 	class ShelterStick;
@@ -4414,6 +4417,10 @@ class CfgVehicles
 	{
 		inventorySlot[] += { "ZenNBC_Mask" };
 	};
+	class AirborneMask: Clothing
+	{
+		inventorySlot[] += { "ZenNBC_Mask" };
+	};
 	class NBCHoodBase: Clothing
 	{
 		inventorySlot[] += { "ZenNBC_Hood" };
@@ -4437,6 +4444,12 @@ class CfgVehicles
 	
 	//! MISCELLANEOUS STATIC OBJECTS
 
+	class Zen_TerrainOccluder: HouseNoDestruct
+	{
+		scope=1;
+		model="\DZ\structures_bliss\underground\terrain\terrain_occluder_40m.p3d";
+	};
+
 	//! Mural
 	class Zen_Decal_Mural_Base: HouseNoDestruct
 	{
@@ -4450,6 +4463,12 @@ class CfgVehicles
 		scope=1;
 		hiddenSelections[]={"texture"};
 		hiddenSelectionsTextures[]={"ZenModPack\data\textures\mural\mural_decal_28dayslater.paa"};
+	};
+	class Zen_Decal_Mural_Zenarchist: Zen_Decal_Mural_Base
+	{
+		scope=1;
+		hiddenSelections[]={"texture"};
+		hiddenSelectionsTextures[]={"ZenModPack\data\textures\mural\mural_zenarchist.paa"};
 	};
 
 	//! Tree houses
@@ -5443,6 +5462,7 @@ class CfgAmmo
 		slowdownThreshold = 100;
 		simulation = "shotShell";
 		simulationStep = 0.050000001;
+		particle="explosion_M84_01";
 		soundSetExplosion[] =
 		{
 			"Flashgrenade_Explosion_SoundSet",
@@ -5483,7 +5503,7 @@ class CfgSoundShaders
 	};
 
 	// Radio static
-	class Zen_MissionRadioStatic_SoundShader : Zen_NotificationAudio_SoundShader_Base { samples[] = { { "ZenModPack\data\sounds\notifications\radiostatic", 1 } }; };
+	class Zen_MissionRadioStatic_SoundShader : Zen_NotificationAudio_SoundShader_Base { samples[] = { { "ZenModPack\data\sounds\notifications\radiostatic", 1 } }; volume=0.1; };
 
 	//! CHESS 
 	class ZenChess_SoundShader_Base
@@ -5544,7 +5564,7 @@ class CfgSoundSets
 	};
 
 	//! Radio static
-	class Zen_MissionRadioStatic_SoundSet { soundShaders[] = { "Zen_MissionRadioStatic_SoundShader" }; volumeFactor = 0.15; };
+	class Zen_MissionRadioStatic_SoundSet { soundShaders[] = { "Zen_MissionRadioStatic_SoundShader" }; };
 
 	//! UTILITIES
 	class Zen_NotifySoundset 

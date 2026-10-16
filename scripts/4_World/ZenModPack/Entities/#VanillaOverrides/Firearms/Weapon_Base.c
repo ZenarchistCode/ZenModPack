@@ -285,6 +285,26 @@ modded class Weapon_Base
 		}
 	}
 
+	void Zen_CopyEngraveStatsFromWeapon(Weapon_Base source_weapon)
+	{
+		if (!source_weapon)
+		{
+			return;
+		}
+
+		m_ZenPlayerUID = source_weapon.m_ZenPlayerUID;
+		m_ZenPlayerName = source_weapon.m_ZenPlayerName;
+		m_ZenZombieKills = source_weapon.m_ZenZombieKills;
+		m_ZenAnimalKills = source_weapon.m_ZenAnimalKills;
+		m_ZenPlayerKills = source_weapon.m_ZenPlayerKills;
+		m_ZenLongestShot = source_weapon.m_ZenLongestShot;
+
+		m_HasReceivedName = false;
+		m_ZenResetReceivedName = true;
+
+		SetSynchDirty();
+	}
+
 	// USE CF_Load/Save because this will NOT break server persistence if the mod is added/removed mid-wipe. 
 	// NOTE: storage[] must refer to this mod's CfgMods classname EXACTLY or this won't work.
 	

@@ -30,7 +30,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
     protected int m_HighestFPS_ZombieCount;
     protected int m_HighestFPS_DrivingVehicles;
 
-#ifdef EXPANSIONMODAI
+#ifdef DZ_Expansion_AI
     protected int m_LowestFPS_AICount;
     protected int m_HighestFPS_AICount;
 #endif
@@ -61,7 +61,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
     int GetServerFps()
     {
         int fps;
-#ifdef GAMELABS
+#ifdef GameLabs
         fps = GetGameLabs().GetServerFPS();
 #else
         fps = GetZenServerFPS();
@@ -82,7 +82,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         msg = msg + "\nAnimal Count: " + m_LowestFPS_AnimalCount;
         msg = msg + "\nZombie Count: " + m_LowestFPS_ZombieCount;
         msg = msg + "\nDriving Count: " + m_LowestFPS_DrivingVehicles;
-#ifdef EXPANSIONMODAI
+#ifdef DZ_Expansion_AI
         msg = msg + "\nAI Count: " + m_LowestFPS_AICount;
 #endif
         if (m_ActionLowestFPSClassName != "")
@@ -94,7 +94,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
         msg = msg + "\nAnimal Count: " + m_HighestFPS_AnimalCount;
         msg = msg + "\nZombie Count: " + m_HighestFPS_ZombieCount;
         msg = msg + "\nDriving Count: " + m_HighestFPS_DrivingVehicles;
-#ifdef EXPANSIONMODAI
+#ifdef DZ_Expansion_AI
         msg = msg + "\nAI Count: " + m_HighestFPS_AICount;
 #endif
         return msg + "\n\n";
@@ -154,7 +154,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
             m_LowestFPS_AnimalCount = AnimalBase.ZENMOD_ANIMAL_COUNT;
             m_LowestFPS_ZombieCount = ZombieBase.ZENMOD_ZOMBIE_COUNT;
             m_LowestFPS_DrivingVehicles = PlayerBase.ZENMOD_DRIVER_COUNT;
-#ifdef EXPANSIONMODAI
+#ifdef DZ_Expansion_AI
             m_LowestFPS_AICount = eAIBase.ZENMOD_AI_COUNT;
 #endif
         }
@@ -168,7 +168,7 @@ class ZenPerformanceMonitorPlugin extends PluginBase
             m_HighestFPS_AnimalCount = AnimalBase.ZENMOD_ANIMAL_COUNT;
             m_HighestFPS_ZombieCount = ZombieBase.ZENMOD_ZOMBIE_COUNT;
             m_HighestFPS_DrivingVehicles = PlayerBase.ZENMOD_DRIVER_COUNT;
-#ifdef EXPANSIONMODAI
+#ifdef DZ_Expansion_AI
             m_HighestFPS_AICount = eAIBase.ZENMOD_AI_COUNT;
 #endif
         }
